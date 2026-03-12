@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build: ../backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - vector_db
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  vector_db:
+    image: ghcr.io/qdrant/qdrant
+    ports:
+      - "6333:6333"
+
+  whisper:
+    image: ghcr.io/openai/whisper
+    ports:
+      - "9000:9000"

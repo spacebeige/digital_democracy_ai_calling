@@ -1,0 +1,36 @@
+# General files to ignore
+.DS_Store # macOS system files
+Thumbs.db # Windows system files
+*.log     # Log files
+temp/     # Temporary directory
+
+.venv/
+backend/.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+*.db
+
+# Dependency directories
+node_modules/ # Node.js dependencies
+vendor/       # Composer dependencies (PHP)
+env/          # Python virtual environment (also venv/)
+
+# Compiled/generated files
+*.pyc         # Python compiled files
+__pycache__/  # Python cache directory
+/dist/        # Distribution/build folder
+/build/       # Build output folder
+target/       # Maven build output (Java)
+
+# Sensitive information/environment variables
+.env          # Environment variable files
+config.inc.php # Example of a specific configuration file
+
+# IDE or editor settings
+.idea/        # JetBrains IDE settings
+.vscode/      # VS Code settings
+*.swp         # Vim swap files
+
+

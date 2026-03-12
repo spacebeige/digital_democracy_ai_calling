@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+redis
+faiss-cpu
+numpy
+sqlalchemy
+python-dotenv
+python-jose
+bcrypt
+requests
