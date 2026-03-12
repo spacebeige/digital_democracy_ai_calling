@@ -1,0 +1,7 @@
+Water complaints should include location details, landmark, and issue duration.
+Road complaints should include pothole size, exact street name, and safety risk level.
+Garbage complaints should include pickup delay days and nearest collection point.
+Electricity complaints should include outage duration, area code, and transformer details.
+All complaints should be acknowledged with a ticket reference and expected resolution timeline.
+Escalation to district officer is required if complaint remains unresolved for more than 7 days.
+Citizen communication must remain respectful, concise, and action oriented.
