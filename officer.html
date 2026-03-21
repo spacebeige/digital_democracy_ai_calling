@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Officer Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 15px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .nav a {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .nav a.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .controls select, .controls input, .controls button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .controls button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+            text-align: center;
+        }
+        
+        .stat-box h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-box .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th {
+            background-color: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .priority-high {
+            background-color: #ffcccc;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .priority-medium {
+            background-color: #fff3cd;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .priority-low {
+            background-color: #d4edda;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .status-open {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .status-progress {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        
+        .status-resolved {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .action-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .action-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .modal select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .modal-buttons .confirm {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .modal-buttons .cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👨‍💼 Government Officer Dashboard</h1>
+            <p>Manage and track all public grievances</p>
+        </div>
+        
+        <div class="nav">
+            <a href="user.html">User</a>
+            <a href="officer.html" class="active">Officer Dashboard</a>
+            <a href="compliance.html">Compliance Dashboard</a>
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <div class="controls">
+            <input type="text" id="locationFilter" placeholder="Filter by location..." />
+            <select id="priorityFilter">
+                <option value="">All Priorities</option>
+                <option value="HIGH">High Priority</option>
+                <option value="MEDIUM">Medium Priority</option>
+                <option value="LOW">Low Priority</option>
+            </select>
+            <button onclick="loadTickets()">Apply Filter</button>
+            <button onclick="generateInsights()" style="background-color: #28a745;">Generate Insights</button>
+        </div>
+        
+        <div class="stats" id="statsContainer"></div>
+        
+        <div id="tableContainer" class="loading">Loading tickets...</div>
+        
+        <div id="insightsContainer"></div>
+    </div>
+    
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Update Ticket Status</div>
+            <select id="statusSelect">
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+            <div class="modal-buttons">
+                <button class="confirm" onclick="confirmStatusUpdate()">Update</button>
+                <button class="cancel" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = "http://localhost:8000";
+        let allTickets = [];
+        let currentTicketId = null;
+        
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('messageContainer');
+            const className = type === 'success' ? 'success' : 'error';
+            container.innerHTML = `<div class="message ${className}">${message}</div>`;
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+        
+        async function loadTickets() {
+            try {
+                const response = await fetch(`${API_BASE}/tickets`);
+                allTickets = await response.json();
+                filterAndDisplayTickets();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error loading tickets. Make sure backend is running.', 'error');
+            }
+        }
+        
+        function filterAndDisplayTickets() {
+            const locationFilter = document.getElementById('locationFilter').value.toLowerCase();
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            
+            let filtered = allTickets.filter(ticket => {
+                const matchLocation = !locationFilter || ticket.location.toLowerCase().includes(locationFilter);
+                const matchPriority = !priorityFilter || ticket.priority === priorityFilter;
+                return matchLocation && matchPriority;
+            });
+            
+            displayTickets(filtered);
+        }
+        
+        function getPriorityClass(priority) {
+            const classes = {
+                'HIGH': 'priority-high',
+                'MEDIUM': 'priority-medium',
+                'LOW': 'priority-low'
+            };
+            return classes[priority] || '';
+        }
+        
+        function getStatusClass(status) {
+            const classes = {
+                'Open': 'status-open',
+                'In Progress': 'status-progress',
+                'Resolved': 'status-resolved'
+            };
+            return classes[status] || '';
+        }
+        
+        function displayTickets(tickets) {
+            const container = document.getElementById('tableContainer');
+            
+            if (tickets.length === 0) {
+                container.innerHTML = '<div class="loading">No tickets found</div>';
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Issue</th>
+                            <th>Location</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>SLA (Hours)</th>
+                            <th>Summary</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            tickets.forEach(ticket => {
+                html += `
+                    <tr>
+                        <td>${ticket.id}</td>
+                        <td>${ticket.issue}</td>
+                        <td>${ticket.location}</td>
+                        <td><span class="${getPriorityClass(ticket.priority)}">${ticket.priority}</span></td>
+                        <td><span class="${getStatusClass(ticket.status)}">${ticket.status}</span></td>
+                        <td>${ticket.sla_hours}</td>
+                        <td>${ticket.summary.substring(0, 50)}...</td>
+                        <td><button class="action-btn" onclick="openStatusModal(${ticket.id})">Change Status</button></td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function openStatusModal(ticketId) {
+            currentTicketId = ticketId;
+            document.getElementById('statusModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('statusModal').style.display = 'none';
+        }
+        
+        async function confirmStatusUpdate() {
+            const newStatus = document.getElementById('statusSelect').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/update-status/${currentTicketId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                if (response.ok) {
+                    showMessage('Ticket status updated successfully!', 'success');
+                    loadTickets();
+                    closeModal();
+                } else {
+                    showMessage('Error updating status', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error updating status', 'error');
+            }
+        }
+        
+        async function generateInsights() {
+            try {
+                const response = await fetch(`${API_BASE}/insights`);
+                const insights = await response.json();
+                displayInsights(insights);
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error generating insights', 'error');
+            }
+        }
+        
+        function displayInsights(insights) {
+            const statsContainer = document.getElementById('statsContainer');
+            const locationsHtml = Object.entries(insights.complaints_by_location)
+                .map(([loc, count]) => `<li>${loc}: ${count}</li>`)
+                .join('');
+            
+            statsContainer.innerHTML = `
+                <div class="stat-box">
+                    <h3>Total Tickets</h3>
+                    <div class="value">${insights.total_tickets}</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Resolved</h3>
+                    <div class="value">${insights.resolved_tickets}</div>
+                </div>
+                <div class="stat-box">
+                    <h3>High Priority</h3>
+                    <div class="value">${insights.high_priority_count}</div>
+                </div>
+            `;
+            
+            const insightsContainer = document.getElementById('insightsContainer');
+            insightsContainer.innerHTML = `
+                <div style="margin-top: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 4px;">
+                    <h3 style="margin-bottom: 15px;">📊 Detailed Insights</h3>
+                    <p><strong>Pending Tickets:</strong> ${insights.pending_tickets}</p>
+                    <p><strong>Most Common Issue:</strong> ${insights.most_common_issue}</p>
+                    <p style="margin-top: 15px;"><strong>Complaints by Location:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        ${locationsHtml}
+                    </ul>
+                </div>
+            `;
+            
+            showMessage('Insights generated!', 'success');
+        }
+        
+        // Load tickets on page load
+        window.addEventListener('load', loadTickets);
+    </script>
+</body>
+</html>

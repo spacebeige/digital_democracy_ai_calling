@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Grievance System - User</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 15px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .nav a {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .nav a.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        textarea, input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        button:hover {
+            background-color: #218838;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .ticket-details {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            border-left: 4px solid #28a745;
+            margin-top: 20px;
+        }
+        
+        .ticket-details h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .detail-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            margin-bottom: 10px;
+            gap: 20px;
+        }
+        
+        .detail-row strong {
+            color: #555;
+        }
+        
+        .detail-row span {
+            color: #333;
+        }
+        
+        .priority-high {
+            background-color: #fff3cd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ AI-Powered Public Grievance System</h1>
+            <p>User Complaint Portal</p>
+        </div>
+        
+        <div class="nav">
+            <a href="user.html" class="active">User</a>
+            <a href="officer.html">Officer Dashboard</a>
+            <a href="compliance.html">Compliance Dashboard</a>
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <div class="form-group">
+            <label for="complaint">Describe Your Complaint:</label>
+            <textarea id="complaint" placeholder="e.g., 'There is a flood in my area at Main Street near the market. Water is overflowing.'"></textarea>
+        </div>
+        
+        <button onclick="submitComplaint()">Submit Complaint</button>
+        
+        <div id="resultContainer"></div>
+    </div>
+    
+    <script>
+        const API_BASE = "http://localhost:8000";
+        
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('messageContainer');
+            const className = type === 'success' ? 'success-message' : 'error-message';
+            container.innerHTML = `<div class="${className}">${message}</div>`;
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+        
+        async function submitComplaint() {
+            const complaint = document.getElementById('complaint').value.trim();
+            
+            if (!complaint) {
+                showMessage('Please enter a complaint', 'error');
+                return;
+            }
+            
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = '<div class="loading">Creating ticket...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/create-ticket`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_input: complaint })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to create ticket');
+                }
+                
+                const ticket = await response.json();
+                displayTicket(ticket);
+                document.getElementById('complaint').value = '';
+                showMessage('Ticket created successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultContainer.innerHTML = '';
+                showMessage('Error creating ticket. Make sure backend is running.', 'error');
+            }
+        }
+        
+        function displayTicket(ticket) {
+            const resultContainer = document.getElementById('resultContainer');
+            const priorityClass = ticket.priority === 'HIGH' ? 'priority-high' : '';
+            
+            resultContainer.innerHTML = `
+                <div class="ticket-details">
+                    <h3>✓ Ticket Created Successfully</h3>
+                    <div class="detail-row">
+                        <strong>Ticket ID:</strong>
+                        <span>${ticket.id}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Issue:</strong>
+                        <span>${ticket.issue}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Location:</strong>
+                        <span>${ticket.location}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Priority:</strong>
+                        <span class="${priorityClass}">${ticket.priority}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>SLA (Hours):</strong>
+                        <span>${ticket.sla_hours}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Status:</strong>
+                        <span>${ticket.status}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Summary:</strong>
+                        <span>${ticket.summary}</span>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
