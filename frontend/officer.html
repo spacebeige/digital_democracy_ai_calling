@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Officer Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #eee; }
+        .high { background: #ffcccc; }
+        .filter { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Government Officer Dashboard</h2>
+    <div class="filter">
+        <label>Filter by Location: <input id="locationFilter" oninput="renderTable()"></label>
+        <button onclick="getInsights()">Generate Insights</button>
+    </div>
+    <table id="tickets">
+        <thead>
+            <tr>
+                <th>ID</th><th>Issue</th><th>Location</th><th>Priority</th><th>Status</th><th>SLA</th><th>Summary</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="insights"></div>
+    <script>
+        let allTickets = [];
+        async function fetchTickets() {
+            const res = await fetch('http://localhost:8000/tickets');
+            allTickets = await res.json();
+            renderTable();
+        }
+        function renderTable() {
+            const filter = document.getElementById('locationFilter').value.toLowerCase();
+            const tbody = document.querySelector('#tickets tbody');
+            tbody.innerHTML = '';
+            allTickets.filter(t => t.location.toLowerCase().includes(filter)).forEach(t => {
+                const row = document.createElement('tr');
+                if (t.priority === 'HIGH') row.className = 'high';
+                row.innerHTML = `
+                    <td>${t.id}</td><td>${t.issue}</td><td>${t.location}</td><td>${t.priority}</td>
+                    <td>${t.status}</td><td>${t.sla_hours}</td><td>${t.summary}</td>
+                    <td><button onclick="updateStatus(${t.id})">Change Status</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        async function updateStatus(id) {
+            await fetch(`http://localhost:8000/update-status/${id}`, { method: 'PUT' });
+            fetchTickets();
+        }
+        async function getInsights() {
+            const res = await fetch('http://localhost:8000/insights');
+            const data = await res.json();
+            document.getElementById('insights').innerHTML =
+                `<b>Complaints per location:</b> ${JSON.stringify(data.complaints_per_location)}<br>
+                 <b>Most common issue:</b> ${data.most_common_issue}<br>
+                 <b>High priority tickets:</b> ${data.high_priority_count}`;
+        }
+        fetchTickets();
+    </script>
+</body>
+</html>

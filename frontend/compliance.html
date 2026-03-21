@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compliance Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #eee; }
+        .breach { background: #ffe0e0; }
+        .stats { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h2>Legal Compliance Dashboard</h2>
+    <div class="stats" id="stats"></div>
+    <table id="tickets">
+        <thead>
+            <tr>
+                <th>ID</th><th>Issue</th><th>Location</th><th>Priority</th><th>Status</th><th>SLA</th><th>Time Passed</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        async function fetchTickets() {
+            const res = await fetch('http://localhost:8000/tickets');
+            const tickets = await res.json();
+            renderTable(tickets);
+            renderStats(tickets);
+        }
+        function renderTable(tickets) {
+            const tbody = document.querySelector('#tickets tbody');
+            tbody.innerHTML = '';
+            const now = new Date();
+            tickets.forEach(t => {
+                const created = new Date(t.created_at);
+                const hoursPassed = ((now - created) / 36e5).toFixed(1);
+                const breach = hoursPassed > t.sla_hours && t.status !== 'Resolved';
+                const row = document.createElement('tr');
+                if (breach) row.className = 'breach';
+                row.innerHTML = `
+                    <td>${t.id}</td><td>${t.issue}</td><td>${t.location}</td><td>${t.priority}</td>
+                    <td>${t.status}</td><td>${t.sla_hours}</td><td>${hoursPassed}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        function renderStats(tickets) {
+            const total = tickets.length;
+            const resolved = tickets.filter(t => t.status === 'Resolved').length;
+            const pending = total - resolved;
+            const breached = tickets.filter(t => ((new Date() - new Date(t.created_at)) / 36e5) > t.sla_hours && t.status !== 'Resolved').length;
+            document.getElementById('stats').innerHTML =
+                `<b>Total:</b> ${total} | <b>Resolved:</b> ${resolved} | <b>Pending:</b> ${pending} | <b>SLA Breached:</b> ${breached}`;
+        }
+        fetchTickets();
+    </script>
+</body>
+</html>

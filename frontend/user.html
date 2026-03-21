@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Grievance Submission</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; }
+        label, textarea, button { display: block; width: 100%; margin-bottom: 10px; }
+        .result { background: #f4f4f4; padding: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Submit a Complaint</h2>
+    <label for="complaint">Your Complaint:</label>
+    <textarea id="complaint" rows="4"></textarea>
+    <button onclick="submitComplaint()">Submit</button>
+    <div class="result" id="result"></div>
+    <script>
+        async function submitComplaint() {
+            const user_input = document.getElementById('complaint').value;
+            const res = await fetch('http://localhost:8000/create-ticket', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_input })
+            });
+            const data = await res.json();
+            document.getElementById('result').innerHTML =
+                `<b>Ticket ID:</b> ${data.id}<br>
+                 <b>Issue:</b> ${data.issue}<br>
+                 <b>Location:</b> ${data.location}<br>
+                 <b>Priority:</b> ${data.priority}<br>
+                 <b>SLA (hours):</b> ${data.sla_hours}`;
+        }
+    </script>
+</body>
+</html>
