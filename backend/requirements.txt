@@ -9,3 +9,6 @@ python-jose
 bcrypt
 requests
 python-multipart
+twilio
+qrcode
+pillow
