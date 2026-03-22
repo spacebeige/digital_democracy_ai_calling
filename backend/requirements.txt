@@ -5,7 +5,12 @@ faiss-cpu
 numpy
 sqlalchemy
 python-dotenv
-python-jose
+python-jose[cryptography]
 bcrypt
 requests
 python-multipart
+pydantic
+tenacity
+httpx
+aiosqlite
+pytest-asyncio
