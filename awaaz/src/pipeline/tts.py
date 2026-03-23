@@ -98,7 +98,7 @@ def is_native_script(text: str, lang: str) -> bool:
 INDIC_LANGS = {
     "mr", "hi", "bn", "ta", "te", "kn", "ml", "gu", "pa", "or",
     "as", "ne", "sa", "kok", "bho", "mai", "doi", "brx", "si",
-    "awa", "mwr", "bgc", "tulu", "konkani"  # Additional regional Indian languages
+    "awa", "mwr", "bgc", "tcy", "konkani", "ur"  # Added Tulu (tcy) and Urdu
 }
 ARABIC_SCRIPT_LANGS = {"ar", "ur", "fa", "ps", "sd", "ug"}
 CJK_LANGS           = {"zh", "ja", "ko"}
@@ -116,6 +116,12 @@ ELEVENLABS_VOICE_MAP = {
     "mr":   os.environ.get("ELEVENLABS_VOICE_MR",  "pFZP5JQG7iQjIQuC4Bku"),
     "hi":   os.environ.get("ELEVENLABS_VOICE_HI",  "pFZP5JQG7iQjIQuC4Bku"),
     "ar":   os.environ.get("ELEVENLABS_VOICE_AR",  "pFZP5JQG7iQjIQuC4Bku"),
+    "ta":   os.environ.get("ELEVENLABS_VOICE_TA",  "pFZP5JQG7iQjIQuC4Bku"),
+    "te":   os.environ.get("ELEVENLABS_VOICE_TE",  "pFZP5JQG7iQjIQuC4Bku"),
+    "kn":   os.environ.get("ELEVENLABS_VOICE_KN",  "pFZP5JQG7iQjIQuC4Bku"),
+    "ml":   os.environ.get("ELEVENLABS_VOICE_ML",  "pFZP5JQG7iQjIQuC4Bku"),
+    "tcy":  os.environ.get("ELEVENLABS_VOICE_TCY", "pFZP5JQG7iQjIQuC4Bku"),
+    "ur":   os.environ.get("ELEVENLABS_VOICE_UR",  "pFZP5JQG7iQjIQuC4Bku"),
 }
 ELEVENLABS_DEFAULT_VOICE = os.environ.get(
     "ELEVENLABS_VOICE_DEFAULT", "pFZP5JQG7iQjIQuC4Bku"
@@ -127,18 +133,25 @@ SARVAM_LANG_MAP = {
     "pa": "pa-IN", "or": "or-IN", "as": "as-IN", "en": "en-IN",
     "si": "si-LK", "kok": "kok-IN", "bho": "hi-IN", "mai": "hi-IN",
     "doi": "hi-IN", "awa": "hi-IN", "mwr": "hi-IN", "bgc": "hi-IN",
+    "tcy": "kn-IN",  # Tulu uses Kannada script in Sarvam
+    "ur": "ur-IN",   # Urdu support
     # Using closest language for regional variants
 }
 
 # ── Sarvam speaker settings - Ritu (female) voice for all languages
 # ENHANCED: Added expressiveness (pitch variation), pace, loudness for natural human-like speech
+# IMPROVED: Updated Tamil, Telugu, Kannada, Malayalam with better settings to enhance clarity and distinctiveness
 SARVAM_SPEAKER_MAP = {
     "hi":   {"speaker": "ritu", "pace": 0.95, "pitch": 0.0, "loudness": 1.5, "emotion": "natural"},  # Neutral tone
     "mr":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.25, "loudness": 1.6, "emotion": "expressive"}, # 0.90 pace but expressive for Marathi
-    "ta":   {"speaker": "ritu", "pace": 0.85, "pitch": 0.3, "loudness": 1.5, "emotion": "warm"},   # Warm & engaging
-    "te":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.2, "loudness": 1.5, "emotion": "natural"},# Natural flow
-    "kn":   {"speaker": "ritu", "pace": 0.75, "pitch": 0.1, "loudness": 1.5, "emotion": "calm"},   # Slower, calm - Kannada needs clarity
-    "ml":   {"speaker": "ritu", "pace": 0.95, "pitch": 0.15, "loudness": 1.5, "emotion": "warm"},  # Melodic language
+    # IMPROVED: Tamil - enhanced for better vowel clarity and melodic flow
+    "ta":   {"speaker": "ritu", "pace": 0.80, "pitch": 0.35, "loudness": 1.6, "emotion": "warm"},   # Slower pace for Tamil distinctiveness
+    # IMPROVED: Telugu - enhanced for better consonant clarity
+    "te":   {"speaker": "ritu", "pace": 0.85, "pitch": 0.25, "loudness": 1.6, "emotion": "natural"},# Natural flow with improved clarity
+    # IMPROVED: Kannada - enhanced for better pronunciation
+    "kn":   {"speaker": "ritu", "pace": 0.78, "pitch": 0.15, "loudness": 1.6, "emotion": "calm"},   # Slower, clear - Kannada needs careful pronunciation
+    # IMPROVED: Malayalam - enhanced for melodic language characteristics
+    "ml":   {"speaker": "ritu", "pace": 0.92, "pitch": 0.20, "loudness": 1.6, "emotion": "warm"},  # Melodic, slightly expressive
     "bn":   {"speaker": "ritu", "pace": 0.92, "pitch": 0.1, "loudness": 1.5, "emotion": "natural"},# Neutral
     "gu":   {"speaker": "ritu", "pace": 1.0, "pitch": 0.35, "loudness": 1.6, "emotion": "expressive"},  # Expressive & lively
     "pa":   {"speaker": "ritu", "pace": 1.0, "pitch": 0.25, "loudness": 1.6, "emotion": "energetic"},   # Energetic tone
@@ -153,6 +166,10 @@ SARVAM_SPEAKER_MAP = {
     "awa":  {"speaker": "ritu", "pace": 0.92, "pitch": 0.25, "loudness": 1.5, "emotion": "warm"},       # Warm
     "mwr":  {"speaker": "ritu", "pace": 0.95, "pitch": 0.2, "loudness": 1.5, "emotion": "natural"},     # Natural
     "bgc":  {"speaker": "ritu", "pace": 1.0, "pitch": 0.3, "loudness": 1.6, "emotion": "energetic"},    # Energetic
+    # NEW: Tulu - similar to Kannada but with slight adjustments for clarity
+    "tcy":  {"speaker": "ritu", "pace": 0.80, "pitch": 0.18, "loudness": 1.6, "emotion": "calm"},  # Tulu - clear, calm delivery similar to Kannada
+    # IMPROVED: Urdu - with Arabic script considerations
+    "ur":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.20, "loudness": 1.6, "emotion": "warm"},       # Warm, expressive for Urdu
 }
 
 SARVAM_DEFAULT_SPEAKER_CONFIG = {
@@ -172,6 +189,8 @@ GROQ_VOICE_MAP = {
     "te":   "playai-tts",
     "kn":   "playai-tts",
     "ml":   "playai-tts",
+    "tcy":  "playai-tts",  # Tulu - use default
+    "ur":   "playai-tts-arabic",  # Urdu - close to Arabic variant
 }
 GROQ_DEFAULT_VOICE = "playai-tts"
 

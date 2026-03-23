@@ -20,10 +20,18 @@ class TokenLevelLangDetector:
         "mr": {"native": ["आहे", "ला", "मुंबई", "महाराष्ट्र", "साहय", "नाही", "हा", "आणि", "पण", "मी", "तू", "काय", "कुठे", "कसा", "कसे", "खूप", "आपण", "माझा", "माझी", "माझे", "सांग", "करा", "झालं", "होता", "होती", "होते", "हे", "ते", "का", "तुमचे", "आमचे", "करून", "द्या", "येतो", "येते", "विचार", "मध्ये", "चा", "ची", "चे"], "latin": ["ahe", "la", "mumbai", "maharashtra", "sahy", "nahi", "ha", "aani", "ani", "pan", "mi", "tu", "kay", "kuthe", "kasa", "kase", "khup", "aapan", "mazha", "mazi", "maze", "sang", "kara", "zala", "hota", "hoti", "hote", "he", "te", "ka", "tumche", "aamche", "karun", "dya", "yeto", "yete", "vichar", "madhye", "cha", "chi", "che", "aahe", "nahin", "proverb"]},
         "gu": {"native": ["છે", "ને", "અમદાવાદ", "ગુજરાત", "મદદ", "નહીં", "આ", "અને", "પણ", "હું", "તમે", "શું", "ક્યાં", "કેવી", "કેમ", "મારું", "મારો", "મારી", "કરવું", "થયું", "હતો", "હતી", "હતું"], "latin": ["che", "ne", "ahmedabad", "gujaraat", "madad", "nahi", "aa", "kem", "cho", "chho", "majama", "su", "kya", "pan", "kem cho"]},
         "pa": {"native": ["ਹੈ", "ਨੂੰ", "ਅੰਮ੍ਰਿਤਸਰ", "ਪੰਜਾਬ", "ਮਦਦ", "ਨਹੀਂ", "ਇਹ", "ਅਤੇ", "ਪਰ", "ਮੈਂ", "ਤੁਸੀਂ", "ਕੀ", "ਕਿੱਥੇ", "ਕਿਵੇਂ", "ਮੇਰਾ", "ਮੇਰੀ", "ਕਰਨਾ", "ਹੋਇਆ", "ਸੀ", "ਸਨ", "ਹਾਂ", "ਹਨ", "ਕਿਉਂ"], "latin": ["hai", "noon", "amritsar", "punjab", "madad", "nahi", "eh"]},
-        "ta": {"native": ["உள்ளது", "க்கு", "சென்னை", "தமிழ்நாடு", "உதவி", "இல்லை", "இது", "மற்றும்", "ஆனால்", "நான்", "நீங்கள்", "என்ன", "எங்கே", "எப்படி", "ஏன்", "என்", "எனது", "செய்", "ஆனது", "இருந்தது", "ஆம்"], "latin": ["ullathu", "kku", "chennai", "tamilnadu", "udhavi", "illai", "ithu"]},
-        "te": {"native": ["ఉంది", "కు", "హైదరాబాద్", "తెలంగాణ", "సహాయ", "లేదు", "ఇది", "మరియు", "కానీ", "నేను", "మీరు", "ఏమిటి", "ఎక్కడ", "ఎలా", "ఎందుకు", "నా", "నాది", "చేయి", "అయింది", "ఉండేది", "అవును"], "latin": ["undi", "ku", "hyderabad", "telangana", "sahay", "ledu", "idi"]},
-        "kn": {"native": ["ಇದೆ", "ಗೆ", "ಬೆಂಗಳೂರು", "ಕರ್ನಾಟಕ", "ಸಹಾಯ", "ಇಲ್ಲ", "ಇದು", "ಮತ್ತು", "ಆದರೆ", "ನಾನು", "ನೀವು", "ಏನು", "ಎಲ್ಲಿ", "ಹೇಗೆ", "ಯಾಕೆ", "ನನ್ನ", "ಮಾಡು", "ಆಯಿತು", "ಇತ್ತು", "ಹೌದು"], "latin": ["ide", "ge", "bangalore", "karnataka", "sahay", "illa", "idu"]},
-        "ml": {"native": ["ഉണ്ടാകുന്നു", "ക്കു", "കോച്ചി", "കേരളം", "സഹായം", "ഇല്ല", "ഇത്", "കൂടാതെ", "പക്ഷേ", "ഞാൻ", "നിങ്ങൾ", "എന്ത്", "എവിടെ", "എങ്ങനെ", "എന്തുകൊണ്ട്", "എന്റെ", "ചെയ്യുക", "ആയി", "ഉണ്ടായിരുന്നു", "അതെ", "അല്ല"], "latin": ["undakunnu", "kku", "kochi", "kerala", "sahayam", "illa", "ith"]},
+        # IMPROVED: Enhanced Tamil detection with more unique markers
+        "ta": {"native": ["உள்ளது", "க்கு", "சென்னை", "தமிழ்நாடு", "உதவி", "இல்லை", "இது", "மற்றும்", "ஆனால்", "நான்", "நீங்கள்", "என்ன", "எங்கே", "எப்படி", "ஏன்", "என்", "எனது", "செய்", "ஆனது", "இருந்தது", "ஆம்", "ற்", "ய்", "ள்", "ணை", "ணी", "ணும்", "ணிலை"], "latin": ["ullathu", "kku", "chennai", "tamilnadu", "udhavi", "illai", "ithu"]},
+        # IMPROVED: Enhanced Telugu detection with more unique markers
+        "te": {"native": ["ఉంది", "కు", "హైదరాబాద్", "తెలంగాణ", "సహాయ", "లేదు", "ఇది", "మరియు", "కానీ", "నేను", "మీరు", "ఏమిటి", "ఎక్కడ", "ఎలా", "ఎందుకు", "నా", "నాది", "చేయి", "అయింది", "ఉండేది", "అవును", "ే్", "ై", "ూ", "ృ", "ాలు"], "latin": ["undi", "ku", "hyderabad", "telangana", "sahay", "ledu", "idi"]},
+        # IMPROVED: Enhanced Kannada detection with more unique markers
+        "kn": {"native": ["ಇದೆ", "ಗೆ", "ಬೆಂಗಳೂರು", "ಕರ್ನಾಟಕ", "ಸಹಾಯ", "ಇಲ್ಲ", "ಇದು", "ಮತ್ತು", "ಆದರೆ", "ನಾನು", "ನೀವು", "ಏನು", "ಎಲ್ಲಿ", "ಹೇಗೆ", "ಯಾಕೆ", "ನನ್ನ", "ಮಾಡು", "ಆಯಿತು", "ಇತ್ತು", "ಹೌದು", "್ಯ", "ೆ", "ಣ", "ೃ", "ೀ"], "latin": ["ide", "ge", "bangalore", "karnataka", "sahay", "illa", "idu"]},
+        # IMPROVED: Enhanced Malayalam detection with distinctive markers
+        "ml": {"native": ["ഉണ്ടാകുന്നു", "ക്കു", "കോച്ചി", "കേരളം", "സഹായം", "ഇല്ല", "ഇത്", "കൂടാതെ", "പക്ഷേ", "ഞാൻ", "നിങ്ങൾ", "എന്ത്", "എവിടെ", "എങ്ങനെ", "എന്തുകൊണ്ട്", "എന്റെ", "ചെയ്യുക", "ആയി", "ഉണ്ടായിരുന്നു", "അതെ", "അല്ല", "്ര", "്റ", "െ", "ോ", "ൌ"], "latin": ["undakunnu", "kku", "kochi", "kerala", "sahayam", "illa", "ith"]},
+        # NEW: Tulu (tcy) detection markers
+        "tcy": {"native": ["ಇದೆ", "ಗೆ", "ಅಪೋ", "ಮಂಗಳೂರು", "ತುಳು", "ಎಡೂ", "ಈಡೀ", "ಬಾರು", "ಚಿಕ್ಕ", "ಕೆಲಸ", "ಕೊಡು", "ತಾರಿ", "ನೋಕು", "ಶರಿ"], "latin": ["ide", "ge", "appo", "mangalore", "tulu", "edu", "baru"]},
+        # IMPROVED: Enhanced Urdu detection with Arabic script markers
+        "ur": {"native": ["ہے", "کو", "لاہور", "پاکستان", "مدد", "نہیں", "یہ", "اور", "لیکن", "میں", "تم", "آپ", "کیا", "کہاں", "کیسے", "کیوں", "میرا", "کرو", "ہوا", "تھا", "ہاں", "ھ", "ی", "ٹ", "ں", "گ"], "latin": ["hai", "ko", "lahore", "pakistan", "madad", "nahi", "ye"]},
         "bn": {"native": ["আছে", "কে", "ঢাকা", "বাংলাদেশ", "সাহায্য", "নেই", "এটি", "এবং", "কিন্তু", "আমি", "তুমি", "আপনি", "কী", "কোথায়", "কেমন", "কেন", "আমার", "করুন", "হয়েছে", "ছিল", "হ্যাঁ", "না"], "latin": ["ache", "ke", "dhaka", "bangladesh", "sahajjya", "nei", "eti"]},
         "or": {"native": ["ଅଛି", "କୁ", "ଭୁବନେଶ୍ୱର", "ଓଡିଶା", "ସାହାଯ୍ୟ", "ନାହିଁ", "ଏହା", "ଏବଂ", "କିନ୍ତୁ", "ମୁଁ", "ତୁମେ", "ଆପଣ", "କଣ", "କେଉଁଠାରେ", "କିପରି", "କାହିଁକି", "ମୋର", "କରନ୍ତୁ", "ହେଲା", "ଥିଲା", "ହଁ", "ନା"], "latin": ["achi", "ku", "bhubaneswar", "odisha", "sahajjya", "nahi", "eha"]},
         "sa": {"native": ["अस्ति", "कस्य", "नमस्ते", "संस्कृतम्", "सहायता", "नास्ति", "एतत्", "च", "किन्तु", "अहम्", "त्वम्", "भवान्", "किम्", "कुत्र", "कथम्", "किमर्थम्", "मम", "करोतु", "आसीत्", "आम", "न"], "latin": ["asti", "kasya", "namaste", "sanskrit", "sahayata", "nasti", "etat"]},
@@ -95,20 +103,22 @@ class TokenLevelLangDetector:
 
     def _detect_by_script(self, text: str) -> Optional[str]:
         """Detect language primarily by Unicode script ranges (PRIMARY method).
-        For MIXED scripts, returns the DOMINANT script (most char count)."""
+        For MIXED scripts, returns the DOMINANT script (most char count).
+        IMPROVED: Better differentiation for Tamil, Telugu, Kannada, Malayalam, Tulu."""
         if not text:
             return None
 
-        # IMPROVED: Count characters in each script to handle mixed scripts
-        # When text has multiple scripts, we return the one with MOST characters
+        # IMPROVED: More granular script detection for South Indian languages
+        # Each script has a unique range and distinctive combination of characters
         script_scores = {
+            "ta": (0x0B80, 0x0BFF, "Tamil"),              # Tamil script (distinct vowels: ு, ி, ா)
+            "te": (0x0C00, 0x0C7F, "Telugu"),             # Telugu script (distinct: ె, ీ, ూ, ీ)
+            "kn": (0x0C80, 0x0CFF, "Kannada"),            # Kannada script (distinct: ೆ, ೇ, ೀ)
+            "ml": (0x0D00, 0x0D7F, "Malayalam"),          # Malayalam script (distinct: െ, േ, ോ, ൌ)
+            "tcy": (0x0C80, 0x0CFF, "Telugu/Kannada*"),   # Tulu uses Kannada script but needs special handling
             "pa": (0x0A00, 0x0A7F, "Gurmukhi (Punjabi)"),
             "gu": (0x0A80, 0x0AFF, "Gujarati"),
             "or": (0x0B00, 0x0B7F, "Oriya/Odia"),
-            "ta": (0x0B80, 0x0BFF, "Tamil"),
-            "te": (0x0C00, 0x0C7F, "Telugu"),
-            "kn": (0x0C80, 0x0CFF, "Kannada"),
-            "ml": (0x0D00, 0x0D7F, "Malayalam"),
             "bn": (0x0980, 0x09FF, "Bengali"),
             "sat": (0x1950, 0x197F, "Ol Chiki (Santali)"),
             "ur_ks": (0x0600, 0x06FF, "Arabic/Urdu/Kashmiri"),
@@ -135,10 +145,48 @@ class TokenLevelLangDetector:
             if any(word in text for word in ["سوہنے", "کیتا", "نوں", "وچ", "دا", "دی", "دے", "ساتھ", "حال", "سریع"]):
                 logger.debug(f"[SCRIPT-DETECT] Shahmukhi markers found, classifying as Punjabi (pa)")
                 return "pa"
-            # Disambiguate between Urdu and Kashmiri
-            if any(word in text for word in ["چھُ", "چھِ", "چُھو", "گژھ", "یہِ", "کینٛہہ", "أكۍ"]):
+            # Disambiguate between Urdu and Kashmiri using specific markers
+            urdu_markers = ["ہے", "کو", "لاہور", "پاکستان", "ھ", "ی", "ٹ", "ں", "گ"]
+            kashmiri_markers = ["چھُ", "چھِ", "چُھو", "گژھ", "یہِ", "کینٛہہ", "أكۍ"]
+            urdu_count = sum(1 for marker in urdu_markers if marker in text)
+            kashmiri_count = sum(1 for marker in kashmiri_markers if marker in text)
+            if kashmiri_count > urdu_count:
                 return "ks"
             return "ur"
+        elif dominant_lang == "tcy":
+            # IMPROVED: Distinguish Tulu from Kannada using specific markers
+            tulu_markers = ["ಅಪೋ", "ಮಂಗಳೂರು", "ತುಳು", "ಎಡೂ", "ನೋಕು", "ತಾರಿ", "ಕೊಡು", "ಬಾರು", "ಶರಿ", "ಕೆಲಸ"]
+            kannada_markers = ["ಬೆಂಗಳೂರು", "ಕರ್ನಾಟಕ", "ಹೌದು", "ನಾವು", "ಇಂದು", "ಈ"]
+            tulu_count = sum(1 for marker in tulu_markers if marker in text)
+            kannada_count = sum(1 for marker in kannada_markers if marker in text)
+            if tulu_count > kannada_count:
+                logger.debug(f"[SCRIPT-DETECT] Tulu markers detected, classifying as Tulu (tcy)")
+                return "tcy"
+            return "kn"  # Default to Kannada if no clear distinction
+        elif dominant_lang == "ta":
+            # Tamil has distinctive vowel markers - double check
+            tamil_markers = ["ற்", "ய்", "ள்", "ணை", "ணी", "ணum"]
+            if any(marker in text for marker in tamil_markers):
+                logger.debug(f"[SCRIPT-DETECT] Tamil-specific markers found")
+                return "ta"
+        elif dominant_lang == "te":
+            # Telugu has distinctive vowel markers - double check
+            telugu_markers = ["ే్", "ై", "ూ", "ృ", "ాలు"]
+            if any(marker in text for marker in telugu_markers):
+                logger.debug(f"[SCRIPT-DETECT] Telugu-specific markers found")
+                return "te"
+        elif dominant_lang == "ml":
+            # Malayalam has distinctive vowel markers - double check  
+            malayalam_markers = ["്ര", "്റ", "െ", "ോ", "ൌ"]
+            if any(marker in text for marker in malayalam_markers):
+                logger.debug(f"[SCRIPT-DETECT] Malayalam-specific markers found")
+                return "ml"
+        elif dominant_lang == "kn":
+            # Kannada distinctive markers
+            kannada_markers = ["್ಯ", "ೆ", "ಣ", "ೃ", "ೀ"]
+            if any(marker in text for marker in kannada_markers):
+                logger.debug(f"[SCRIPT-DETECT] Kannada-specific markers found")
+                return "kn"
         elif dominant_lang == "hi_devanagari":
             # Disambiguate Devanagari variants (Hindi, Marathi, Sanskrit, etc.)
             return self._detect_devanagari_variant(text)

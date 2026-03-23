@@ -251,11 +251,12 @@ class GroqWhisperSTT(BaseSTTProvider):
             "bn": "Bengali", "pa": "Punjabi", "or": "Odia", "as": "Assamese",
             "doi": "Dogri", "mwr": "Marwadi", "pah": "Pahadi", "kas": "Kashmiri",
             "ur": "Urdu", "ne": "Nepali", "sa": "Sanskrit", "mai": "Maithili",
-            "sd": "Sindhi", "bho": "Bhojpuri", "kok": "Konkani", "bgc": "Haryanvi"
+            "sd": "Sindhi", "bho": "Bhojpuri", "kok": "Konkani", "bgc": "Haryanvi",
+            "tcy": "Tulu"  # Added Tulu support
         }
 
         # Optional: Add indian languages focus via prompt
-        base_prompt = 'Indian languages: Hindi, Marathi, Gujarati, Kannada, Konkani, Telugu, Tamil, Odia, Punjabi, Marwadi, Haryanvi, Assamese, Dogri, Pahadi, Bengali, Malayalam, Bhojpuri'
+        base_prompt = 'Indian languages: Hindi, Marathi, Gujarati, Kannada, Konkani, Telugu, Tamil, Odia, Punjabi, Marwadi, Haryanvi, Assamese, Dogri, Pahadi, Bengali, Malayalam, Bhojpuri, Tulu, Urdu'
         if language and language not in ['auto', '']:
             target_lang_name = whisper_lang_map_reverse.get(language, language.title())
             if target_lang_name not in base_prompt:
@@ -292,7 +293,8 @@ class GroqWhisperSTT(BaseSTTProvider):
                     "tamil": "ta", "telugu": "te", "kannada": "kn", "malayalam": "ml",
                     "bengali": "bn", "punjabi": "pa", "odia": "or", "assamese": "as", "dogri": "doi", "marwadi": "mwr", "pahadi": "pah", "kashmiri": "kas",
                     "urdu": "ur", "nepali": "ne", "sanskrit": "sa", "maithili": "mai",
-                    "sindhi": "sd", "bhojpuri": "bho", "konkani": "kok", "haryanvi": "bgc"
+                    "sindhi": "sd", "bhojpuri": "bho", "konkani": "kok", "haryanvi": "bgc",
+                    "tulu": "tcy"  # Added Tulu support
                 }
                 detected_lang = whisper_lang_map.get(whisper_lang, whisper_lang) or "hi"
 
