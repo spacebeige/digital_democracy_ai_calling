@@ -4,6 +4,7 @@ redis
 faiss-cpu
 numpy
 sqlalchemy
+psycopg[binary]
 python-dotenv
 python-jose
 bcrypt
