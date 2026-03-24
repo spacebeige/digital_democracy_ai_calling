@@ -2,13 +2,14 @@
 FastAPI Integration for SmartRouter — Layer 3 API Endpoints
 
 Endpoints:
-    POST /v1/router/route-call       — Route a single voice input
+    POST /v1/router/route-call       — Route a single voice input (simplified)
     POST /v1/router/route-call/batch — Batch route (max 100)
     GET  /v1/router/health           — Health check
 """
 
 from datetime import datetime
 from typing import Optional
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
 import logging
@@ -17,6 +18,12 @@ from app.services.smart_router import (
     SmartRouter,
     VoiceInput,
     RoutingResult,
+    DEPT_MAPPING,
+)
+from app.schemas import (
+    SimpleRouterRequest,
+    SimpleRouterResponse,
+    DepartmentRoutingInfo,
 )
 from app.config import SARVAM_API_KEY
 
@@ -42,18 +49,89 @@ def get_router() -> SmartRouter:
     return _router_instance
 
 
-@router.post("/route-call", response_model=RoutingResult)
-async def route_call(
-    voice_input: VoiceInput,
-    smart_router: SmartRouter = Depends(get_router),
-) -> RoutingResult:
-    """
-    Route an incoming voice call through the 3-stage pipeline.
+def _routing_result_to_simple_response(
+    result: RoutingResult,
+    transcript: str,
+    language: str,
+    intent: str,
+    issue_category: str,
+) -> SimpleRouterResponse:
+    """Convert RoutingResult to user-friendly SimpleRouterResponse."""
+    dept_info = DEPT_MAPPING.get(result.routing_data.dept_id, {})
+    dept_name = dept_info.get("name", "Unknown Department")
+    
+    return SimpleRouterResponse(
+        session_id=str(result.session_id),
+        transcript=transcript,
+        language=language,
+        intent=intent,
+        issue_category=issue_category,
+        department=DepartmentRoutingInfo(
+            dept_id=result.routing_data.dept_id,
+            dept_name=dept_name,
+            priority=result.routing_data.priority,
+        ),
+        urgency=result.routing_data.priority,
+        is_emergency=result.is_emergency,
+        action=result.action.value,
+        summary=result.routing_data.summary,
+        confidence=result.confidence,
+        processing_time_ms=result.processing_time_ms,
+    )
 
-    Accepts the raw STT output and returns structured routing intelligence.
+
+@router.post("/route-call", response_model=SimpleRouterResponse)
+async def route_call(
+    request: SimpleRouterRequest,
+    smart_router: SmartRouter = Depends(get_router),
+) -> SimpleRouterResponse:
+    """
+    Route an incoming voice call through the intelligent NLP + routing pipeline.
+    
+    **What you provide:**
+    - `session_id`: Unique identifier for this call (optional, auto-generated if not provided)
+    - `transcript`: User's complaint or query (the only manual input)
+    
+    **What the system auto-detects:**
+    - Language (Hindi, English, Hinglish, Tamil, etc.)
+    - Intent (NEW_COMPLAINT, STATUS_QUERY, FEEDBACK, etc.)
+    - Issue category (Water, Electricity, Road, Waste, Health, Education)
+    - Department routing (PWD, Water Board, Health Ministry, etc.)
+    - Urgency level (1-5)
+    - Emergency detection
+    
+    **Returns:**
+    - Detected language and intent
+    - Automatically routed department
+    - Action to take (CREATE_TICKET, TRANSFER_HUMAN, etc.)
+    - Processing summary
     """
     try:
-        return await smart_router.process(voice_input)
+        # Generate session_id if not provided
+        session_id = request.session_id if request.session_id != "auto" else str(uuid4())
+        
+        # Convert to VoiceInput (internally only has session_id and transcript)
+        voice_input = VoiceInput(
+            session_id=session_id,  # Can be string or UUID
+            transcript=request.transcript,
+        )
+        
+        # Process through NLP + routing
+        routing_result = await smart_router.process(voice_input)
+        
+        # All auto-detected information is now in routing_result
+        language = routing_result.language
+        intent = routing_result.intent
+        issue_category = routing_result.issue_category
+        
+        # Convert to SimpleRouterResponse
+        return _routing_result_to_simple_response(
+            routing_result,
+            request.transcript,
+            language,
+            intent,
+            issue_category,
+        )
 
     except ValueError as exc:
         logger.warning("Validation error: %s", exc)

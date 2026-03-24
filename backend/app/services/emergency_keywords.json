@@ -1,0 +1,127 @@
+{
+  "emergency_keywords": {
+    "fire_related": [
+      "fire", "aag", "agni", "burning", "jalna", "flame", "blaze", "inferno"
+    ],
+    "medical_emergency": [
+      "ambulance", "ambulans", "hospital", "doctor", "heart-attack", "dil-ka-dora",
+      "chest-pain", "breathless", "saans", "poison", "zeher", "faint", "seizure",
+      "allergy", "shock", "stroke", "paralysis", "coma", "unconscious", "behosh",
+      "breathing-difficulty", "oxygen", "CPR", "resuscitation", "critical", "severe",
+      "dying", "death", "maut", "wound", "injury", "chot", "bleeding", "khoon",
+      "fracture", "haddi", "broken-bone", "internal-bleeding", "hemorrhage",
+      "infection", "sepsis", "fever-high", "heat-stroke", "hypothermia",
+      "allergic-reaction", "anaphylaxis", "diabetes-emergency", "seizure-disorder"
+    ],
+    "police_law": [
+      "police", "thana", "crime", "chori", "robbery", "loot", "dakaiti",
+      "rape", "assault", "attack", "hamla", "violence", "hinsa", "kidnap",
+      "abduction", "murder", "homicide", "manslaughter", "stealing", "theft",
+      "burglary", "mugging", "gangs", "gunda", "fighting", "maar-peet",
+      "weapon", "talwar", "gun", "goli", "knife", "chaku", "sword", "dao",
+      "bomb", "blast", "explosion", "threat", "dhamki", "ransom", "extortion",
+      "abuse", "harassment", "molestation", "molest", "stalking", "eve-teasing",
+      "child-abuse", "domestic-violence", "dowry-abuse", "forcing"
+    ],
+    "accident_related": [
+      "accident", "durghatna", "collision", "crash", "thokna", "vehicle-accident",
+      "car-crash", "bike-crash", "truck-accident", "train-accident", "bus-accident",
+      "hit-and-run", "stuck", "phas-gaya", "trapped", "locked", "jammed",
+      "derailment", "rollover", "capsizing", "sinking", "wreck"
+    ],
+    "natural_disaster": [
+      "earthquake", "bhukamp", "tsunami", "flood", "baadh", "cyclone", "toofan",
+      "landslide", "girna", "collapse", "collapse-building", "building-fall",
+      "monsoon-disaster", "hailstorm", "tornado", "whirlwind", "avalanche"
+    ],
+    "electrical_hazard": [
+      "electrocution", "bijli-ka-jhatka", "electric-shock", "short-circuit",
+      "power-surge", "electrical-fire", "sparking", "high-voltage", "overload",
+      "current", "bijli", "transformer-burst", "substation-fire"
+    ],
+    "chemical_hazard": [
+      "chemical", "gas-leak", "hazmat", "toxic", "poisoning", "carbon-monoxide",
+      "chlorine-leak", "ammonia-leak", "sulfur-leak", "methane-leak", "acid-spill",
+      "caustic", "radiation", "biohazard", "biological-threat"
+    ],
+    "drowning_suffocation": [
+      "drowning", "doobna", "suffocation", "choking", "breathlessness",
+      "asphyxia", "strangulation", "hanging", "carbon-monoxide-poisoning",
+      "oxygen-deprivation", "water-logging", "submerged"
+    ],
+    "snake_animal": [
+      "snake", "saanp", "venomous", "cobra", "viper", "krait", "scorpion",
+      "wild-animal", "beast", "attack", "animal-bite", "mauling", "goring"
+    ],
+    "mental_health_crisis": [
+      "suicide", "suicide-attempt", "hanging", "overdose", "self-harm", "self-injury",
+      "depression-crisis", "panic-attack", "psychiatric-emergency", "mental-breakdown",
+      "psychotic-episode", "person-in-crisis", "behavioral-crisis", "suicidal-ideation"
+    ],
+    "common_response_words": [
+      "emergency", "urgent", "urgently", "turant", "jaldi", "immediately",
+      "ASAP", "right-now", "right-away", "instantly", "directly", "without-delay",
+      "SOS", "mayday", "help", "sahayata", "madad", "bachao", "save-me", "help-me",
+      "calling", "dialing", "emergency-call", "emergency-response", "first-responder",
+      "critical", "severe", "serious", "grave", "danger", "khatra", "risk", "threat",
+      "life-threatening", "fatal", "deadly", "high-priority", "top-priority"
+    ]
+  },
+  "silence_fillers": {
+    "english": [
+      "hello", "hi", "hmm", "huh", "uh", "um", "uhhh", "umm", "ah", "eh",
+      "yeah", "yep", "nope", "ok", "okay", "umkay", "alright", "right",
+      "pause", "repeat", "sorry", "excuse-me", "pardon", "what", "huh",
+      "hallo", "hey", "yo", "sup", "would", "could", "should", "may",
+      "hang-on", "hold-on", "wait", "just-a-moment", "one-second", "one-minute"
+    ],
+    "hindi": [
+      "ji", "haan", "na", "bas", "theek", "thik-hai", "kuch-nahi", "koi-baat-nahi",
+      "bilkul", "samajh-gaya", "samajh-gaye", "theek-achi", "bilkul-achi",
+      "turant", "socha-nahi", "ek-minute", "ek-pal", "hamne-bhool", "samajhiye",
+      "acha", "arre", "accha", "suniye", "boliye", "sunbo", "dekho"
+    ],
+    "tamil": [
+      "ama", "ama-da", "aama", "sollunga", "sollida", "vikalpa", "vikalpp",
+      "oru-nimidam", "irunga", "polam", "maari"
+    ],
+    "tamil_rest": [
+      "ama", "ama-da", "aama", "sollunga", "sollida", "polam"
+    ]
+  },
+  "abuse_toxicity": {
+    "hindi": [
+      "bakwas", "bc", "bkl", "chutiya", "madarchod", "benchod", "bhenchod",
+      "gaandu", "harami", "kutta", "saala", "kutiya", "randi", "jhatu",
+      "gandu", "goor", "lavda", "bhikari", "sala", "teri", "tere",
+      "badmash", "bewkoof", "besharam", "jhagri", "jhunjhuna", "ladaki",
+      "chakka", "hijra", "randighor", "randi-ana", "paimano", "fateh",
+      "bewkuff", "bewakoofana", "bewkuffiana", "badshah", "balyakari"
+    ],
+    "english": [
+      "stupid", "idiot", "moron", "asshole", "asshat", "fuck", "shit",
+      "damn", "dammit", "bullshit", "crap", "bastard", "jerk", "prick",
+      "dickhead", "motherfucker", "douchebag", "twat", "wanker", "shithead",
+      "retard", "crazy", "insane", "psycho", "loser", "slut", "whore",
+      "bitch", "hoe", "witch", "devil", "demon", "beast", "animal",
+      "scum", "filth", "dirt", "trash", "garbage", "waste", "useless"
+    ],
+    "universal": [
+      "kill", "die", "death-threat", "bomb-threat", "attack-threat",
+      "violence-threat", "harm-threat", "rape-threat", "murder-threat"
+    ]
+  },
+  "prank_indicators": {
+    "english": [
+      "lol", "haha", "joke", "prank", "fooled-you", "just-kidding", "jk",
+      "funny", "hilarious", "rofl", "lmao", "joking", "made-you-laugh"
+    ],
+    "hindi": [
+      "bakwas", "chal-hat", "mazaak", "hassi", "jhooth", "fake", "bakwas-bol",
+      "toh-just-joking", "sirf-hassi", "haha-ji"
+    ],
+    "mixed": [
+      "lol", "haha", "hehe", "xD", "rofl"
+    ]
+  }
+}

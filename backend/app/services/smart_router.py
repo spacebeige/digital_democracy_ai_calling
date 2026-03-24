@@ -5,6 +5,7 @@ A decoupled, production-grade, async pipeline that transforms raw STT
 transcriptions into structured Actionable Intelligence.
 
 Architecture:
+    Stage 0  →  NLP Classification (Language, intent, edge cases via nlp_classifier)
     Stage A  →  High-Speed Interceptor (Regex emergency + noise filter)
     Stage B  →  Semantic Analysis     (Sarvam-1 LLM, forced JSON, tenacity retry)
     Stage C  →  Deterministic Mapping  (DEPT_MAPPING dict + mock SQLite FTS5)
@@ -19,7 +20,7 @@ import re
 import sqlite3
 import time
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 from uuid import UUID
 
 import httpx
@@ -29,6 +30,13 @@ from tenacity import (
     retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
+)
+
+from app.config import SARVAM_API_KEY, SARVAM_API_ENDPOINT, USE_MOCK_NLP
+from app.services.nlp_classifier import (
+    NLPClassifier,
+    NLPInput,
+    EdgeCaseType,
 )
 
 logger = logging.getLogger(__name__)
@@ -72,23 +80,12 @@ class ActionType(str, Enum):
 
 
 class VoiceInput(BaseModel):
-    """Input schema — what arrives from Layer 2 (STT)."""
-    session_id: UUID = Field(..., description="Unique session identifier")
-    caller_metadata: Dict[str, Any] = Field(
-        default_factory=dict,
-        description="Includes phone number, location, etc.",
-    )
-    transcript: str = Field(..., description="Raw transcript from STT")
-    language_code: str = Field(
-        default="hi-IN",
-        description="BCP-47 language code, e.g. 'hi-IN', 'en-IN'",
-    )
-    stt_confidence: float = Field(
-        default=1.0,
-        ge=0.0,
-        le=1.0,
-        description="STT engine confidence score",
-    )
+    """
+    Simplified input schema — user only provides the transcript.
+    Everything else is auto-detected by the system.
+    """
+    session_id: Union[str, UUID] = Field(..., description="Unique session identifier (UUID or string)")
+    transcript: str = Field(..., description="Raw transcript from STT (user's complaint/query)")
 
     @field_validator("transcript")
     @classmethod
@@ -108,10 +105,15 @@ class RoutingData(BaseModel):
 
 class RoutingResult(BaseModel):
     """Output schema — the Actionable Intelligence packet."""
-    session_id: UUID
+    session_id: Union[str, UUID]
     is_emergency: bool = False
     action: ActionType
     routing_data: RoutingData
+    # New fields to track auto-detected information
+    language: str = "unknown"  # e.g., "hi", "en", "ta"
+    intent: str = "OTHER"  # e.g., "NEW_COMPLAINT", "STATUS_QUERY"
+    issue_category: str = "General"  # e.g., "Water", "Electricity"
+    confidence: float = 0.85  # Classification confidence (0.0-1.0), lower if conflicting signals
     audit_log: List[str] = Field(
         default_factory=list,
         description="Trace of which pipeline stage made the final decision",
@@ -504,48 +506,57 @@ class SmartRouter:
         sarvam_timeout: float = 10.0,
         use_mock: bool = False,
     ) -> None:
-        self._api_key = sarvam_api_key
-        self._endpoint = sarvam_endpoint
-        self._timeout = sarvam_timeout
-        self._use_mock = use_mock or (sarvam_api_key is None)
+        # Use injected key or fallback to config
+        api_key = sarvam_api_key or SARVAM_API_KEY
+        use_mock_flag = use_mock or USE_MOCK_NLP or (api_key is None)
 
-        if self._use_mock:
-            self._mock_client = MockSarvamClient()
-            logger.info("SmartRouter initialised with MockSarvamClient")
-        else:
-            self._mock_client = None
-            logger.info("SmartRouter initialised with real Sarvam-1 endpoint")
+        # Initialize new NLP classifier (handles language detection, intent, edge cases)
+        self._nlp_classifier = NLPClassifier(
+            sarvam_api_key=api_key,
+            sarvam_endpoint=sarvam_endpoint or SARVAM_API_ENDPOINT,
+            use_mock=use_mock_flag,
+        )
+
+        logger.info(
+            "SmartRouter initialised with NLPClassifier (mode=%s)",
+            "MOCK" if use_mock_flag else "PRODUCTION",
+        )
 
     # ── public entry point ──────────────────────────────────────────────
 
     async def process(self, voice_input: VoiceInput) -> RoutingResult:
-        """Run the 3-stage pipeline and return a RoutingResult."""
+        """
+        Run the unified NLP + routing pipeline and return a RoutingResult.
+        
+        System auto-detects:
+        - Language (no manual input needed)
+        - Intent classification
+        - Edge cases (emergency, silence, abuse)
+        - Department routing based on issue category
+        """
         start = time.perf_counter()
         audit: List[str] = []
 
-        # ── Stage A ─────────────────────────────────────────────────
-        stage_a = self._stage_a_intercept(voice_input.transcript)
-
-        if stage_a["status"] == "EMERGENCY":
-            audit.append("STAGE_A: Emergency keyword detected → TRANSFER_HUMAN")
-            elapsed = (time.perf_counter() - start) * 1000
-            return RoutingResult(
+        # ── Stage 0: Unified NLP Classification ─────────────────────
+        # Auto-detects language, intent, urgency, and edge cases
+        try:
+            nlp_input = NLPInput(
                 session_id=voice_input.session_id,
-                is_emergency=True,
-                action=ActionType.TRANSFER_HUMAN,
-                routing_data=RoutingData(
-                    dept_id="DEPT_EMERGENCY_911",
-                    priority=5,
-                    summary="Emergency detected — immediate human transfer required.",
-                ),
-                audit_log=audit,
-                processing_time_ms=round(elapsed, 2),
+                transcript=voice_input.transcript,
+                # Language will be auto-detected (detected_language=None)
             )
-
-        if stage_a["status"] == "INVALID_INPUT":
-            audit.append(
-                f"STAGE_A: Invalid input ({stage_a['reason']}) → DISCONNECT"
+            nlp_result = await self._nlp_classifier.classify(nlp_input)
+            audit.extend(nlp_result.audit_log)
+            
+            logger.debug(
+                "NLP classification: language=%s, intent=%s, edge_case=%s",
+                nlp_result.language.value,
+                nlp_result.intent.value,
+                nlp_result.edge_case.value,
             )
+        except Exception as exc:
+            logger.error("NLP classification failed: %s", exc, exc_info=True)
+            audit.append(f"NLP_CLASSIFY: FAILED ({exc!r})")
             elapsed = (time.perf_counter() - start) * 1000
             return RoutingResult(
                 session_id=voice_input.session_id,
@@ -554,100 +565,104 @@ class SmartRouter:
                 routing_data=RoutingData(
                     dept_id=GENERAL_ADMIN_ID,
                     priority=1,
-                    summary="Input too short or filler-only. Call disconnected.",
+                    summary="NLP processing error. Please try again.",
                 ),
+                language="unknown",
+                intent="OTHER",
+                issue_category="General",
+                confidence=0.0,
                 audit_log=audit,
                 processing_time_ms=round(elapsed, 2),
             )
 
-        audit.append("STAGE_A: Passed — transcript is valid, non-emergency")
-
-        # ── Stage B ─────────────────────────────────────────────────
-        try:
-            llm_response = await self._stage_b_semantic_analysis(
-                voice_input.transcript,
-                voice_input.language_code,
-            )
-            audit.append(
-                f"STAGE_B: LLM classified intent={llm_response.intent.value}, "
-                f"category={llm_response.issue_category.value}, "
-                f"urgency={llm_response.urgency}"
-            )
-        except Exception as exc:
-            logger.error("Stage B failed: %s", exc, exc_info=True)
-            audit.append(f"STAGE_B: LLM call failed ({exc!r}) → fallback to GENERAL")
-            llm_response = SarvamLLMResponse(
-                intent=IntentType.NEW_COMPLAINT,
-                issue_category=IssueCategory.GENERAL,
-                summary="LLM unavailable — routed to general administration",
-                urgency=3,
+        # ── Handle edge cases ───────────────────────────────────────
+        if nlp_result.edge_case == EdgeCaseType.EMERGENCY:
+            elapsed = (time.perf_counter() - start) * 1000
+            audit.append("EDGE_CASE_RESPONSE: Emergency → TRANSFER_HUMAN")
+            return RoutingResult(
+                session_id=voice_input.session_id,
+                is_emergency=True,
+                action=ActionType.TRANSFER_HUMAN,
+                routing_data=RoutingData(
+                    dept_id="DEPT_EMERGENCY_911",
+                    priority=5,
+                    summary=nlp_result.summary,
+                ),
+                language=nlp_result.language.value,
+                intent=nlp_result.intent.value,
+                issue_category=nlp_result.issue_category.value,
+                confidence=nlp_result.confidence,
+                audit_log=audit,
+                processing_time_ms=round(elapsed, 2),
             )
 
-        # ── Stage C ─────────────────────────────────────────────────
+        if nlp_result.edge_case == EdgeCaseType.SILENCE:
+            elapsed = (time.perf_counter() - start) * 1000
+            audit.append("EDGE_CASE_RESPONSE: Silence → REPROMPT_USER")
+            return RoutingResult(
+                session_id=voice_input.session_id,
+                is_emergency=False,
+                action=ActionType.REPROMPT_USER,
+                routing_data=RoutingData(
+                    dept_id=GENERAL_ADMIN_ID,
+                    priority=1,
+                    summary=nlp_result.summary,
+                ),
+                language=nlp_result.language.value,
+                intent=nlp_result.intent.value,
+                issue_category=nlp_result.issue_category.value,
+                confidence=nlp_result.confidence,
+                audit_log=audit,
+                processing_time_ms=round(elapsed, 2),
+            )
+
+        if nlp_result.edge_case == EdgeCaseType.ABUSE:
+            elapsed = (time.perf_counter() - start) * 1000
+            audit.append("EDGE_CASE_RESPONSE: Abuse → WARN_AND_REPROMPT")
+            return RoutingResult(
+                session_id=voice_input.session_id,
+                is_emergency=False,
+                action=ActionType.REPROMPT_USER,
+                routing_data=RoutingData(
+                    dept_id=GENERAL_ADMIN_ID,
+                    priority=2,
+                    summary="Abusive content detected. Please maintain courtesy.",
+                ),
+                language=nlp_result.language.value,
+                intent="ABUSE",
+                issue_category=nlp_result.issue_category.value,
+                confidence=nlp_result.confidence,
+                audit_log=audit,
+                processing_time_ms=round(elapsed, 2),
+            )
+
+        # ── Stage C: Deterministic Department Routing ───────────────
         dept_id = self._stage_c_route_department(
-            llm_response.issue_category,
+            nlp_result.issue_category,
             voice_input.transcript,
         )
         audit.append(f"STAGE_C: Routed to {dept_id}")
 
-        # ── Determine action ────────────────────────────────────────
-        action = self._decide_action(llm_response.intent)
+        # ── Determine action based on intent ────────────────────────
+        action = self._decide_action(nlp_result.intent)
         audit.append(f"ACTION: {action.value}")
 
         elapsed = (time.perf_counter() - start) * 1000
         return RoutingResult(
             session_id=voice_input.session_id,
-            is_emergency=False,
+            is_emergency=nlp_result.emergency_flag,
             action=action,
             routing_data=RoutingData(
                 dept_id=dept_id,
-                priority=llm_response.urgency,
-                summary=llm_response.summary,
+                priority=nlp_result.urgency,
+                summary=nlp_result.summary,
             ),
+            language=nlp_result.language.value,
+            intent=nlp_result.intent.value,
+            issue_category=nlp_result.issue_category.value,
+            confidence=nlp_result.confidence,
             audit_log=audit,
             processing_time_ms=round(elapsed, 2),
-        )
-
-    # ── Stage A: High-Speed Interceptor ─────────────────────────────────
-
-    @staticmethod
-    def _stage_a_intercept(transcript: str) -> Dict[str, str]:
-        """
-        Fast-pass checks:
-          1. Regex → life-threatening emergency?  → EMERGENCY
-          2. < 3 words or filler-only?            → INVALID_INPUT
-          3. Otherwise                            → OK
-        """
-        # 1. Emergency regex
-        if EMERGENCY_PATTERN.search(transcript):
-            return {"status": "EMERGENCY"}
-
-        # 2. Noise / filler filter
-        words = re.findall(r"\b\w+\b", transcript.lower())
-        if len(words) < MIN_WORDS_THRESHOLD:
-            return {"status": "INVALID_INPUT", "reason": "fewer_than_3_words"}
-
-        non_filler = [w for w in words if w not in FILLER_WORDS]
-        if not non_filler:
-            return {"status": "INVALID_INPUT", "reason": "filler_words_only"}
-
-        return {"status": "OK"}
-
-    # ── Stage B: Semantic Analysis ──────────────────────────────────────
-
-    async def _stage_b_semantic_analysis(
-        self, transcript: str, language_code: str
-    ) -> SarvamLLMResponse:
-        """Call the LLM (real or mock) for intent + category extraction."""
-        if self._use_mock:
-            return await self._mock_client.classify(transcript, language_code)
-
-        return await call_sarvam_api(
-            transcript,
-            language_code,
-            api_key=self._api_key,
-            endpoint=self._endpoint,
-            timeout=self._timeout,
         )
 
     # ── Stage C: Deterministic Department Mapping ───────────────────────
@@ -680,11 +695,22 @@ class SmartRouter:
     # ── Action decision ─────────────────────────────────────────────────
 
     @staticmethod
-    def _decide_action(intent: IntentType) -> ActionType:
-        """Map intent → action."""
-        return {
-            IntentType.NEW_COMPLAINT: ActionType.CREATE_TICKET,
-            IntentType.STATUS_QUERY: ActionType.CREATE_TICKET,
-            IntentType.FEEDBACK: ActionType.CREATE_TICKET,
-            IntentType.PRANK: ActionType.DISCONNECT,
-        }.get(intent, ActionType.REPROMPT_USER)
+    def _decide_action(intent) -> ActionType:
+        """
+        Map intent → action.
+        
+        Handles both old IntentType (from old router) and new from nlp_classifier.
+        """
+        # Handle new intent types from nlp_classifier
+        intent_str = intent.value if hasattr(intent, 'value') else str(intent)
+        
+        action_map = {
+            "NEW_COMPLAINT": ActionType.CREATE_TICKET,
+            "STATUS_QUERY": ActionType.CREATE_TICKET,
+            "FEEDBACK": ActionType.CREATE_TICKET,
+            "PRANK": ActionType.DISCONNECT,
+            "ABUSE": ActionType.DISCONNECT,
+            "OTHER": ActionType.REPROMPT_USER,
+        }
+        
+        return action_map.get(intent_str, ActionType.REPROMPT_USER)

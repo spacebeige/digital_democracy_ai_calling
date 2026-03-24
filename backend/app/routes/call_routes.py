@@ -1,5 +1,6 @@
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 import requests
+from typing import Optional
 
 from app.config import LLM_API, STT_API, TTS_API
 from app.database import SessionLocal
@@ -27,7 +28,7 @@ def check_service(url: str) -> dict:
         }
 
 
-def persist_complaint(transcript: str, department: str, call_id: str | None) -> int:
+def persist_complaint(transcript: str, department: str, call_id: Optional[str]) -> int:
     db = SessionLocal()
     try:
         complaint = Complaint(
@@ -47,7 +48,7 @@ def persist_complaint(transcript: str, department: str, call_id: str | None) -> 
 @router.post("/handle-turn", response_model=CallTurnResponse)
 async def handle_turn(
     audio_file: UploadFile = File(...),
-    call_id: str | None = Form(default=None),
+    call_id: Optional[str] = Form(default=None),
 ):
     try:
         audio_bytes = await audio_file.read()
