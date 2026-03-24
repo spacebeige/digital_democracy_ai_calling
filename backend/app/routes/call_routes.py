@@ -31,10 +31,11 @@ def persist_complaint(transcript: str, department: str, call_id: str | None) -> 
     db = SessionLocal()
     try:
         complaint = Complaint(
-            phone_number=call_id or "unknown",
-            issue=transcript,
-            department=department or "general",
-            status="processed",
+            phone=call_id or "unknown",
+            issue_text=transcript,
+            summary=f"Auto-categorized department: {department or 'general'}",
+            priority="MEDIUM",
+            status="OPEN",
         )
         db.add(complaint)
         db.commit()
