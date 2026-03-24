@@ -30,7 +30,7 @@ from app.services.nlp_classifier import (
     IntentType as ClassifierIntentType,
     EdgeCaseType,
 )
-from app.services.smart_router import SmartRouter, VoiceInput
+from app.services.smart_router import SmartRouter, VoiceInput, DEPT_MAPPING, ActionType
 
 logger = logging.getLogger(__name__)
 
@@ -214,7 +214,7 @@ class PostCallAnalyzer:
                 transcript=analysis_input.full_transcript,
             )
 
-            routing_result = await self.smart_router.route(routing_input)
+            routing_result = await self.smart_router.process(routing_input)
             logger.info(f"Routing completed: {routing_result}")
 
             # ─────────────────────────────────────────────────────────────────
@@ -269,25 +269,27 @@ class PostCallAnalyzer:
                 call_id=analysis_input.call_metadata.call_id,
                 analysis_timestamp=datetime.utcnow(),
                 classification=ClassificationResult(
-                    language=classification_result.language,
-                    intent=classification_result.intent,
-                    edge_case=classification_result.edge_case,
+                    language=classification_result.language.value,
+                    intent=classification_result.intent.value,
+                    edge_case=classification_result.edge_case.value,
                     confidence=classification_result.confidence,
-                    keywords_detected=classification_result.keywords_detected,
+                    keywords_detected=[],  # NLP classifier doesn't return keywords
                 ),
                 routing=RoutingResult(
-                    department_id=routing_result.dept_id,
-                    department_name=routing_result.department_name or "Unknown",
+                    department_id=routing_result.routing_data.dept_id,
+                    department_name=DEPT_MAPPING.get(
+                        routing_result.routing_data.dept_id, {}
+                    ).get("name", "Unknown"),
                     issue_category=routing_result.issue_category,
-                    routing_confidence=routing_result.confidence_score,
-                    suggested_action=action,
-                    priority_level=routing_result.urgency,
+                    routing_confidence=routing_result.confidence,
+                    suggested_action=self._action_type_to_action_required(routing_result.action),
+                    priority_level=self._priority_to_level(routing_result.routing_data.priority),
                 ),
                 summary=summary,
                 entities=entities,
-                is_emergency=is_emergency,
+                is_emergency=routing_result.is_emergency,
                 is_abuse=is_abuse,
-                is_prank=(classification_result.intent == ClassifierIntentType.PRANK),
+                is_prank=(classification_result.intent == ClassifierIntentType.ABUSE),
                 is_genuine_complaint=is_genuine,
                 processing_time_ms=processing_time_ms,
                 transcript_length=len(analysis_input.full_transcript),
@@ -318,7 +320,7 @@ class PostCallAnalyzer:
             return ActionRequired.TRANSFER_TO_HUMAN
         elif is_silence:
             return ActionRequired.AUTO_RESOLVE
-        elif intent == ClassifierIntentType.PRANK:
+        elif intent == ClassifierIntentType.ABUSE:
             return ActionRequired.MARK_PRANK
         elif intent == ClassifierIntentType.FEEDBACK:
             return ActionRequired.STORE_FEEDBACK
@@ -353,3 +355,26 @@ class PostCallAnalyzer:
             department = routing_data.department_name
 
         return f"Call classified as {intent} routed to {department}. Summary: {preview}"
+
+    @staticmethod
+    def _action_type_to_action_required(action_type: ActionType) -> ActionRequired:
+        """Convert ActionType to ActionRequired."""
+        mapping = {
+            ActionType.CREATE_TICKET: ActionRequired.CREATE_TICKET,
+            ActionType.TRANSFER_HUMAN: ActionRequired.TRANSFER_TO_HUMAN,
+            ActionType.DISCONNECT: ActionRequired.AUTO_RESOLVE,
+            ActionType.REPROMPT_USER: ActionRequired.AUTO_RESOLVE,
+        }
+        return mapping.get(action_type, ActionRequired.TRANSFER_TO_HUMAN)
+
+    @staticmethod
+    def _priority_to_level(priority: int) -> str:
+        """Convert numeric priority to level string."""
+        if priority >= 5:
+            return "EMERGENCY"
+        elif priority >= 4:
+            return "HIGH"
+        elif priority >= 2:
+            return "MEDIUM"
+        else:
+            return "LOW"
