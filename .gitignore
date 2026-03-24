@@ -7,11 +7,10 @@ temp/     # Temporary directory
 .venv/
 backend/.venv/
 __pycache__/
-*.pyc
 .env
 .env.example
 .env.*
-*.db
+
 
 # Dependency directories
 node_modules/ # Node.js dependencies
