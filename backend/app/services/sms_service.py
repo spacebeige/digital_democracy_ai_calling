@@ -17,6 +17,13 @@ from app.config import (
 NON_DIGIT_PATTERN = re.compile(r"[^0-9]")
 
 
+def _twilio_message_url(message_sid: str | None) -> str | None:
+    sid = (message_sid or "").strip()
+    if not sid or not TWILIO_ACCOUNT_SID:
+        return None
+    return f"https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}/Messages/{sid}.json"
+
+
 def _normalize_sms_number(phone: str) -> str:
     digits = NON_DIGIT_PATTERN.sub("", phone or "")
     if not digits:
@@ -48,6 +55,7 @@ def build_ticket_sms_text(
     if session_id and session_id.strip():
         lines.append(f"Session: {session_id.strip()}")
     if qr_link and qr_link.strip():
+        lines.append("Click the link below to generate session QR")
         lines.append(f"Track Link: {qr_link.strip()}")
     return "\n".join(lines)
 
@@ -105,8 +113,9 @@ def send_ticket_sms(
             "ticket_id": ticket_id,
             "body": body,
             "qr_link": normalized_qr_link,
-            "media_url": normalized_media_url,
+            "media_url": None,
             "status": "dry_run",
+            "detail": "dry_run does not create a Twilio message link",
         }
 
     if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_FROM_NUMBER:
@@ -130,10 +139,12 @@ def send_ticket_sms(
             "ticket_id": ticket_id,
             "body": body,
             "qr_link": normalized_qr_link,
-            "media_url": normalized_media_url,
+            "media_url": None,
             "status": "failed",
             "detail": str(exc),
         }
+
+    twilio_url = _twilio_message_url(message.sid)
 
     return {
         "success": True,
@@ -141,7 +152,7 @@ def send_ticket_sms(
         "ticket_id": ticket_id,
         "body": body,
         "qr_link": normalized_qr_link,
-        "media_url": normalized_media_url,
+        "media_url": twilio_url,
         "status": message.status or "queued",
         "sid": message.sid,
     }
