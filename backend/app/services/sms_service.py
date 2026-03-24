@@ -31,7 +31,12 @@ def _normalize_sms_number(phone: str) -> str:
     return f"+{digits}"
 
 
-def build_ticket_sms_text(custom_text: str, ticket_id: str, session_id: str | None = None) -> str:
+def build_ticket_sms_text(
+    custom_text: str,
+    ticket_id: str,
+    session_id: str | None = None,
+    qr_link: str | None = None,
+) -> str:
     custom = (custom_text or "").strip()
     ticket = (ticket_id or "").strip()
     if not custom:
@@ -42,6 +47,8 @@ def build_ticket_sms_text(custom_text: str, ticket_id: str, session_id: str | No
     lines = [custom, f"Ticket ID: {ticket}"]
     if session_id and session_id.strip():
         lines.append(f"Session: {session_id.strip()}")
+    if qr_link and qr_link.strip():
+        lines.append(f"Track Link: {qr_link.strip()}")
     return "\n".join(lines)
 
 
@@ -73,11 +80,18 @@ def send_ticket_sms(
     ticket_id: str,
     media_url: str | None = None,
     session_id: str | None = None,
+    qr_link: str | None = None,
     ticket_metadata: dict | None = None,
     dry_run: bool = False,
 ) -> dict:
     normalized_to = _normalize_sms_number(to)
-    body_lines = build_ticket_sms_text(custom_text, ticket_id, session_id).split("\n")
+    normalized_qr_link = (qr_link or "").strip() or None
+    body_lines = build_ticket_sms_text(
+        custom_text,
+        ticket_id,
+        session_id,
+        qr_link=normalized_qr_link,
+    ).split("\n")
     _append_ticket_metadata(body_lines, ticket_metadata)
     body = "\n".join(body_lines)
 
@@ -90,6 +104,7 @@ def send_ticket_sms(
             "to": normalized_to,
             "ticket_id": ticket_id,
             "body": body,
+            "qr_link": normalized_qr_link,
             "media_url": normalized_media_url,
             "status": "dry_run",
         }
@@ -114,6 +129,7 @@ def send_ticket_sms(
             "to": normalized_to,
             "ticket_id": ticket_id,
             "body": body,
+            "qr_link": normalized_qr_link,
             "media_url": normalized_media_url,
             "status": "failed",
             "detail": str(exc),
@@ -124,6 +140,7 @@ def send_ticket_sms(
         "to": normalized_to,
         "ticket_id": ticket_id,
         "body": body,
+        "qr_link": normalized_qr_link,
         "media_url": normalized_media_url,
         "status": message.status or "queued",
         "sid": message.sid,

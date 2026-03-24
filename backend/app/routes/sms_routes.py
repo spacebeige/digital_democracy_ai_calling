@@ -35,9 +35,12 @@ def send_ticket(payload: SendTicketSMSRequest) -> SendTicketSMSResponse:
 
         media_url = None
         if payload.include_qr_image:
+            if not payload.qr_link or not payload.qr_link.strip():
+                raise ValueError("qr_link is required when include_qr_image is true")
             image_path = generate_ticket_qr(
                 payload.ticket_id,
                 payload.session_id,
+                qr_link=payload.qr_link,
                 ticket_metadata=ticket_metadata,
             )
             if QR_IMAGE_DIR not in image_path.parents and image_path.parent != QR_IMAGE_DIR:
@@ -49,6 +52,7 @@ def send_ticket(payload: SendTicketSMSRequest) -> SendTicketSMSResponse:
             custom_text=payload.custom_text,
             ticket_id=payload.ticket_id,
             session_id=payload.session_id,
+            qr_link=payload.qr_link,
             ticket_metadata=ticket_metadata,
             media_url=media_url,
             dry_run=payload.dry_run,

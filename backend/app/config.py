@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parents[1]
 WORKSPACE_DIR = BASE_DIR.parent
 
-# Prefer backend-local environment variables, then fall back to workspace-level .env.
-load_dotenv(BASE_DIR / ".env", override=False)
+# Prefer backend-local environment variables and allow overriding shell values.
+load_dotenv(BASE_DIR / ".env", override=True)
+# Workspace-level .env acts only as fallback.
 load_dotenv(WORKSPACE_DIR / ".env", override=False)
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")

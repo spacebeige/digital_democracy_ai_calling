@@ -14,6 +14,7 @@ def _safe_fragment(value: str) -> str:
 def generate_ticket_qr(
     ticket_id: str,
     session_id: str | None = None,
+    qr_link: str | None = None,
     ticket_metadata: dict | None = None,
 ) -> Path:
     QR_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
@@ -22,12 +23,15 @@ def generate_ticket_qr(
     filename = f"{ticket_part}-{session_part}.png"
     image_path = QR_IMAGE_DIR / filename
 
-    payload = {
-        "ticket_id": ticket_id,
-        "session_id": session_id,
-    }
-    if ticket_metadata:
-        payload.update({k: v for k, v in ticket_metadata.items() if v is not None})
+    if qr_link and qr_link.strip():
+        payload = qr_link.strip()
+    else:
+        payload = {
+            "ticket_id": ticket_id,
+            "session_id": session_id,
+        }
+        if ticket_metadata:
+            payload.update({k: v for k, v in ticket_metadata.items() if v is not None})
 
     qr = qrcode.QRCode(version=2, box_size=8, border=2)
     qr.add_data(str(payload))
