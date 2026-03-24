@@ -1,36 +1,82 @@
-# General files to ignore
-.DS_Store # macOS system files
-Thumbs.db # Windows system files
-*.log     # Log files
-temp/     # Temporary directory
-
+# Python virtual environments
+venv/
 .venv/
+env/
+ENV/
+.ENV/
+backend/venv/
 backend/.venv/
+awaaz/venv/
+awaaz/.venv/
+*/venv/
+*/.venv/
+
+# Python compiled/cache files
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+.cache/
+*.pot
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.hypothesis/
+
+# Environment variables
 .env
 .env.*
+.env.local
+.env.*.local
+
+# Logs
+*.log
+*.log.*
+
+# Audio/Media files
+*.wav
+*.mp3
+*.m4a
+
+# Database
 *.db
-
-# Dependency directories
-node_modules/ # Node.js dependencies
-vendor/       # Composer dependencies (PHP)
-env/          # Python virtual environment (also venv/)
-
-# Compiled/generated files
-*.pyc         # Python compiled files
-__pycache__/  # Python cache directory
-/dist/        # Distribution/build folder
-/build/       # Build output folder
-target/       # Maven build output (Java)
-
-# Sensitive information/environment variables
-.env          # Environment variable files
-config.inc.php # Example of a specific configuration file
+*.sqlite
+*.sqlite3
 
 # IDE or editor settings
-.idea/        # JetBrains IDE settings
-.vscode/      # VS Code settings
-*.swp         # Vim swap files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary directories
+temp/
+tmp/
+temp_*
+
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Vendor
+vendor/
+target/
 
 

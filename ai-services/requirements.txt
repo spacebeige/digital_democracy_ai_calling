@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 pydantic
-openai-whisper
-TTS
+stable-ts
 numpy
 faiss-cpu
+SpeechRecognition
