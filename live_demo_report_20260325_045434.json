@@ -1,0 +1,164 @@
+{
+  "timestamp": "2026-03-25T04:54:34.818344",
+  "total_calls": 4,
+  "successful_calls": 4,
+  "scenarios_tested": 4,
+  "calls": [
+    {
+      "call_id": "202e7bca-b837",
+      "scenario": {
+        "type": "water_leak",
+        "name": "\ud83c\udf0a Water Leak Complaint",
+        "description": "Citizen reports water pipeline leak in locality",
+        "transcription": "\u0928\u092e\u0938\u094d\u0924\u0947, \u092e\u0948\u0902 \u092a\u093e\u0928\u0940 \u0915\u0940 \u0938\u092e\u0938\u094d\u092f\u093e \u0915\u0940 \u0936\u093f\u0915\u093e\u092f\u0924 \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u093e \u0939\u0942\u0901\u0964 \u092e\u0947\u0930\u0947 \u0907\u0932\u093e\u0915\u0947 \u092e\u0947\u0902 \u092a\u093e\u0928\u0940 \u0915\u0940 \u092a\u093e\u0907\u092a \u0938\u0947 \u092a\u093e\u0928\u0940 \u0932\u0940\u0915 \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u0964 \u092f\u0939 \u0938\u0947\u0915\u094d\u091f\u0930 5, \u092e\u0947\u0928 \u0938\u094d\u091f\u094d\u0930\u0940\u091f \u092e\u0947\u0902 \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u0907\u0938\u0947 \u0920\u0940\u0915 \u0915\u0930\u0935\u093e \u0926\u0947\u0902\u0964",
+        "expected_department": "Water & Sewerage",
+        "priority": "MEDIUM"
+      },
+      "call_data": {
+        "success": true,
+        "transcript": "unknown audio input",
+        "agent_text": "Grievance recorded: unknown audio input",
+        "audio_base64": "UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAP8A/wD/",
+        "complaint_id": 9,
+        "department": "Water & Sewerage",
+        "call_id": "202e7bca-b837"
+      },
+      "routing_data": {
+        "session_id": "202e7bca-b837",
+        "transcript": "\u0928\u092e\u0938\u094d\u0924\u0947, \u092e\u0948\u0902 \u092a\u093e\u0928\u0940 \u0915\u0940 \u0938\u092e\u0938\u094d\u092f\u093e \u0915\u0940 \u0936\u093f\u0915\u093e\u092f\u0924 \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u093e \u0939\u0942\u0901\u0964 \u092e\u0947\u0930\u0947 \u0907\u0932\u093e\u0915\u0947 \u092e\u0947\u0902 \u092a\u093e\u0928\u0940 \u0915\u0940 \u092a\u093e\u0907\u092a \u0938\u0947 \u092a\u093e\u0928\u0940 \u0932\u0940\u0915 \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u0964 \u092f\u0939 \u0938\u0947\u0915\u094d\u091f\u0930 5, \u092e\u0947\u0928 \u0938\u094d\u091f\u094d\u0930\u0940\u091f \u092e\u0947\u0902 \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u0907\u0938\u0947 \u0920\u0940\u0915 \u0915\u0930\u0935\u093e \u0926\u0947\u0902\u0964",
+        "language": "hi",
+        "intent": "OTHER",
+        "issue_category": "General",
+        "department": {
+          "dept_id": "DEPT_GENERAL_ADMIN",
+          "dept_name": "General Administration",
+          "priority": 3
+        },
+        "urgency": 3,
+        "is_emergency": false,
+        "action": "REPROMPT_USER",
+        "summary": "\u0928\u092e\u0938\u094d\u0924\u0947, \u092e\u0948\u0902 \u092a\u093e\u0928\u0940 \u0915\u0940 \u0938\u092e\u0938\u094d\u092f\u093e \u0915\u0940 \u0936\u093f\u0915\u093e\u092f\u0924 \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u093e \u0939\u0942\u0901\u0964",
+        "confidence": 0.8,
+        "processing_time_ms": 3.26
+      },
+      "timestamp": "2026-03-25T04:54:30.815939"
+    },
+    {
+      "call_id": "f31ade3a-1ab0",
+      "scenario": {
+        "type": "electricity",
+        "name": "\u26a1 Electricity Problem",
+        "description": "No power supply in residential area",
+        "transcription": "\u0939\u0947\u0932\u094b, \u0939\u092e\u093e\u0930\u0947 \u092e\u094b\u0939\u0932\u094d\u0932\u0947 \u092e\u0947\u0902 \u092c\u093f\u091c\u0932\u0940 \u0928\u0939\u0940\u0902 \u0906 \u0930\u0939\u0940 \u0939\u0948\u0964 \u091f\u094d\u0930\u093e\u0902\u0938\u092b\u0949\u0930\u094d\u092e\u0930 \u0916\u0930\u093e\u092c \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u091c\u0932\u094d\u0926\u0940 \u0938\u0947 \u091c\u0932\u094d\u0926\u0940 \u0920\u0940\u0915 \u0915\u0930\u0935\u093e \u0926\u0947\u0902\u0964 \u0932\u0917\u092d\u0917 5 \u0918\u0902\u091f\u0947 \u0938\u0947 \u092c\u093f\u091c\u0932\u0940 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964",
+        "expected_department": "Electricity",
+        "priority": "HIGH"
+      },
+      "call_data": {
+        "success": true,
+        "transcript": "unknown audio input",
+        "agent_text": "Grievance recorded: unknown audio input",
+        "audio_base64": "UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAP8A/wD/",
+        "complaint_id": 10,
+        "department": "Water & Sewerage",
+        "call_id": "f31ade3a-1ab0"
+      },
+      "routing_data": {
+        "session_id": "f31ade3a-1ab0",
+        "transcript": "\u0939\u0947\u0932\u094b, \u0939\u092e\u093e\u0930\u0947 \u092e\u094b\u0939\u0932\u094d\u0932\u0947 \u092e\u0947\u0902 \u092c\u093f\u091c\u0932\u0940 \u0928\u0939\u0940\u0902 \u0906 \u0930\u0939\u0940 \u0939\u0948\u0964 \u091f\u094d\u0930\u093e\u0902\u0938\u092b\u0949\u0930\u094d\u092e\u0930 \u0916\u0930\u093e\u092c \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u091c\u0932\u094d\u0926\u0940 \u0938\u0947 \u091c\u0932\u094d\u0926\u0940 \u0920\u0940\u0915 \u0915\u0930\u0935\u093e \u0926\u0947\u0902\u0964 \u0932\u0917\u092d\u0917 5 \u0918\u0902\u091f\u0947 \u0938\u0947 \u092c\u093f\u091c\u0932\u0940 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964",
+        "language": "hi",
+        "intent": "OTHER",
+        "issue_category": "General",
+        "department": {
+          "dept_id": "DEPT_GENERAL_ADMIN",
+          "dept_name": "General Administration",
+          "priority": 3
+        },
+        "urgency": 3,
+        "is_emergency": false,
+        "action": "REPROMPT_USER",
+        "summary": "\u0939\u0947\u0932\u094b, \u0939\u092e\u093e\u0930\u0947 \u092e\u094b\u0939\u0932\u094d\u0932\u0947 \u092e\u0947\u0902 \u092c\u093f\u091c\u0932\u0940 \u0928\u0939\u0940\u0902 \u0906 \u0930\u0939\u0940 \u0939\u0948\u0964 \u091f\u094d\u0930\u093e\u0902\u0938\u092b\u0949\u0930\u094d\u092e\u0930",
+        "confidence": 0.8,
+        "processing_time_ms": 3.19
+      },
+      "timestamp": "2026-03-25T04:54:32.145998"
+    },
+    {
+      "call_id": "83ca8d64-1e50",
+      "scenario": {
+        "type": "road_pothole",
+        "name": "\ud83d\udee3\ufe0f Road Maintenance",
+        "description": "Large pothole on main road causing accidents",
+        "transcription": "\u0938\u093e\u0939\u092c, \u092e\u0947\u0928 \u0930\u094b\u0921 \u092a\u0930 \u092c\u0939\u0941\u0924 \u092c\u0921\u093c\u093e \u0917\u0921\u094d\u0922\u093e \u0939\u0948\u0964 \u0907\u0938\u0940 \u0935\u091c\u0939 \u0938\u0947 \u0915\u0932 \u0926\u094b accidents \u0939\u0941\u090f\u0964 \u0915\u0943\u092a\u092f\u093e \u0907\u0938\u0947 \u0924\u0941\u0930\u0902\u0924 \u0920\u0940\u0915 \u0915\u0930\u0935\u093e\u0907\u090f\u0964",
+        "expected_department": "Roads & Infrastructure",
+        "priority": "HIGH"
+      },
+      "call_data": {
+        "success": true,
+        "transcript": "unknown audio input",
+        "agent_text": "Grievance recorded: unknown audio input",
+        "audio_base64": "UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAP8A/wD/",
+        "complaint_id": 11,
+        "department": "Water & Sewerage",
+        "call_id": "83ca8d64-1e50"
+      },
+      "routing_data": {
+        "session_id": "83ca8d64-1e50",
+        "transcript": "\u0938\u093e\u0939\u092c, \u092e\u0947\u0928 \u0930\u094b\u0921 \u092a\u0930 \u092c\u0939\u0941\u0924 \u092c\u0921\u093c\u093e \u0917\u0921\u094d\u0922\u093e \u0939\u0948\u0964 \u0907\u0938\u0940 \u0935\u091c\u0939 \u0938\u0947 \u0915\u0932 \u0926\u094b accidents \u0939\u0941\u090f\u0964 \u0915\u0943\u092a\u092f\u093e \u0907\u0938\u0947 \u0924\u0941\u0930\u0902\u0924 \u0920\u0940\u0915 \u0915\u0930\u0935\u093e\u0907\u090f\u0964",
+        "language": "hi",
+        "intent": "OTHER",
+        "issue_category": "General",
+        "department": {
+          "dept_id": "DEPT_GENERAL_ADMIN",
+          "dept_name": "General Administration",
+          "priority": 3
+        },
+        "urgency": 3,
+        "is_emergency": false,
+        "action": "REPROMPT_USER",
+        "summary": "\u0938\u093e\u0939\u092c, \u092e\u0947\u0928 \u0930\u094b\u0921 \u092a\u0930 \u092c\u0939\u0941\u0924 \u092c\u0921\u093c\u093e \u0917\u0921\u094d\u0922\u093e \u0939\u0948\u0964 \u0907\u0938\u0940 \u0935\u091c\u0939",
+        "confidence": 0.8,
+        "processing_time_ms": 2.34
+      },
+      "timestamp": "2026-03-25T04:54:33.482672"
+    },
+    {
+      "call_id": "75cc3ea8-eb4b",
+      "scenario": {
+        "type": "sanitation",
+        "name": "\ud83d\uddd1\ufe0f Sanitation Issue",
+        "description": "Waste accumulation in residential colony",
+        "transcription": "\u0928\u092e\u0938\u094d\u0924\u0947 \u091c\u0940, \u0939\u092e\u093e\u0930\u0947 \u0915\u0949\u0932\u094b\u0928\u0940 \u092e\u0947\u0902 \u0915\u091a\u0930\u093e \u0907\u0915\u0920\u094d\u0920\u093e \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u0964 \u0938\u092b\u093e\u0908 \u0915\u0930\u094d\u092e\u091a\u093e\u0930\u0940 \u0928\u0939\u0940\u0902 \u0906 \u0930\u0939\u0947\u0964 \u0917\u0930\u094d\u092e\u0940 \u0915\u0947 \u092e\u094c\u0938\u092e \u092e\u0947\u0902 \u0938\u094d\u0935\u093e\u0938\u094d\u0925\u094d\u092f \u0938\u092e\u0938\u094d\u092f\u093e \u0939\u094b \u0938\u0915\u0924\u0940 \u0939\u0948\u0964",
+        "expected_department": "Sanitation",
+        "priority": "MEDIUM"
+      },
+      "call_data": {
+        "success": true,
+        "transcript": "unknown audio input",
+        "agent_text": "Grievance recorded: unknown audio input",
+        "audio_base64": "UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAP8A/wD/",
+        "complaint_id": 12,
+        "department": "Water & Sewerage",
+        "call_id": "75cc3ea8-eb4b"
+      },
+      "routing_data": {
+        "session_id": "75cc3ea8-eb4b",
+        "transcript": "\u0928\u092e\u0938\u094d\u0924\u0947 \u091c\u0940, \u0939\u092e\u093e\u0930\u0947 \u0915\u0949\u0932\u094b\u0928\u0940 \u092e\u0947\u0902 \u0915\u091a\u0930\u093e \u0907\u0915\u0920\u094d\u0920\u093e \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u0964 \u0938\u092b\u093e\u0908 \u0915\u0930\u094d\u092e\u091a\u093e\u0930\u0940 \u0928\u0939\u0940\u0902 \u0906 \u0930\u0939\u0947\u0964 \u0917\u0930\u094d\u092e\u0940 \u0915\u0947 \u092e\u094c\u0938\u092e \u092e\u0947\u0902 \u0938\u094d\u0935\u093e\u0938\u094d\u0925\u094d\u092f \u0938\u092e\u0938\u094d\u092f\u093e \u0939\u094b \u0938\u0915\u0924\u0940 \u0939\u0948\u0964",
+        "language": "hi",
+        "intent": "OTHER",
+        "issue_category": "General",
+        "department": {
+          "dept_id": "DEPT_GENERAL_ADMIN",
+          "dept_name": "General Administration",
+          "priority": 3
+        },
+        "urgency": 3,
+        "is_emergency": false,
+        "action": "REPROMPT_USER",
+        "summary": "\u0928\u092e\u0938\u094d\u0924\u0947 \u091c\u0940, \u0939\u092e\u093e\u0930\u0947 \u0915\u0949\u0932\u094b\u0928\u0940 \u092e\u0947\u0902 \u0915\u091a\u0930\u093e \u0907\u0915\u0920\u094d\u0920\u093e \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u0964",
+        "confidence": 0.8,
+        "processing_time_ms": 2.92
+      },
+      "timestamp": "2026-03-25T04:54:34.817821"
+    }
+  ]
+}

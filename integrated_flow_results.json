@@ -1,0 +1,89 @@
+[
+  {
+    "test_case": "Water leak complaint",
+    "call": {
+      "call_id": "bbe5abed-d92b",
+      "transcript": "unknown audio input",
+      "department": "Water & Sewerage",
+      "agent_response": "Grievance recorded: unknown audio input",
+      "complaint_id": 6
+    },
+    "routing": {
+      "session_id": "bbe5abed-d92b",
+      "transcript": "unknown audio input",
+      "language": "en",
+      "intent": "OTHER",
+      "issue_category": "General",
+      "department": {
+        "dept_id": "DEPT_GENERAL_ADMIN",
+        "dept_name": "General Administration",
+        "priority": 3
+      },
+      "urgency": 3,
+      "is_emergency": false,
+      "action": "REPROMPT_USER",
+      "summary": "unknown audio input",
+      "confidence": 0.8,
+      "processing_time_ms": 11.17
+    },
+    "timestamp": "2026-03-25T04:49:58.782616"
+  },
+  {
+    "test_case": "Emergency scenario",
+    "call": {
+      "call_id": "922223a5-6d0b",
+      "transcript": "unknown audio input",
+      "department": "Water & Sewerage",
+      "agent_response": "Grievance recorded: unknown audio input",
+      "complaint_id": 7
+    },
+    "routing": {
+      "session_id": "922223a5-6d0b",
+      "transcript": "unknown audio input",
+      "language": "en",
+      "intent": "OTHER",
+      "issue_category": "General",
+      "department": {
+        "dept_id": "DEPT_GENERAL_ADMIN",
+        "dept_name": "General Administration",
+        "priority": 3
+      },
+      "urgency": 3,
+      "is_emergency": false,
+      "action": "REPROMPT_USER",
+      "summary": "unknown audio input",
+      "confidence": 0.8,
+      "processing_time_ms": 1.14
+    },
+    "timestamp": "2026-03-25T04:49:59.318158"
+  },
+  {
+    "test_case": "Generic complaint",
+    "call": {
+      "call_id": "a1eca28c-2111",
+      "transcript": "unknown audio input",
+      "department": "Water & Sewerage",
+      "agent_response": "Grievance recorded: unknown audio input",
+      "complaint_id": 8
+    },
+    "routing": {
+      "session_id": "a1eca28c-2111",
+      "transcript": "unknown audio input",
+      "language": "en",
+      "intent": "OTHER",
+      "issue_category": "General",
+      "department": {
+        "dept_id": "DEPT_GENERAL_ADMIN",
+        "dept_name": "General Administration",
+        "priority": 3
+      },
+      "urgency": 3,
+      "is_emergency": false,
+      "action": "REPROMPT_USER",
+      "summary": "unknown audio input",
+      "confidence": 0.8,
+      "processing_time_ms": 1.25
+    },
+    "timestamp": "2026-03-25T04:49:59.855732"
+  }
+]

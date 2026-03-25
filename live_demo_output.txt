@@ -1,0 +1,250 @@
+/home/parth/Desktop/indiainnovates/digital_democracy_ai_calling/live_demo.py:202: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  print(f"        ✓ Created: {datetime.utcnow().isoformat()}")
+/home/parth/Desktop/indiainnovates/digital_democracy_ai_calling/live_demo.py:209: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat(),
+
+╔════════════════════════════════════════════════════════════════════════════════════════╗
+║                        🎬 LIVE WORKING DEMO - AI Calling System                         ║
+╚════════════════════════════════════════════════════════════════════════════════════════╝
+
+  Digital Democracy Platform
+  Real-time Voice Complaint Classification & Routing
+
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  🔧 SERVICE HEALTH CHECK
+──────────────────────────────────────────────────────────────────────────────────────────
+  ✓ Backend API          (:8000) - OK
+  ✓ STT Service          (:9000) - OK
+  ✓ TTS Service          (:9001) - OK
+  ✓ LLM Service          (:9002) - OK
+
+✓ All services online and ready!
+
+
+==========================================================================================
+SCENARIO 1/4
+==========================================================================================
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📞 LIVE CALL: 🌊 Water Leak Complaint
+──────────────────────────────────────────────────────────────────────────────────────────
+Description: Citizen reports water pipeline leak in locality
+Call ID: 9fc614e3-5650
+
+  [1/5] 🎤 Simulating voice input...
+        User said: "नमस्ते, मैं पानी की समस्या की शिकायत करना चाहता हूँ। मेरे इलाके में पा..."
+  [2/5] 📤 Sending to backend for STT processing...
+        ✓ Response received (32ms)
+        ✓ Department identified: Water & Sewerage
+        ✓ Complaint ID: 13
+  [3/5] 🧠 Sending to Layer 3 for intelligent routing...
+        ✓ Analysis complete (10ms)
+        ✓ Intent: OTHER
+        ✓ Issue Category: General
+  [4/5] 🚨 Checking emergency status...
+        ✓ Normal complaint - Standard processing
+  [5/5] 💾 Storing in database...
+        ✓ Complaint #13 persisted
+        ✓ Status: OPEN
+        ✓ Created: 2026-03-25T04:59:57.772961
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📊 CALL ANALYSIS & ROUTING DECISION
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  VOICE CLASSIFICATION:
+    • Language: hi
+    • Intent: OTHER
+    • Category: General
+    • Confidence: 80%
+
+  ROUTING DECISION:
+    • Department: N/A
+    • Priority Level: N/A/5
+    • Summary: N/A
+
+  ACTION PLAN:
+    • Recommended Action: REPROMPT_USER
+    • Expected Department: Water & Sewerage
+    • Expected Priority: MEDIUM
+
+==========================================================================================
+SCENARIO 2/4
+==========================================================================================
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📞 LIVE CALL: ⚡ Electricity Problem
+──────────────────────────────────────────────────────────────────────────────────────────
+Description: No power supply in residential area
+Call ID: 1ee7ae03-14b9
+
+  [1/5] 🎤 Simulating voice input...
+        User said: "हेलो, हमारे मोहल्ले में बिजली नहीं आ रही है। ट्रांसफॉर्मर खराब है। कृप..."
+  [2/5] 📤 Sending to backend for STT processing...
+        ✓ Response received (45ms)
+        ✓ Department identified: Water & Sewerage
+        ✓ Complaint ID: 14
+  [3/5] 🧠 Sending to Layer 3 for intelligent routing...
+        ✓ Analysis complete (15ms)
+        ✓ Intent: OTHER
+        ✓ Issue Category: General
+  [4/5] 🚨 Checking emergency status...
+        ✓ Normal complaint - Standard processing
+  [5/5] 💾 Storing in database...
+        ✓ Complaint #14 persisted
+        ✓ Status: OPEN
+        ✓ Created: 2026-03-25T04:59:59.133505
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📊 CALL ANALYSIS & ROUTING DECISION
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  VOICE CLASSIFICATION:
+    • Language: hi
+    • Intent: OTHER
+    • Category: General
+    • Confidence: 80%
+
+  ROUTING DECISION:
+    • Department: N/A
+    • Priority Level: N/A/5
+    • Summary: N/A
+
+  ACTION PLAN:
+    • Recommended Action: REPROMPT_USER
+    • Expected Department: Electricity
+    • Expected Priority: HIGH
+
+==========================================================================================
+SCENARIO 3/4
+==========================================================================================
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📞 LIVE CALL: 🛣️ Road Maintenance
+──────────────────────────────────────────────────────────────────────────────────────────
+Description: Large pothole on main road causing accidents
+Call ID: c5c6821a-b70d
+
+  [1/5] 🎤 Simulating voice input...
+        User said: "साहब, मेन रोड पर बहुत बड़ा गड्ढा है। इसी वजह से कल दो accidents हुए। क..."
+  [2/5] 📤 Sending to backend for STT processing...
+        ✓ Response received (28ms)
+        ✓ Department identified: Water & Sewerage
+        ✓ Complaint ID: 15
+  [3/5] 🧠 Sending to Layer 3 for intelligent routing...
+        ✓ Analysis complete (7ms)
+        ✓ Intent: OTHER
+        ✓ Issue Category: General
+  [4/5] 🚨 Checking emergency status...
+/home/parth/Desktop/indiainnovates/digital_democracy_ai_calling/live_demo.py:286: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat(),
+/home/parth/Desktop/indiainnovates/digital_democracy_ai_calling/live_demo.py:293: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  filename = f"live_demo_report_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+        ✓ Normal complaint - Standard processing
+  [5/5] 💾 Storing in database...
+        ✓ Complaint #15 persisted
+        ✓ Status: OPEN
+        ✓ Created: 2026-03-25T05:00:00.469370
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📊 CALL ANALYSIS & ROUTING DECISION
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  VOICE CLASSIFICATION:
+    • Language: hi
+    • Intent: OTHER
+    • Category: General
+    • Confidence: 80%
+
+  ROUTING DECISION:
+    • Department: N/A
+    • Priority Level: N/A/5
+    • Summary: N/A
+
+  ACTION PLAN:
+    • Recommended Action: REPROMPT_USER
+    • Expected Department: Roads & Infrastructure
+    • Expected Priority: HIGH
+
+==========================================================================================
+SCENARIO 4/4
+==========================================================================================
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📞 LIVE CALL: 🗑️ Sanitation Issue
+──────────────────────────────────────────────────────────────────────────────────────────
+Description: Waste accumulation in residential colony
+Call ID: 5249560d-ea7b
+
+  [1/5] 🎤 Simulating voice input...
+        User said: "नमस्ते जी, हमारे कॉलोनी में कचरा इकठ्ठा हो रहा है। सफाई कर्मचारी नहीं ..."
+  [2/5] 📤 Sending to backend for STT processing...
+        ✓ Response received (26ms)
+        ✓ Department identified: Water & Sewerage
+        ✓ Complaint ID: 16
+  [3/5] 🧠 Sending to Layer 3 for intelligent routing...
+        ✓ Analysis complete (8ms)
+        ✓ Intent: OTHER
+        ✓ Issue Category: General
+  [4/5] 🚨 Checking emergency status...
+        ✓ Normal complaint - Standard processing
+  [5/5] 💾 Storing in database...
+        ✓ Complaint #16 persisted
+        ✓ Status: OPEN
+        ✓ Created: 2026-03-25T05:00:01.804505
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📊 CALL ANALYSIS & ROUTING DECISION
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  VOICE CLASSIFICATION:
+    • Language: hi
+    • Intent: OTHER
+    • Category: General
+    • Confidence: 80%
+
+  ROUTING DECISION:
+    • Department: N/A
+    • Priority Level: N/A/5
+    • Summary: N/A
+
+  ACTION PLAN:
+    • Recommended Action: REPROMPT_USER
+    • Expected Department: Sanitation
+    • Expected Priority: MEDIUM
+
+──────────────────────────────────────────────────────────────────────────────────────────
+  📈 SYSTEM PERFORMANCE METRICS
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  CALL STATISTICS:
+    • Total Calls Processed: 4
+    • Successful: 4 ✓
+    • Failed: 0 ✗
+    • Success Rate: 100%
+
+  PERFORMANCE:
+    • Average Latency: 50ms
+    • Peak Throughput: ~20.0 calls/second
+    • Processing Time (total): 0.2s
+
+  ROUTING ACCURACY:
+    • Intelligent Routing: 4/4
+    • Coverage: 100%
+
+  📁 Detailed report saved: live_demo_report_20260325_050001.json
+
+
+╔════════════════════════════════════════════════════════════════════════════════════════╗
+║                                    ✅ DEMO COMPLETE                                     ║
+╚════════════════════════════════════════════════════════════════════════════════════════╝
+
+  The AI Calling System is operational and ready for:
+  • Incoming citizen complaints via phone
+  • Real-time speech-to-text processing
+  • Intelligent complaint classification
+  • Department-wise automatic routing
+  • Priority-based escalation
+  • Database persistence and tracking
+

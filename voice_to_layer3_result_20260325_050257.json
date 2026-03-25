@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-03-25T05:02:57.249725",
+  "transcript": "unknown audio input",
+  "routing": {
+    "session_id": "fd0a305c-1502",
+    "transcript": "unknown audio input",
+    "language": "en",
+    "intent": "OTHER",
+    "issue_category": "General",
+    "department": {
+      "dept_id": "DEPT_GENERAL_ADMIN",
+      "dept_name": "General Administration",
+      "priority": 3
+    },
+    "urgency": 3,
+    "is_emergency": false,
+    "action": "REPROMPT_USER",
+    "summary": "unknown audio input",
+    "confidence": 0.8,
+    "processing_time_ms": 0.53
+  }
+}

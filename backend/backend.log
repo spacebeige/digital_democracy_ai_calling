@@ -1,2 +1,49 @@
-INFO:     Will watch for changes in these directories: ['/home/parth/Desktop/indiainnovates/digital_democracy_ai_calling/backend']
-ERROR:    [Errno 98] Address already in use
+SARVAM_API_KEY not set. NLP classifier will use mock mode. Set SARVAM_API_KEY environment variable for production.
+INFO:     Started server process [13774]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33458 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33472 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33480 - "POST /v1/router/route-call HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:33488 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33500 - "POST /v1/router/route-call HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:33508 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33524 - "POST /v1/router/route-call HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:44228 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44240 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44256 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44272 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44280 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44296 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44308 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33482 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33496 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33502 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33514 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33516 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33524 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33528 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33532 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33538 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33818 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33834 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33840 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33850 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33858 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33864 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33866 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33874 - "POST /calls/handle-turn HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33882 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44262 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44266 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44768 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49520 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36776 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36782 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47308 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38110 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58854 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49112 - "POST /v1/router/route-call HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33674 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33680 - "POST /v1/router/route-call HTTP/1.1" 200 OK

@@ -1,0 +1,25 @@
+{
+  "session_id": "104654aa-233f",
+  "timestamp": "2026-03-25T05:19:47.247780",
+  "transcript": "unknown audio input",
+  "urgency_level": "LOW",
+  "keywords_detected": [],
+  "routing": {
+    "session_id": "104654aa-233f",
+    "transcript": "unknown audio input",
+    "language": "en",
+    "intent": "OTHER",
+    "issue_category": "General",
+    "department": {
+      "dept_id": "DEPT_GENERAL_ADMIN",
+      "dept_name": "General Administration",
+      "priority": 3
+    },
+    "urgency": 3,
+    "is_emergency": false,
+    "action": "REPROMPT_USER",
+    "summary": "unknown audio input",
+    "confidence": 0.8,
+    "processing_time_ms": 1.01
+  }
+}
