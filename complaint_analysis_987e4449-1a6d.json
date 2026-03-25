@@ -1,0 +1,25 @@
+{
+  "session_id": "987e4449-1a6d",
+  "timestamp": "2026-03-25T05:59:01.460102",
+  "transcript": "Mere ghar ke saamne pani ki pipeline tut gayi hai, bahut pani beh raha hai",
+  "urgency_level": "LOW",
+  "keywords_detected": [],
+  "routing": {
+    "session_id": "987e4449-1a6d",
+    "transcript": "Mere ghar ke saamne pani ki pipeline tut gayi hai, bahut pani beh raha hai",
+    "language": "en",
+    "intent": "NEW_COMPLAINT",
+    "issue_category": "Water",
+    "department": {
+      "dept_id": "DEPT_WATER_001",
+      "dept_name": "Water & Sewerage",
+      "priority": 3
+    },
+    "urgency": 3,
+    "is_emergency": false,
+    "action": "CREATE_TICKET",
+    "summary": "Mere ghar ke saamne pani ki pipeline tut gayi hai,",
+    "confidence": 0.8,
+    "processing_time_ms": 1.08
+  }
+}

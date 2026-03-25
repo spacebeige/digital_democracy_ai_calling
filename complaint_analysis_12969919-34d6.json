@@ -1,0 +1,12 @@
+{
+  "session_id": "12969919-34d6",
+  "timestamp": "2026-03-25T08:03:17.341206",
+  "transcript": "\uc774 \uc2dc\uc6d0\ud55c",
+  "urgency_level": "LOW",
+  "keywords_detected": [],
+  "routing": {
+    "status": "local_mode",
+    "urgency": "LOW",
+    "message": "Complaint recorded with urgency: LOW"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "session_id": "7f5c83d7-fc39",
+  "timestamp": "2026-03-25T06:09:29.635638",
+  "transcript": "This is test audio for system testing purposes",
+  "urgency_level": "LOW",
+  "keywords_detected": [],
+  "routing": {
+    "session_id": "7f5c83d7-fc39",
+    "transcript": "This is test audio for system testing purposes",
+    "language": "en",
+    "intent": "OTHER",
+    "issue_category": "General",
+    "department": {
+      "dept_id": "DEPT_GENERAL_ADMIN",
+      "dept_name": "General Administration",
+      "priority": 3
+    },
+    "urgency": 3,
+    "is_emergency": false,
+    "action": "REPROMPT_USER",
+    "summary": "This is test audio for system testing purposes",
+    "confidence": 0.8,
+    "processing_time_ms": 1.32
+  }
+}

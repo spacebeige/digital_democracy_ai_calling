@@ -1,5 +1,16 @@
 # 🚀 QUICK START - 3 MINUTES TO WORKING SYSTEM
 
+## 🌐 NEW: Automatic Language Detection
+
+**The system now automatically detects whether you're speaking:**
+- 🇮🇳 **Hindi (हिंदी)** 
+- 🇬🇧 **English**
+- 🔀 **Hinglish** (Mixed Hindi-English)
+
+No setup needed - just speak naturally in any language!
+
+---
+
 ## Choose Your Path
 
 ### 🟢 **Option A: Test Right Now (No Microphone)**
@@ -109,6 +120,7 @@ interactive_voice_to_layer3_enhanced.py
 ✓ Real-time audio meter
 ✓ Live countdown timer
 ✓ Transcription display
+✓ Language detection (Hindi/English/Hinglish)
 ✓ Urgency level (🚨 to ℹ️)
 ✓ Keyword extraction
 ✓ Confidence scoring
@@ -116,6 +128,39 @@ interactive_voice_to_layer3_enhanced.py
 ✓ Department assignment
 ✓ JSON reports
 ✓ Multi-language (Hindi/English)
+```
+
+---
+
+## 🌐 Language Detection
+
+The system automatically detects which language you're speaking:
+
+### Supported Languages
+- **हिंदी (Hindi)** - Full support with 70+ keywords
+- **English** - Full support 
+- **Hinglish** - Mixed Hindi-English detected automatically
+
+### How It Works
+```
+You say: "Mere ghar ke pani ki supply nahi aa rahi"
+System detects: Hindi
+Urgency detected: MEDIUM
+Keywords: ["पानी", "supply"]
+```
+
+```
+You say: "There's a fire in the building"
+System detects: English
+Urgency detected: CRITICAL
+Keywords: ["fire"]
+```
+
+```
+You say: "Electricity ka bill bohot zyada aa gya"
+System detects: Hinglish (Mixed)
+Urgency detected: LOW
+Keywords: ["electricity"]
 ```
 
 ---

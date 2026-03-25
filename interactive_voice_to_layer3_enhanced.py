@@ -20,6 +20,7 @@ import time
 import requests
 import json
 import re
+import logging
 from pathlib import Path
 from uuid import uuid4
 from datetime import datetime
@@ -37,6 +38,10 @@ except ImportError:
     MICROPHONE_AVAILABLE = False
     SAMPLE_RATE = 16000
 
+# Setup logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 # Configuration
 STT_API = "http://localhost:9000"
 BACKEND_API = "http://localhost:8000"
@@ -46,9 +51,11 @@ URGENCY_KEYWORDS = {
     "CRITICAL": {
         "hindi": ["आग", "आग लगी", "fire", "emergency", "तुरंत", "जल्दी", "तुरंत ही", "बहुत खतरनाक", 
                   "मेरी जान", "जान का खतरा", "घायल", "खून", "गंभीर", "accident", "दुर्घटना",
-                  "collision", "टकराव", "ज्यादा चोट", "serious"],
+                  "collision", "टकराव", "ज्यादा चोट", "serious", "madad", "मदद", "मदद करो", "मदद करौ",
+                  "बचाओ", "bachao", "बचा लो", "ट्रैप", "फंस", "help", "rescue", "save", "aag", "blaze"],
         "english": ["fire", "emergency", "urgent", "critical", "critical level", "danger", "help", "911", "dying", 
-                    "severe", "accident", "bleeding", "unconscious", "dead", "police", "attack", "shot"]
+                    "severe", "accident", "bleeding", "unconscious", "dead", "police", "attack", "shot", 
+                    "madad", "save me", "rescue", "help immediately", "call police"]
     },
     "HIGH": {
         "hindi": ["बिजली", "बिजली नहीं", "बिजली गई", "बिजली खत्म", "कोई आ रहा है", "चोर", "डाका", "गायब", "खो गया", 
@@ -220,16 +227,19 @@ def analyze_urgency(text, transcript_session_id):
 
 
 def transcribe_audio_with_feedback(audio_file):
-    """Transcribe with live feedback."""
+    """Transcribe with live feedback - uses Whisper > Google Cloud > Mock.
+    
+    Returns:
+        Tuple of (transcript, language_detected) or (None, None)
+    """
     print_section("🎤 STEP 1: TRANSCRIPTION")
-    print(f"  Sending audio to STT service...")
-    print(f"  Waiting for results...\n")
     
     try:
-        with open(audio_file, "rb") as f:
-            audio_data = f.read()
+        # Try unified STT service first (Whisper)
+        print(f"  Attempting real STT transcription...\n")
         
-        # Show progress
+        from unified_stt_service import transcribe, get_status
+        
         sys.stdout.write("  ")
         for i in range(3):
             time.sleep(0.2)
@@ -237,32 +247,60 @@ def transcribe_audio_with_feedback(audio_file):
             sys.stdout.flush()
         sys.stdout.write("\n")
         
-        response = requests.post(
-            f"{STT_API}/transcribe",
-            files={"file": ("audio.wav", audio_data)},
-            timeout=30,
-        )
-        
-        if response.status_code != 200:
-            print(f"  {Colors.RED}✗ Error: {response.status_code}{Colors.END}")
-            return None
-        
-        result = response.json()
-        transcript = result.get("text", "").strip()
+        transcript, engine_used, language_detected = transcribe(audio_file, engine="auto")
         
         if not transcript:
             print(f"  {Colors.RED}✗ No transcription returned{Colors.END}")
-            return None
+            return None, None
         
-        # Display transcription with formatting
+        # Display transcription with engine and language info
         print(f"\n  {Colors.BOLD}YOU SAID:{Colors.END}")
-        print(f"  {Colors.CYAN}\"{transcript}\"{Colors.END}\n")
+        print(f"  {Colors.CYAN}\"{transcript}\"{Colors.END}")
+        print(f"  {Colors.DIM}(Transcribed using: {engine_used} | Language: {language_detected}){Colors.END}\n")
         
-        return transcript
+        return transcript, language_detected
+    
+    except ImportError:
+        # Fallback to HTTP mock service if unified_stt_service not available
+        print(f"  Using mock STT service (HTTP)...\n")
+        
+        try:
+            with open(audio_file, "rb") as f:
+                audio_data = f.read()
+            
+            response = requests.post(
+                f"{STT_API}/transcribe",
+                files={"file": ("audio.wav", audio_data)},
+                timeout=30,
+            )
+            
+            if response.status_code != 200:
+                print(f"  {Colors.RED}✗ Error: {response.status_code}{Colors.END}")
+                return None, None
+            
+            result = response.json()
+            transcript = result.get("text", "").strip()
+            
+            if not transcript:
+                print(f"  {Colors.RED}✗ No transcription returned{Colors.END}")
+                return None, None
+            
+            # Default to Hindi for mock service (since we don't have language detection)
+            language = "hi"
+            
+            print(f"\n  {Colors.BOLD}YOU SAID:{Colors.END}")
+            print(f"  {Colors.CYAN}\"{transcript}\"{Colors.END}")
+            print(f"  {Colors.DIM}(Transcribed using: Mock Service | Language: {language}){Colors.END}\n")
+            
+            return transcript, language
+        
+        except Exception as e:
+            print(f"  {Colors.RED}✗ Error: {e}{Colors.END}")
+            return None, None
     
     except Exception as e:
         print(f"  {Colors.RED}✗ Error: {e}{Colors.END}")
-        return None
+        return None, None
 
 
 def route_and_analyze(transcript, session_id):
@@ -300,28 +338,46 @@ def route_and_analyze(transcript, session_id):
     
     print(f"\n  Sending to department routing system...")
     
-    # Send to Layer 3
+    # Send to Layer 3 (optional - doesn't block if backend unavailable)
     try:
         response = requests.post(
             f"{BACKEND_API}/v1/router/route-call",
             json={
                 "session_id": session_id,
                 "transcript": transcript,
+                "urgency": urgency,
             },
-            timeout=30,
+            timeout=5,  # Shorter timeout for optional service
         )
         
-        if response.status_code != 200:
-            print(f"  {Colors.RED}✗ Routing failed{Colors.END}")
-            return None
-        
-        result = response.json()
-        print(f"  {Colors.GREEN}✓ Routed successfully{Colors.END}\n")
-        return result
+        if response.status_code == 200:
+            result = response.json()
+            print(f"  {Colors.GREEN}✓ Routed successfully{Colors.END}\n")
+            return result
+        else:
+            print(f"  {Colors.DIM}⚠️  Backend routing unavailable (developing locally){Colors.END}")
+            # Return fallback routing based on urgency
+            return {
+                "status": "local_mode",
+                "urgency": urgency,
+                "message": f"Complaint recorded with urgency: {urgency}"
+            }
     
+    except requests.exceptions.Timeout:
+        print(f"  {Colors.DIM}⚠️  Backend routing timeout (developing locally){Colors.END}")
+        return {
+            "status": "local_mode",
+            "urgency": urgency,
+            "message": f"Complaint recorded with urgency: {urgency}"
+        }
     except Exception as e:
-        print(f"  {Colors.RED}✗ Error: {e}{Colors.END}")
-        return None
+        print(f"  {Colors.DIM}⚠️  Backend unavailable: {type(e).__name__}{Colors.END}")
+        # Graceful fallback - system still works locally
+        return {
+            "status": "local_mode",
+            "urgency": urgency,
+            "message": f"Complaint recorded with urgency: {urgency}"
+        }
 
 
 def display_final_action(routing, urgency, keywords):
@@ -365,21 +421,24 @@ def print_section(text):
 
 
 def check_services():
-    """Verify services are running."""
-    services = {
-        "STT Service": STT_API,
-        "Backend API": BACKEND_API,
-    }
+    """Verify services are available (local Python modules or HTTP APIs)."""
+    modules_to_check = [
+        ("STT (Whisper)", "unified_stt_service"),
+        ("Language Detection", "unified_stt_service"),
+        ("TTS (gTTS)", "unified_tts_service"),
+        ("Urgency Analysis", "interactive_voice_to_layer3_enhanced"),
+    ]
     
-    for name, url in services.items():
+    all_ok = True
+    for name, module in modules_to_check:
         try:
-            resp = requests.get(f"{url}/", timeout=2)
-            print(f"  {Colors.GREEN}✓{Colors.END} {name:20} OK")
-        except:
-            print(f"  {Colors.RED}✗{Colors.END} {name:20} FAILED")
-            return False
+            __import__(module)
+            print(f"  {Colors.GREEN}✓{Colors.END} {name:25} Ready")
+        except ImportError as e:
+            print(f"  {Colors.RED}✗{Colors.END} {name:25} FAILED: {e}")
+            all_ok = False
     
-    return True
+    return all_ok
 
 
 def save_results(transcript, urgency, keywords, routing, session_id):
@@ -447,9 +506,20 @@ def main():
     session_id = str(uuid4())[:13]
     
     # Step 1: Transcribe
-    transcript = transcribe_audio_with_feedback(audio_file)
+    transcript, language_detected = transcribe_audio_with_feedback(audio_file)
     if not transcript:
         return
+    
+    # Step 1.5: Greet user in their language
+    try:
+        from unified_tts_service import respond_to_user
+        print_section("🎙️ STEP 1.5: LANGUAGE-AWARE GREETING")
+        
+        greeting_audio = respond_to_user(language_detected, playback_method="display")
+        if greeting_audio:
+            print(f"  {Colors.GREEN}✓ Greeting generated in detected language{Colors.END}\n")
+    except Exception as e:
+        logger.warning(f"TTS greeting failed (continuing): {e}")
     
     # Step 2: Analyze and route
     routing = route_and_analyze(transcript, session_id)
