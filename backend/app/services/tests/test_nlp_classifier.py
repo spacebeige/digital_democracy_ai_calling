@@ -335,18 +335,21 @@ class TestInputValidation:
     """Test input validation."""
 
     def test_empty_transcript_validation(self):
-        with pytest.raises(ValueError):
-            NLPInput(
-                session_id=uuid4(),
-                transcript="",
-            )
+        """Empty transcripts should be allowed at input level (caught by silence detector)."""
+        nlp_input = NLPInput(
+            session_id=uuid4(),
+            transcript="",
+        )
+        assert nlp_input.transcript == ""
 
     def test_whitespace_only_validation(self):
-        with pytest.raises(ValueError):
-            NLPInput(
-                session_id=uuid4(),
-                transcript="   \n\t   ",
-            )
+        """Whitespace-only transcripts should be allowed at input level (caught by silence detector)."""
+        nlp_input = NLPInput(
+            session_id=uuid4(),
+            transcript="   \n\t   ",
+        )
+        # Should be trimmed to empty string
+        assert nlp_input.transcript == ""
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

@@ -4,7 +4,7 @@
       "fire", "aag", "agni", "burning", "jalna", "flame", "blaze", "inferno"
     ],
     "medical_emergency": [
-      "ambulance", "ambulans", "hospital", "doctor", "heart-attack", "dil-ka-dora",
+      "ambulance", "ambulans", "एम्बुलेंस", "hospital", "doctor", "heart-attack", "dil-ka-dora",
       "chest-pain", "breathless", "saans", "poison", "zeher", "faint", "seizure",
       "allergy", "shock", "stroke", "paralysis", "coma", "unconscious", "behosh",
       "breathing-difficulty", "oxygen", "CPR", "resuscitation", "critical", "severe",
@@ -64,7 +64,8 @@
       "SOS", "mayday", "help", "sahayata", "madad", "bachao", "save-me", "help-me",
       "calling", "dialing", "emergency-call", "emergency-response", "first-responder",
       "critical", "severe", "serious", "grave", "danger", "khatra", "risk", "threat",
-      "life-threatening", "fatal", "deadly", "high-priority", "top-priority"
+      "life-threatening", "fatal", "deadly", "high-priority", "top-priority",
+      "खतरनाक", "खतरा", "खतरे", "जोखिम"
     ]
   },
   "silence_fillers": {
@@ -96,6 +97,7 @@
       "gandu", "goor", "lavda", "bhikari", "sala", "teri", "tere",
       "badmash", "bewkoof", "besharam", "jhagri", "jhunjhuna", "ladaki",
       "chakka", "hijra", "randighor", "randi-ana", "paimano", "fateh",
+      "साला", "बकवास", "चुटिया", "मादरचोद", "हरामी",
       "bewkuff", "bewakoofana", "bewkuffiana", "badshah", "balyakari"
     ],
     "english": [

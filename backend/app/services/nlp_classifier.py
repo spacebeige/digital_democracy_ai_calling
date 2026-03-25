@@ -96,10 +96,9 @@ class NLPInput(BaseModel):
 
     @field_validator("transcript")
     @classmethod
-    def transcript_not_empty(cls, v: str) -> str:
-        if not v or not v.strip():
-            raise ValueError("Transcript cannot be empty")
-        return v.strip()
+    def transcript_valid(cls, v: str) -> str:
+        # Allow empty/whitespace transcripts - will be caught by silence detector
+        return v.strip() if v else ""
 
 
 class SarvamNLPResponse(BaseModel):

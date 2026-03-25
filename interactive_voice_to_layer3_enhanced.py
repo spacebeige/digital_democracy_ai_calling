@@ -256,6 +256,10 @@ def transcribe_audio_with_feedback(audio_file):
         
         transcript, engine_used, language_detected = transcribe(audio_file, engine="auto")
         
+        # CONSTRAIN language detection to 22 official Indian languages
+        from language_constraint import constrain_detected_language
+        language_detected = constrain_detected_language(language_detected, fallback="en")
+        
         if not transcript:
             print(f"  {Colors.RED}✗ No transcription returned{Colors.END}")
             return None, None
@@ -580,14 +584,8 @@ def main():
         print(f"  {Colors.RED}No audio file{Colors.END}")
         return
     
-    # Get phone number for SMS notifications
-    print_section("📱 CONTACT INFORMATION")
-    phone_number = input("  Enter phone number (for SMS updates): ").strip()
-    if not phone_number:
-        phone_number = None
-        print(f"  {Colors.YELLOW}⚠️  No phone number provided (SMS disabled){Colors.END}")
-    else:
-        print(f"  {Colors.GREEN}✓ Phone: {phone_number}{Colors.END}")
+    # SMS temporarily disabled
+    phone_number = None
     
     # Process
     session_id = str(uuid4())[:13]
@@ -597,16 +595,17 @@ def main():
     if not transcript:
         return
     
-    # Step 1.5: Greet user in their language
+    # Step 1.5: Greet user in their language (using audio files)
     try:
-        from unified_tts_service import respond_to_user
+        from audio_greeting_handler import create_greeting_handler
         print_section("🎙️ STEP 1.5: LANGUAGE-AWARE GREETING")
         
-        greeting_audio = respond_to_user(language_detected, playback_method="display")
-        if greeting_audio:
-            print(f"  {Colors.GREEN}✓ Greeting generated in detected language{Colors.END}\n")
+        greeting_handler = create_greeting_handler()
+        greeting_success = greeting_handler.detect_and_greet(language_detected, display_only=True)
+        
     except Exception as e:
-        logger.warning(f"TTS greeting failed (continuing): {e}")
+        logger.warning(f"Audio greeting failed (continuing): {e}")
+        print(f"  {Colors.YELLOW}⚠️  {e}{Colors.END}")
     
     # Step 2: Analyze and route
     routing = route_and_analyze(transcript, session_id, language_detected, phone_number=phone_number)
