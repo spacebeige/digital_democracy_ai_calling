@@ -19,7 +19,7 @@ torch>=2.2
 groq>=0.12
 
 # TTS
-TTS>=0.24
+TTS>=0.22.0
 gTTS>=2.4
 
 # Audio
