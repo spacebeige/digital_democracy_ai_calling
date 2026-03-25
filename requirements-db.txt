@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+"""
+Database and routing dependencies for voice complaint system
+"""
+
+# Database
+psycopg2-binary>=2.9.0
+python-dotenv>=1.0.0
+
+# Already in awaaz/requirements.txt but needed here too
+faster-whisper>=1.0
+langdetect>=1.0.9
+gtts>=2.4.0
+pydub>=0.25
+numpy>=1.26
+scipy>=1.13
+librosa>=0.10
+soundfile>=0.13
+sounddevice>=0.4.6

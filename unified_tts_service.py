@@ -95,7 +95,86 @@ GREETINGS = {
         "language_name": "Gujarati",
         "greeting": "નમસ્તે! હું તમારી ફરિયાદ નોંધી રહ્યો છું.",
         "language_code": "gu",
-        "greetings_alt": []
+    },
+    "kn": {
+        "language_name": "ಕನ್ನಡ (Kannada)",
+        "greeting": "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ದೂರು ದಾಖಲ ಮಾಡುತ್ತಿದ್ದೇನೆ.",
+        "language_code": "kn",
+    },
+    "ml": {
+        "language_name": "മലയാളം (Malayalam)",
+        "greeting": "നമസ്കാരം! ഞാൻ നിങ്ങളുടെ പരാതി രജിസ്ട്റർ ചെയ്യുകയാണ്।",
+        "language_code": "ml",
+    },
+    "bn": {
+        "language_name": "বাংলা (Bengali)",
+        "greeting": "নমস্কার! আমি আপনার অভিযোগ নিবন্ধন করছি।",
+        "language_code": "bn",
+    },
+    "pa": {
+        "language_name": "ਪੰਜਾਬੀ (Punjabi)",
+        "greeting": "ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰ ਰਿਹਾ ਹਾਂ।",
+        "language_code": "pa",
+    },
+    "or": {
+        "language_name": "ଓଡ଼ିଆ (Odia)",
+        "greeting": "ନମସ୍କାର! ମୁଁ ଆପଣଙ୍କ ଅଭିଯୋଗ ନୋଟ କରୁଛି।",
+        "language_code": "or",
+    },
+    "ur": {
+        "language_name": "اردو (Urdu)",
+        "greeting": "السلام عليكم! میں آپ کی شکایت درج کر رہا ہوں۔",
+        "language_code": "ur",
+    },
+    "ne": {
+        "language_name": "नेपाली (Nepali)",
+        "greeting": "नमस्ते! मैले तपाईंको गुनासो दर्ता गरिरहेको छु।",
+        "language_code": "ne",
+    },
+    "as": {
+        "language_name": "অসমীয়া (Assamese)",
+        "greeting": "নমস্কাৰ! মই আপোনাৰ অভিযোগ নিবন্ধন কৰছি।",
+        "language_code": "as",
+    },
+    "kok": {
+        "language_name": "कोंकणी (Konkani)",
+        "greeting": "नमस्कार! मी तुमचे तक्रार नोंदणी करत आहे।",
+        "language_code": "kok",
+    },
+    "ks": {
+        "language_name": "کشمیری (Kashmiri)",
+        "greeting": "السلام عليكم! ميں آپ کی شکایت درج کر رہا ہوں۔",
+        "language_code": "ks",
+    },
+    "sa": {
+        "language_name": "संस्कृतम् (Sanskrit)",
+        "greeting": "नमस्ते! अहं भवतः शिकायां लेखयामि।",
+        "language_code": "sa",
+    },
+    "sd": {
+        "language_name": "سندھی (Sindhi)",
+        "greeting": "السلام عليكم! ميں آپ کی شکایت درج کر رہا ہوں۔",
+        "language_code": "sd",
+    },
+    "mni": {
+        "language_name": "ꯃꯤꯇꯩ (Manipuri/Meitei)",
+        "greeting": "ꯅꯈꯜꯂꯥ! ꯁꯥ ꯇꯖ ꯄꯤꯅꯈꯠ।",
+        "language_code": "mni",
+    },
+    "bo": {
+        "language_name": "बड़ो (Bodo)",
+        "greeting": "नमस्कार! मी तुम्चे तक्रार नोंदणी करत आहे।",
+        "language_code": "bo",
+    },
+    "sat": {
+        "language_name": "ᱥᱟᱱᱛᱟᱲᱤ (Santali)",
+        "greeting": "नमस्कार! मी तुमचे तक्रार नोंदणी करत आहे।",
+        "language_code": "sat",
+    },
+    "mai": {
+        "language_name": "मैथिली (Maithili)",
+        "greeting": "नमस्कार! हम अहाँक शिकायत नोद कऽ रहल छी।",
+        "language_code": "mai",
     },
 }
 

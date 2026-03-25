@@ -26,6 +26,13 @@ from uuid import uuid4
 from datetime import datetime
 from collections import defaultdict
 
+# Load environment variables
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # Audio libraries for microphone capture
 try:
     import sounddevice as sd
@@ -303,9 +310,9 @@ def transcribe_audio_with_feedback(audio_file):
         return None, None
 
 
-def route_and_analyze(transcript, session_id):
-    """Route to Layer 3 and show urgency analysis."""
-    print_section("🧠 STEP 2: INTELLIGENT ANALYSIS")
+def route_and_analyze(transcript, session_id, language_detected="en", phone_number=None):
+    """Route to appropriate department and show urgency analysis."""
+    print_section("🧠 STEP 2: INTELLIGENT ANALYSIS & DEPARTMENT ROUTING")
     
     # Analyze urgency immediately from transcript
     urgency, keywords, score = analyze_urgency(transcript, session_id)
@@ -329,55 +336,126 @@ def route_and_analyze(transcript, session_id):
     print(f"  {color}{icon} LEVEL: {urgency}{Colors.END}")
     print(f"  {Colors.DIM}Confidence: {score}/4{Colors.END}")
     
+    # Initialize unique_keywords (ALWAYS define it, even if empty)
+    unique_keywords = []
+    
     # Show identified keywords
     if keywords:
         print(f"\n  {Colors.BOLD}KEY TERMS DETECTED:{Colors.END}")
         unique_keywords = list(set(keywords))[:5]  # Show top 5 unique
         for kw in unique_keywords:
             print(f"    • {Colors.YELLOW}{kw}{Colors.END}")
+    else:
+        unique_keywords = []
     
-    print(f"\n  Sending to department routing system...")
+    # STEP 2A: Database routing (using DATABASE_ROUTER)
+    print(f"\n  {Colors.BOLD}🗄️  DEPARTMENT ROUTING:{Colors.END}")
     
-    # Send to Layer 3 (optional - doesn't block if backend unavailable)
     try:
-        response = requests.post(
-            f"{BACKEND_API}/v1/router/route-call",
-            json={
-                "session_id": session_id,
-                "transcript": transcript,
-                "urgency": urgency,
-            },
-            timeout=5,  # Shorter timeout for optional service
-        )
+        from database_router import route_complaint, save_complaint_to_db, get_db_status
         
-        if response.status_code == 200:
-            result = response.json()
-            print(f"  {Colors.GREEN}✓ Routed successfully{Colors.END}\n")
-            return result
+        # Get database status first
+        db_status = get_db_status()
+        if db_status.get("status") == "connected":
+            # Route using database logic
+            routing_info = route_complaint(
+                transcript=transcript,
+                urgency=urgency,
+                keywords=unique_keywords,
+                language=language_detected
+            )
+            
+            print(f"    Department: {Colors.CYAN}{routing_info['department'].upper()}{Colors.END}")
+            print(f"    Priority: {Colors.CYAN}{routing_info['priority']}/5{Colors.END}")
+            print(f"    Confidence: {Colors.CYAN}{routing_info['confidence']:.1f}%{Colors.END}")
+            
+            # Save to database
+            db_saved = save_complaint_to_db(
+                session_id=session_id,
+                transcript=transcript,
+                language_code=language_detected,
+                urgency_level=urgency,
+                keywords=unique_keywords,
+                routing_info=routing_info
+            )
+            
+            if db_saved:
+                print(f"    {Colors.GREEN}✓ Saved to database{Colors.END}")
+                
+                # Send SMS notification if phone number provided
+                if phone_number:
+                    try:
+                        from sms_notifier import notify_complaint_received
+                        
+                        complaint_data = {
+                            "session_id": session_id,
+                            "department_assigned": routing_info['department'],
+                            "urgency_level": urgency,
+                            "transcript": transcript[:50]  # First 50 chars
+                        }
+                        
+                        sms_result = notify_complaint_received(
+                            complaint_data=complaint_data,
+                            phone_number=phone_number,
+                            language=language_detected
+                        )
+                        
+                        if sms_result.get("success"):
+                            if sms_result.get("dry_run"):
+                                print(f"    {Colors.BLUE}📱 [DRY-RUN] SMS would be sent: {sms_result.get('phone')}{Colors.END}")
+                            else:
+                                print(f"    {Colors.GREEN}✓ SMS sent to {sms_result.get('phone')}{Colors.END}")
+                        else:
+                            print(f"    {Colors.YELLOW}⚠️  SMS failed: {sms_result.get('error')}{Colors.END}")
+                    
+                    except Exception as sms_error:
+                        logger.warning(f"SMS notification failed: {sms_error}")
+                        print(f"    {Colors.YELLOW}⚠️  SMS error: {str(sms_error)[:50]}{Colors.END}")
+            else:
+                print(f"    {Colors.YELLOW}⚠️  Database save failed{Colors.END}")
+            
+            print()
+            return routing_info
         else:
-            print(f"  {Colors.DIM}⚠️  Backend routing unavailable (developing locally){Colors.END}")
-            # Return fallback routing based on urgency
-            return {
-                "status": "local_mode",
-                "urgency": urgency,
-                "message": f"Complaint recorded with urgency: {urgency}"
-            }
+            logger.warning(f"Database status: {db_status}")
+            raise Exception("Database not connected")
     
-    except requests.exceptions.Timeout:
-        print(f"  {Colors.DIM}⚠️  Backend routing timeout (developing locally){Colors.END}")
-        return {
-            "status": "local_mode",
-            "urgency": urgency,
-            "message": f"Complaint recorded with urgency: {urgency}"
-        }
+    except ModuleNotFoundError:
+        logger.warning("database_router module not found, using fallback routing")
     except Exception as e:
-        print(f"  {Colors.DIM}⚠️  Backend unavailable: {type(e).__name__}{Colors.END}")
-        # Graceful fallback - system still works locally
-        return {
-            "status": "local_mode",
-            "urgency": urgency,
-            "message": f"Complaint recorded with urgency: {urgency}"
-        }
+        logger.warning(f"Database routing failed: {e}, using fallback")
+    
+    # FALLBACK: Use local routing logic (no database)
+    print(f"    {Colors.DIM}Using local routing (offline mode){Colors.END}")
+    
+    # Simple local routing based on urgency and keywords
+    if urgency == "CRITICAL":
+        if unique_keywords and any(kw.lower() in ["aag", "fire", "आग"] for kw in unique_keywords):
+            dept = "fire"
+        elif unique_keywords and any(kw.lower() in ["police", "चोरी", "डाका"] for kw in unique_keywords):
+            dept = "police"
+        else:
+            dept = "emergency"
+    elif urgency == "HIGH":
+        dept = "police"
+    elif urgency == "MEDIUM":
+        dept = "health"
+    else:
+        dept = "general"
+    
+    routing_info = {
+        "department": dept,
+        "priority": {"CRITICAL": 1, "HIGH": 2, "MEDIUM": 3, "LOW": 4}.get(urgency, 5),
+        "confidence": 50,  # Lower confidence for local routing
+        "matched_keywords": unique_keywords[:3] if unique_keywords else [],
+        "status": "local_mode"
+    }
+    
+    print(f"    Department: {Colors.CYAN}{dept.upper()}{Colors.END}")
+    print(f"    Priority: {Colors.CYAN}{routing_info['priority']}/5{Colors.END}")
+    print()
+    
+    return routing_info
 
 
 def display_final_action(routing, urgency, keywords):
@@ -502,6 +580,15 @@ def main():
         print(f"  {Colors.RED}No audio file{Colors.END}")
         return
     
+    # Get phone number for SMS notifications
+    print_section("📱 CONTACT INFORMATION")
+    phone_number = input("  Enter phone number (for SMS updates): ").strip()
+    if not phone_number:
+        phone_number = None
+        print(f"  {Colors.YELLOW}⚠️  No phone number provided (SMS disabled){Colors.END}")
+    else:
+        print(f"  {Colors.GREEN}✓ Phone: {phone_number}{Colors.END}")
+    
     # Process
     session_id = str(uuid4())[:13]
     
@@ -522,7 +609,7 @@ def main():
         logger.warning(f"TTS greeting failed (continuing): {e}")
     
     # Step 2: Analyze and route
-    routing = route_and_analyze(transcript, session_id)
+    routing = route_and_analyze(transcript, session_id, language_detected, phone_number=phone_number)
     
     # Get urgency from session
     urgency = SESSION_KEYWORDS[session_id]["urgency_levels"][-1] if SESSION_KEYWORDS[session_id]["urgency_levels"] else "LOW"

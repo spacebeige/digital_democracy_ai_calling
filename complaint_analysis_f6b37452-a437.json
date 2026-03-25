@@ -1,0 +1,16 @@
+{
+  "session_id": "f6b37452-a437",
+  "timestamp": "2026-03-25T10:19:44.726931",
+  "transcript": "Hey, this is me Vedant here. So what's your plan today? Let's sit here.",
+  "urgency_level": "LOW",
+  "keywords_detected": [
+    "what"
+  ],
+  "routing": {
+    "department": "general",
+    "priority": 5,
+    "confidence": 0,
+    "matched_keywords": [],
+    "reasoning": "No specific department keywords matched"
+  }
+}

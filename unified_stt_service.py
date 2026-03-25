@@ -33,73 +33,208 @@ except ImportError:
 
 
 def detect_language(text: str) -> str:
-    """Detect language of text. Returns language code (hi, en, etc)."""
+    """
+    Detect language of text. Returns language code for 22 official Indian languages + English.
+    
+    22 Official Languages of India:
+    1. Hindi (hi), 2. English (en), 3. Assamese (as), 4. Bengali (bn), 5. Gujarati (gu)
+    6. Kannada (kn), 7. Kashmiri (ks), 8. Konkani (kok), 9. Malayalam (ml)
+    10. Manipuri/Meitei (mni), 11. Marathi (mr), 12. Nepali (ne), 13. Odia (or)
+    14. Punjabi (pa), 15. Sanskrit (sa), 16. Sindhi (sd), 17. Tamil (ta), 18. Telugu (te)
+    19. Urdu (ur), 20. Bodo (bo), 21. Santali (sat), 22. Maithili (mai)
+    """
     if not text.strip():
-        return "unknown"
+        return "hi"  # Default to Hindi
     
-    # PRIORITY 1: Check for Devanagari script (pure Hindi indicator)
-    devanagari_count = sum(1 for c in text if ord(c) >= 0x900 and ord(c) <= 0x97F)
+    # OFFICIAL INDIAN LANGUAGES - Script ranges
     text_length = len(text)
-    devanagari_ratio = devanagari_count / text_length if text_length > 0 else 0
     
-    # If significant Devanagari content, it's Hindi (NOT Urdu/Arabic)
-    if devanagari_ratio > 0.15:  # 15%+ Devanagari = Hindi
+    # Check for regional script characters (ONLY Indian scripts)
+    # Tamil script (0x0B80–0x0BFF)
+    tamil_count = sum(1 for c in text if ord(c) >= 0x0B80 and ord(c) <= 0x0BFF)
+    # Telugu script (0x0C00–0x0C7F)
+    telugu_count = sum(1 for c in text if ord(c) >= 0x0C00 and ord(c) <= 0x0C7F)
+    # Kannada script (0x0C80–0x0CFF)
+    kannada_count = sum(1 for c in text if ord(c) >= 0x0C80 and ord(c) <= 0x0CFF)
+    # Malayalam script (0x0D00–0x0D7F)
+    malayalam_count = sum(1 for c in text if ord(c) >= 0x0D00 and ord(c) <= 0x0D7F)
+    # Odia script (0x0B00–0x0B7F)
+    odia_count = sum(1 for c in text if ord(c) >= 0x0B00 and ord(c) <= 0x0B7F)
+    # Gujarati script (0x0A80–0x0AFF)
+    gujarati_count = sum(1 for c in text if ord(c) >= 0x0A80 and ord(c) <= 0x0AFF)
+    # Bengali script (0x0980–0x09FF)
+    bengali_count = sum(1 for c in text if ord(c) >= 0x0980 and ord(c) <= 0x09FF)
+    # Assamese script (0x0980–0x09FF, similar to Bengali)
+    assamese_count = sum(1 for c in text if ord(c) >= 0x0980 and ord(c) <= 0x09FF)
+    # Gurmukhi script (0x0A00–0x0A7F) - Punjabi
+    punjabi_count = sum(1 for c in text if ord(c) >= 0x0A00 and ord(c) <= 0x0A7F)
+    
+    # Devanagari script (0x0900–0x097F) - Hindi, Marathi, Sanskrit, Nepali, etc.
+    devanagari_count = sum(1 for c in text if ord(c) >= 0x0900 and ord(c) <= 0x097F)
+    # Arabic script (0x0600–0x06FF) - Urdu uses Arabic script
+    arabic_count = sum(1 for c in text if ord(c) >= 0x0600 and ord(c) <= 0x06FF)
+    
+    # Calculate ratios
+    tamil_ratio = tamil_count / text_length if text_length > 0 else 0
+    telugu_ratio = telugu_count / text_length if text_length > 0 else 0
+    kannada_ratio = kannada_count / text_length if text_length > 0 else 0
+    malayalam_ratio = malayalam_count / text_length if text_length > 0 else 0
+    odia_ratio = odia_count / text_length if text_length > 0 else 0
+    gujarati_ratio = gujarati_count / text_length if text_length > 0 else 0
+    bengali_ratio = bengali_count / text_length if text_length > 0 else 0
+    punjabi_ratio = punjabi_count / text_length if text_length > 0 else 0
+    devanagari_ratio = devanagari_count / text_length if text_length > 0 else 0
+    arabic_ratio = arabic_count / text_length if text_length > 0 else 0
+    
+    # Detection threshold
+    SCRIPT_THRESHOLD = 0.15
+    
+    # Check for Tamil
+    if tamil_ratio > SCRIPT_THRESHOLD:
+        logger.info(f"Language detection: Tamil script detected ({tamil_ratio:.1%})")
+        return "ta"
+    
+    # Check for Telugu
+    if telugu_ratio > SCRIPT_THRESHOLD:
+        logger.info(f"Language detection: Telugu script detected ({telugu_ratio:.1%})")
+        return "te"
+    
+    # Check for Kannada
+    if kannada_ratio > SCRIPT_THRESHOLD:
+        logger.info(f"Language detection: Kannada script detected ({kannada_ratio:.1%})")
+        return "kn"
+    
+    # Check for Malayalam
+    if malayalam_ratio > SCRIPT_THRESHOLD:
+        logger.info(f"Language detection: Malayalam script detected ({malayalam_ratio:.1%})")
+        return "ml"
+    
+    # Check for Odia
+    if odia_ratio > SCRIPT_THRESHOLD and not bengali_count > 0:
+        logger.info(f"Language detection: Odia script detected ({odia_ratio:.1%})")
+        return "or"
+    
+    # Check for Gujarati
+    if gujarati_ratio > SCRIPT_THRESHOLD:
+        logger.info(f"Language detection: Gujarati script detected ({gujarati_ratio:.1%})")
+        return "gu"
+    
+    # Check for Bengali/Assamese
+    if bengali_ratio > SCRIPT_THRESHOLD:
+        # Bengali (bn) is more common than Assamese
+        logger.info(f"Language detection: Bengali/Assamese script detected ({bengali_ratio:.1%})")
+        return "bn"
+    
+    # Check for Punjabi
+    if punjabi_ratio > SCRIPT_THRESHOLD:
+        logger.info(f"Language detection: Punjabi (Gurmukhi) script detected ({punjabi_ratio:.1%})")
+        return "pa"
+    
+    # Check for Urdu (uses Arabic script)
+    if arabic_ratio > SCRIPT_THRESHOLD:
+        logger.info(f"Language detection: Urdu (Arabic script) detected ({arabic_ratio:.1%})")
+        return "ur"
+    
+    # PRIORITY 2: Check for Devanagari script and distinguish Hindi vs Marathi vs Sanskrit
+    if devanagari_ratio > SCRIPT_THRESHOLD:  # 15%+ Devanagari
+        # Marathi-specific words for detection
+        marathi_words = ["तुम्ही", "आहे", "आहेत", "करून", "आणि", "मी", "तू", "हे", "ते", "ही", "त्या", "एक"]
+        # Sanskrit-specific words
+        sanskrit_words = ["नमस्ते", "वेदा", "अस्ति", "भवतु", "शास्त्रम्"]
+        
+        text_lower = text.lower()
+        
+        # Check for Marathi-specific words
+        marathi_matches = sum(1 for word in marathi_words if word in text_lower)
+        if marathi_matches > 0:
+            logger.info(f"Language detection: Marathi words detected ({marathi_matches}) + Devanagari → Marathi")
+            return "mr"  # It's Marathi!
+        
+        # Check for Sanskrit words
+        sanskrit_matches = sum(1 for word in sanskrit_words if word in text_lower)
+        if sanskrit_matches > 0:
+            logger.info(f"Language detection: Sanskrit words detected ({sanskrit_matches}) + Devanagari → Sanskrit")
+            return "sa"  # It's Sanskrit!
+        
+        # Default Devanagari to Hindi
         logger.info(f"Language detection: Devanagari detected ({devanagari_ratio:.1%}) → Hindi")
         return "hi"
     
-    # PRIORITY 2: Check for common romanized Hindi words (context clue)
+    # PRIORITY 3: Check for common romanized Hindi/Marathi words (Hinglish)
     romanized_hindi_words = [
         "aag", "naar", "madad", "bachao", "help", "meri", "mere", "ghar", "ghare", 
-        "nearby", "samne", "pani", "electricity", "bijli", "gayi", "nahi", "hai"
+        "nearby", "samne", "pani", "electricity", "bijli", "gayi", "nahi", "hai",
+        "tum", "tumhi", "pan", "ahe", "karun"  # Marathi-like words
     ]
     text_lower = text.lower()
     
     # If text contains multiple Hindi romanized words, likely Hinglish/romanized Hindi
     hindi_word_count = sum(1 for word in romanized_hindi_words if word in text_lower)
-    if text_length < 50 and hindi_word_count >= 1:  # Short text with Hindi words = likely Hinglish
+    if text_length < 50 and hindi_word_count >= 1:
         logger.info(f"Language detection: Romanized Hindi words detected ({hindi_word_count} words) → Hindi")
         return "hi"
     
-    # PRIORITY 3: Use langdetect for ambiguous cases
+    # PRIORITY 4: Use langdetect for ambiguous cases (with Indian-only filtering)
+    # Official Indian languages supported by langdetect
+    OFFICIAL_INDIAN_LANGS = {"hi", "en", "mr", "ta", "te", "kn", "ml", "gu", "bn", "pa", "or", "ur", "ne", "kok", "ks", "sa", "sd", "as", "mni", "bo", "sat", "mai"}
+    
     try:
         if LANGDETECT_AVAILABLE:
             detected = detect(text)
             
-            # Sanity check: If langdetect says non-Indian language but context suggests Indian
-            if detected in ["ur", "ar", "so", "fa"] and len(text) < 50:
-                # For very short text in non-Indian scripts, default to Hindi (high probability in India context)
-                logger.info(f"Language detection: langdetect said {detected} but short text + India context → defaulting to Hindi")
-                return "hi"
-            
-            # Sanity check: If langdetect says Urdu/Arabic but we see Latin letters, it's likely Hinglish
-            if detected in ["ur", "ar"] and re.search(r'[a-zA-Z]', text):
-                logger.info(f"Language detection: {detected} detected but Latin letters found → English/Hinglish")
-                return "en"  # Treat as English for keyword matching
-            
-            logger.info(f"Language detection (langdetect): {detected}")
-            return detected
+            # Filter: Only accept official Indian languages
+            if detected in OFFICIAL_INDIAN_LANGS:
+                logger.info(f"Language detection (langdetect): {detected}")
+                return detected
+            else:
+                # Non-Indian language detected (like sk/Slovak, ko/Korean, cy/Welsh, etc.)
+                logger.warning(f"Language detection: Non-Indian language detected '{detected}' - defaulting to Hindi")
+                # Check if there's any Latin alphabet, default to English if so
+                if re.search(r'^[a-zA-Z\\s0-9.,:!?]*$', text):
+                    logger.info(f"Language detection: Latin-only text detected - defaulting to English")
+                    return "en"
+                else:
+                    # Default to Hindi for Indian context
+                    return "hi"
         else:
-            # Fallback: Simple pattern matching
+            # Fallback: Simple pattern matching (no langdetect)
             if re.search(r'[a-zA-Z]', text):
                 return "en"
             else:
-                return "hi"  # Default to Hindi
+                return "hi"
+    
     except Exception as e:
         logger.warning(f"Language detection failed: {e}, defaulting to 'hi'")
         return "hi"
 
 
 def format_language(lang_code: str) -> str:
-    """Convert language code to readable name."""
+    """Convert language code to readable name (Official Indian Languages)."""
     lang_names = {
+        # 22 Official Languages of India
         "hi": "Hindi (हिंदी)",
-        "en": "English", 
-        "id": "Hindi/Hinglish (detected as ID)",  # langdetect quirk for Hinglish
-        "no": "Hindi/Hinglish (detected as Norwegian)",  # langdetect quirk
-        "mix": "Hinglish (Mixed)",
-        "unknown": "Unknown"
+        "en": "English",
+        "mr": "Marathi (मराठी)",
+        "ta": "Tamil (தமிழ்)",
+        "te": "Telugu (తెలుగు)",
+        "gu": "Gujarati (ગુજરાતી)",
+        "kn": "Kannada (ಕನ್ನಡ)",
+        "ml": "Malayalam (മലയാളം)",
+        "bn": "Bengali (বাংলা)",
+        "as": "Assamese (অসমীয়া)",
+        "pa": "Punjabi (ਪੰਜਾਬੀ)",
+        "or": "Odia (ଓଡ଼ିଆ)",
+        "ur": "Urdu (اردو)",
+        "ne": "Nepali (नेपाली)",
+        "kok": "Konkani (कोंकणी)",
+        "ks": "Kashmiri (كشمیر)",
+        "sa": "Sanskrit (संस्कृतम्)",
+        "sd": "Sindhi (سنڌي)",
+        "mni": "Manipuri/Meitei (ꯃꯤꯇꯩ)",
+        "bo": "Bodo (बड़ो)",
+        "sat": "Santali (ᱥᱟᱱᱛᱟᱲᱤ)",
+        "mai": "Maithili (मैथिली)",
     }
-    # Default: capitalize language code or return as-is
     if lang_code in lang_names:
         return lang_names[lang_code]
     else:

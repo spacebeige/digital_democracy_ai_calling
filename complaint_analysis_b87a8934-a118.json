@@ -1,0 +1,14 @@
+{
+  "session_id": "b87a8934-a118",
+  "timestamp": "2026-03-25T10:18:02.909471",
+  "transcript": "kru cun kru cun janti bol kru cun kru cun",
+  "urgency_level": "LOW",
+  "keywords_detected": [],
+  "routing": {
+    "department": "general",
+    "priority": 5,
+    "confidence": 0,
+    "matched_keywords": [],
+    "reasoning": "No specific department keywords matched"
+  }
+}
