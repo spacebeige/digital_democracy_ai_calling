@@ -1,0 +1,45 @@
+{
+  "session_id": "2f21d4b9-ec14",
+  "timestamp": "2026-03-26T05:54:20.596559",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "general_complaint",
+    "secondary_intents": [
+      "general_complaint"
+    ],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "electricity",
+    "service_name": "Maharashtra State Electricity Distribution Company Limited (MSEDCL)",
+    "contact_info": "Toll Free: 1912 (local call); 9545909090",
+    "phone": "Toll Free: 1912 (local call); 9545909090",
+    "confidence": 0.8,
+    "reasoning": "Route: ELECTRICITY | Intent: general_complaint | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 4.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The customer has a long-standing issue with a non-functional home electrical connection and is inquiring about the status of an incomplete reply from the electrical department, requiring written documentation.\n\n**Summary:** Non-functional home electrical connection requires attention and resolution from the electrical department.\n\n**Urgency:** LOW, since the customer is asking about action but not mentioning a specific deadline or critical circumstances.",
+  "issue_category": "Power/Electricity",
+  "severity_flags": [],
+  "follow_up_needed": true
+}

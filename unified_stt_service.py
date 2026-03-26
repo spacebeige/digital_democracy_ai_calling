@@ -29,7 +29,7 @@ try:
     LANGDETECT_AVAILABLE = True
 except ImportError:
     LANGDETECT_AVAILABLE = False
-    logger.warning("langdetect not installed. Install with: pip install langdetect")
+    logger.debug("langdetect not installed. Install with: pip install langdetect")
 
 
 def detect_language(text: str) -> str:
@@ -324,7 +324,7 @@ try:
     from google.cloud import speech_v1
     GOOGLE_STT_AVAILABLE = True
 except ImportError:
-    logger.warning("google-cloud-speech not installed. Install with: pip install google-cloud-speech")
+    logger.debug("google-cloud-speech not installed. Install with: pip install google-cloud-speech")
 
 
 def init_google_credentials() -> bool:

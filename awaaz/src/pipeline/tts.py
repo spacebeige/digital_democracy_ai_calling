@@ -107,8 +107,70 @@ CYRILLIC_LANGS      = {"ru", "uk", "bg", "sr", "mk", "be", "kk"}
 def get_provider_order(lang: str) -> list[str]:
     # Extract base language if formatted like "mr-IN"
     lang = lang.split("-")[0]
-    # Simple provider chain: Sarvam first (best for Indian languages), ElevenLabs fallback
-    return ["sarvam", "elevenlabs"]
+    # Primary logic: use Sarvam (specifically Ritu voice for smooth Indic scripts) first
+    return ["sarvam", "elevenlabs", "groq", "gtts", "google_cloud"]
+
+
+def _split_text_for_sarvam(text: str, max_chars: int = 450) -> list[str]:
+    """Split text into sentence-aware chunks under Sarvam's per-input limit."""
+    cleaned = (text or "").strip()
+    if not cleaned:
+        return []
+    if len(cleaned) <= max_chars:
+        return [cleaned]
+
+    # Split with punctuation retained (., !, ?, Hindi danda)
+    parts = re.split(r"([.!?।])", cleaned)
+    chunks: list[str] = []
+    buf = ""
+
+    for i in range(0, len(parts) - 1, 2):
+        sentence = (parts[i] or "").strip()
+        punct = parts[i + 1] if i + 1 < len(parts) else ""
+        if not sentence:
+            continue
+        candidate = f"{sentence}{punct}".strip()
+
+        if len(candidate) > max_chars:
+            # hard split oversized sentence by words
+            words = candidate.split()
+            word_buf = ""
+            for w in words:
+                c = (word_buf + " " + w).strip() if word_buf else w
+                if len(c) > max_chars and word_buf:
+                    chunks.append(word_buf.strip())
+                    word_buf = w
+                else:
+                    word_buf = c
+            if word_buf:
+                if buf:
+                    chunks.append(buf.strip())
+                    buf = ""
+                chunks.append(word_buf.strip())
+            continue
+
+        trial = (buf + " " + candidate).strip() if buf else candidate
+        if len(trial) > max_chars and buf:
+            chunks.append(buf.strip())
+            buf = candidate
+        else:
+            buf = trial
+
+    # Tail part when split count is odd
+    if len(parts) % 2 != 0:
+        tail = (parts[-1] or "").strip()
+        if tail:
+            trial = (buf + " " + tail).strip() if buf else tail
+            if len(trial) > max_chars and buf:
+                chunks.append(buf.strip())
+                buf = tail
+            else:
+                buf = trial
+
+    if buf.strip():
+        chunks.append(buf.strip())
+
+    return [c for c in chunks if c]
 
 ELEVENLABS_MODEL = "eleven_multilingual_v2"
 ELEVENLABS_VOICE_MAP = {
@@ -135,7 +197,40 @@ SARVAM_LANG_MAP = {
     "doi": "hi-IN", "awa": "hi-IN", "mwr": "hi-IN", "bgc": "hi-IN",
     "tcy": "kn-IN",  # Tulu uses Kannada script in Sarvam
     "ur": "ur-IN",   # Urdu support
-    # Using closest language for regional variants
+    # Additional AWAAZ regional variants -> closest supported Sarvam voice
+    "brx": "hi-IN", "dcc": "ur-IN", "gbm": "hi-IN", "hne": "hi-IN",
+    "kfy": "hi-IN", "kru": "hi-IN", "ks": "ur-IN", "lmn": "te-IN",
+    "mah": "hi-IN", "mni": "hi-IN", "ne": "hi-IN", "pah": "hi-IN",
+    "raj": "hi-IN", "sa": "hi-IN", "sat": "hi-IN", "saz": "gu-IN",
+    "sd": "ur-IN",
+}
+
+GTTS_LANG_FALLBACK_MAP = {
+    # Direct / common support
+    "hi": "hi", "mr": "mr", "ta": "ta", "te": "te", "kn": "kn",
+    "ml": "ml", "gu": "gu", "bn": "bn", "pa": "pa", "or": "or",
+    "ur": "ur", "en": "en", "ne": "ne",
+    # AWAAZ regional variants
+    "as": "bn", "kok": "mr", "mai": "hi", "bho": "hi", "awa": "hi",
+    "bgc": "hi", "doi": "hi", "mwr": "hi", "pah": "hi", "sa": "hi",
+    "sat": "bn", "brx": "bn", "mni": "bn", "tcy": "kn", "hne": "hi",
+    "raj": "hi", "kfy": "hi", "gbm": "hi", "kru": "hi", "mah": "hi",
+    "lmn": "te", "dcc": "ur", "saz": "gu", "sd": "ur", "ks": "ur",
+}
+
+GOOGLE_CLOUD_LANG_FALLBACK_MAP = {
+    "hi": "hi-IN", "mr": "mr-IN", "ta": "ta-IN", "te": "te-IN",
+    "kn": "kn-IN", "ml": "ml-IN", "bn": "bn-IN", "gu": "gu-IN",
+    "pa": "pa-IN", "or": "or-IN", "as": "as-IN", "en": "en-US",
+    "ne": "hi-IN",
+    "si": "si-LK", "ur": "ur-IN",
+    # AWAAZ regional variants mapped to closest available voice locale
+    "kok": "mr-IN", "mai": "hi-IN", "bho": "hi-IN", "awa": "hi-IN",
+    "bgc": "hi-IN", "doi": "hi-IN", "mwr": "hi-IN", "pah": "hi-IN",
+    "sa": "hi-IN", "sat": "bn-IN", "brx": "bn-IN", "mni": "bn-IN",
+    "tcy": "kn-IN", "hne": "hi-IN", "raj": "hi-IN", "kfy": "hi-IN",
+    "gbm": "hi-IN", "kru": "hi-IN", "mah": "hi-IN", "lmn": "te-IN",
+    "dcc": "ur-IN", "saz": "gu-IN", "sd": "ur-IN", "ks": "ur-IN",
 }
 
 # ── Sarvam speaker settings - Ritu (female) voice for all languages
@@ -212,8 +307,10 @@ def _elevenlabs_tts(text: str, lang: str, output_path: str) -> str:
         "text": text,
         "model_id": ELEVENLABS_MODEL,
         "voice_settings": {
-            "stability": 0.5,
-            "similarity_boost": 0.75,
+            "stability": 0.45,
+            "similarity_boost": 0.85,
+            "style": 0.35, # Adds more expressiveness and human-like smoothness
+            "use_speaker_boost": True
         },
     }
     logger.debug(
@@ -251,11 +348,7 @@ def _elevenlabs_tts(text: str, lang: str, output_path: str) -> str:
 
 def _sarvam_tts(text: str, lang: str, output_path: str) -> str:
     lang = lang.split("-")[0]
-    
-    # Convert to phonetic for better pronunciation if available
-    if PHONETIC_CONVERTER_AVAILABLE and PhoneticConverter.should_use_phonetic(lang):
-        text = PhoneticConverter.convert_to_phonetic(text, lang)
-        logger.debug(f"[PHONETIC] Sarvam: Converted text to phonetic representation")
+    # NOTE: Keep native script for Sarvam. It handles Indic scripts best natively.
     
     api_key    = os.environ.get("SARVAM_API_KEY")
     if not api_key: raise RuntimeError("SARVAM_API_KEY missing")
@@ -268,14 +361,9 @@ def _sarvam_tts(text: str, lang: str, output_path: str) -> str:
     # Get language-specific speaker configuration (ritu - female voice)
     speaker_config = SARVAM_SPEAKER_MAP.get(lang, SARVAM_DEFAULT_SPEAKER_CONFIG)
     
-    payload = {
-        "inputs":               [text],
-        "target_language_code": sarvam_lang,
-        "speaker":              speaker_config["speaker"],
-        "pace":                 speaker_config.get("pace", 1.0),
-        "enable_preprocessing": True,
-        "model":                "bulbul:v3",
-    }
+    chunks = _split_text_for_sarvam(text, max_chars=450)
+    if not chunks:
+        raise RuntimeError("[D5-ERROR] sarvam: empty text after chunking")
     
     # ── BUGFIX: Sarvam Bulbul V3 does NOT support pitch and loudness yet.
     # We must remove these parameters from the payload while keeping the logic
@@ -288,41 +376,58 @@ def _sarvam_tts(text: str, lang: str, output_path: str) -> str:
     
     logger.debug(
         "[D3-REQUEST] provider=sarvam | lang=%r | sarvam_lang=%r | "
-        "speaker=%r | pace=%r | pitch=%r(skipped_for_v3) | loudness=%r(skipped_for_v3) | emotion=%r | text_len=%d",
-        lang, sarvam_lang, speaker_config.get("speaker"), speaker_config.get("pace"), 
-        speaker_config.get("pitch"), speaker_config.get("loudness"), 
-        speaker_config.get("emotion"), len(text)
+        "speaker=%r | pace=%r | pitch=%r(skipped_for_v3) | loudness=%r(skipped_for_v3) | emotion=%r | text_len=%d | chunks=%d",
+        lang, sarvam_lang, speaker_config.get("speaker"), speaker_config.get("pace"),
+        speaker_config.get("pitch"), speaker_config.get("loudness"),
+        speaker_config.get("emotion"), len(text), len(chunks)
     )
+
+    audio_buffers: list[bytes] = []
     t0 = time.time()
-    resp = requests.post(
-        "https://api.sarvam.ai/text-to-speech",
-        headers={
-            "api-subscription-key": api_key,
-            "Content-Type": "application/json",
-        },
-        json=payload,
-        timeout=15,
-    )
-    latency_ms = int((time.time() - t0) * 1000)
-    logger.debug(
-        "[D4-RESPONSE] provider=sarvam | status=%d | latency=%dms",
-        resp.status_code, latency_ms
-    )
-    if resp.status_code != 200:
-        raise RuntimeError(
-            f"[D5-ERROR] sarvam {resp.status_code} | "
-            f"lang={lang!r} | body={resp.text[:300]}"
+    for idx, chunk in enumerate(chunks):
+        payload = {
+            "inputs":               [chunk],
+            "target_language_code": sarvam_lang,
+            "speaker":              speaker_config["speaker"],
+            "pace":                 speaker_config.get("pace", 1.0),
+            "enable_preprocessing": True,
+            "model":                "bulbul:v3",
+        }
+        resp = requests.post(
+            "https://api.sarvam.ai/text-to-speech",
+            headers={
+                "api-subscription-key": api_key,
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=15,
         )
-    audio_b64 = resp.json()["audios"][0]
-    audio_bytes = base64.b64decode(audio_b64)
+        if resp.status_code != 200:
+            raise RuntimeError(
+                f"[D5-ERROR] sarvam {resp.status_code} | "
+                f"lang={lang!r} | chunk={idx+1}/{len(chunks)} | body={resp.text[:300]}"
+            )
+        audio_b64 = resp.json()["audios"][0]
+        audio_buffers.append(base64.b64decode(audio_b64))
+
+    latency_ms = int((time.time() - t0) * 1000)
+
+    if len(audio_buffers) == 1:
+        merged_audio = audio_buffers[0]
+    else:
+        from awaaz.src.pipeline.enhancements.audio_merger import combine_and_fade
+        merged_audio = combine_and_fade(audio_buffers)
+        if not merged_audio:
+            raise RuntimeError("[D5-ERROR] sarvam: failed to merge chunked audio")
+
     with open(output_path, "wb") as f:
-        f.write(audio_bytes)
+        f.write(merged_audio)
     logger.info(
         "[D6-SUCCESS] provider=sarvam | lang=%r | speaker=%r | pace=%r | pitch=%r | loudness=%r | emotion=%r | "
         "path=%s | bytes=%d | latency=%dms",
         lang, speaker_config.get("speaker"), speaker_config.get("pace"), 
         speaker_config.get("pitch"), speaker_config.get("loudness"),
-        speaker_config.get("emotion"), output_path, len(audio_bytes), latency_ms
+        speaker_config.get("emotion"), output_path, len(merged_audio), latency_ms
     )
     return output_path
 
@@ -380,7 +485,8 @@ def _gtts_tts(text: str, lang: str, output_path: str) -> str:
         from gtts import gTTS
     except ImportError:
         raise RuntimeError("[D5-ERROR] gtts not installed — pip install gtts")
-    gtts_lang = lang.split("-")[0]
+    lang_base = lang.split("-")[0]
+    gtts_lang = GTTS_LANG_FALLBACK_MAP.get(lang_base, lang_base)
     
     # Convert to phonetic for better pronunciation if available
     if PHONETIC_CONVERTER_AVAILABLE and PhoneticConverter.should_use_phonetic(lang):
@@ -422,15 +528,7 @@ def _google_cloud_tts(text: str, lang: str, output_path: str) -> str:
     
     synthesis_input = texttospeech.SynthesisInput(text=text)
     
-    # Language code mapping for Google Cloud
-    gc_lang_map = {
-        "hi": "hi-IN", "mr": "mr-IN", "ta": "ta-IN", "te": "te-IN",
-        "kn": "kn-IN", "ml": "ml-IN", "bn": "bn-IN", "gu": "gu-IN",
-        "pa": "pa-IN", "or": "or-IN", "as": "as-IN", "en": "en-US",
-        "si": "si-LK",
-    }
-    
-    gc_lang_code = gc_lang_map.get(lang_code, "en-US")
+    gc_lang_code = GOOGLE_CLOUD_LANG_FALLBACK_MAP.get(lang_code, "en-US")
     
     voice = texttospeech.VoiceSelectionParams(
         language_code=gc_lang_code,
@@ -612,7 +710,7 @@ class TTSProcessor:
         lang = getattr(session, "lang", "en")
         try:
             from awaaz.src.pipeline.tts import synthesize_speech
-            res = synthesize_speech(text, lang, output_path)
+            res = synthesize_speech(text, lang, output_path, force_provider=self.preferred_provider)
             return res["path"] is not None
         except Exception as e:
             logger.error(f"TTSProcessor.synthesize error: {e}")
@@ -624,7 +722,8 @@ class TTSProcessor:
         try:
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
                 out_path = f.name
-            res = synthesize_speech(text, lang, out_path)
+            # Honor the preferred provider if set
+            res = synthesize_speech(text, lang, out_path, force_provider=self.preferred_provider)
             if res["path"]:
                 with open(res["path"], "rb") as bf:
                     data = bf.read()

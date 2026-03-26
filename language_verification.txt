@@ -1,0 +1,9 @@
+================================================================================
+LANGUAGE SUPPORT VERIFICATION - ALL 75+ LANGUAGES
+================================================================================
+Traceback (most recent call last):
+  File "/Users/ashwinagarkhed/integration1/verify_all_languages.py", line 11, in <module>
+    from awaaz.src.pipeline.nlp import LANGUAGE_CONFIG
+  File "/Users/ashwinagarkhed/integration1/awaaz/src/pipeline/nlp.py", line 11, in <module>
+    from src.pipeline.lang_detect import TokenLevelLangDetector
+ModuleNotFoundError: No module named 'src'

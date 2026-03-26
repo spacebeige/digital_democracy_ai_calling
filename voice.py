@@ -554,6 +554,10 @@ class ModelProcessor:
             print("[MODEL] Groq client loaded OK")
         except ImportError:
             print("[MODEL] groq package not installed. Run: pip install groq")
+        except TypeError as e:
+            print(f"[MODEL] ⚠️ Groq initialization failed (version incompatibility): {e}")
+            print("[MODEL] Will use Ollama local fallback instead.")
+            self.groq_client = None
 
     def _build_system_prompt(self, profile: CallerProfile) -> str:
         max_sentences = {"SIMPLE": 2, "STANDARD": 3, "FORMAL": 4}.get(

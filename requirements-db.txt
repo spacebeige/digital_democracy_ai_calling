@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-Database and routing dependencies for voice complaint system
-"""
-
 # Database
 psycopg2-binary>=2.9.0
 python-dotenv>=1.0.0

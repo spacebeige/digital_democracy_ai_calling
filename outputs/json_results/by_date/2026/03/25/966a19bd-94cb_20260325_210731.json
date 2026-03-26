@@ -1,0 +1,45 @@
+{
+  "session_id": "966a19bd-94cb",
+  "timestamp": "2026-03-25T21:07:31.818012",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "general_complaint",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "electricity",
+    "service_name": "Maharashtra State Electricity Distribution Company Limited (MSEDCL)",
+    "contact_info": "Toll Free: 1912 (local call); 9545909090",
+    "phone": "Toll Free: 1912 (local call); 9545909090",
+    "confidence": 0.8,
+    "reasoning": "Route: ELECTRICITY | Intent: general_complaint | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 4.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "General inquiry or non-urgent complaint. User submitted a complaint. Summary: Hi, I'm calling to inquire about municipal services in our area.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true
+}

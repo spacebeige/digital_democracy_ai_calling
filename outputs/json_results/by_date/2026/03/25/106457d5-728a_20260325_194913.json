@@ -1,0 +1,47 @@
+{
+  "session_id": "106457d5-728a",
+  "timestamp": "2026-03-25T19:49:13.189396",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "ANGRY",
+    "anger_score": 0.8199999971532071,
+    "frustration_score": 0.6,
+    "stress_level": 0.5799999975090562
+  },
+  "intent": {
+    "primary_intent": "electricity_issue",
+    "secondary_intents": [
+      "electricity_issue"
+    ],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "electricity",
+    "service_name": "Maharashtra State Electricity Distribution Company Limited (MSEDCL)",
+    "contact_info": "Toll Free: 1912 (local call); 9545909090",
+    "phone": "Toll Free: 1912 (local call); 9545909090",
+    "confidence": 0.8,
+    "reasoning": "Route: ELECTRICITY | Intent: electricity_issue | Urgency: LOW | Priority: P4 | Emotion: ANGRY | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "General inquiry or non-urgent complaint. User submitted a complaint. Summary: electricity is not working for 2 days in my area",
+  "issue_category": "Power/Electricity",
+  "severity_flags": [
+    "ANGRY_CUSTOMER"
+  ],
+  "follow_up_needed": true
+}

@@ -1,0 +1,61 @@
+{
+  "session_id": "b919843e-c045",
+  "timestamp": "2026-03-25T19:49:13.159771",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "ANGRY",
+    "anger_score": 0.8199999989705016,
+    "frustration_score": 0.6,
+    "stress_level": 0.5799999990991889
+  },
+  "intent": {
+    "primary_intent": "report_fire",
+    "secondary_intents": [
+      "report_fire"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "fire",
+    "service_name": "Maharashtra Fire and Emergency Services",
+    "contact_info": "101 (All Emergency)",
+    "phone": "101 (All Emergency)",
+    "confidence": 0.8,
+    "reasoning": "Route: FIRE | Intent: report_fire | Urgency: CRITICAL | Priority: P1 | Emotion: ANGRY | Confidence: 6.2/10"
+  },
+  "escalation": {
+    "should_escalate": true,
+    "triggered_rules": [
+      "ANGER_CRITICAL_ESCALATION"
+    ],
+    "escalation_details": [
+      {
+        "trigger": "ANGER_CRITICAL_ESCALATION",
+        "condition": "anger_score > 0.8 AND urgency == CRITICAL",
+        "from_level": "tier_1_operator",
+        "to_level": "tier_2_supervisor",
+        "timeframe_minutes": 5,
+        "action": "Immediate call to user, escalate to senior management",
+        "reason": "High anger (score: 0.82) in CRITICAL situation"
+      }
+    ]
+  },
+  "ai_summary": "URGENT: Critical emergency requiring immediate response. User emergency fire situation. Summary: My house is on fire! Please help immediately!",
+  "issue_category": "Fire/Emergency",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE",
+    "ANGRY_CUSTOMER",
+    "AUTO_ESCALATION_TRIGGERED"
+  ],
+  "follow_up_needed": true
+}

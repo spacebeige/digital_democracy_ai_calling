@@ -40,10 +40,13 @@ try:
     import numpy as np
     MICROPHONE_AVAILABLE = True
     SAMPLE_RATE = 16000
-except ImportError:
-    print("⚠️  sounddevice/soundfile not available")
+except ImportError as e:
+    # Silent fail - microphone might not be needed for file-based processing
     MICROPHONE_AVAILABLE = False
     SAMPLE_RATE = 16000
+    sd = None
+    sf = None
+    np = None
 
 # Setup logging
 logger = logging.getLogger(__name__)

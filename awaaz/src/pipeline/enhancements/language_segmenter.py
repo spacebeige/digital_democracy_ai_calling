@@ -22,8 +22,71 @@ class LanguageSegmenter:
         self.model = None
 
     def segment(self, text: str, fallback_lang: str = "hi") -> list[TextSegment]:
-        word_count = len(text.split())
-        return [TextSegment(text=text, lang=fallback_lang, confidence=0.8, is_mixed=False, word_count=word_count)]
+        import re
+        MAX_CHARS = 400
+        segments = []
+
+        def flush_chunk(chunk_text: str):
+            c = (chunk_text or "").strip()
+            if not c:
+                return
+            segments.append(
+                TextSegment(
+                    text=c,
+                    lang=fallback_lang,
+                    confidence=0.8,
+                    is_mixed=False,
+                    word_count=len(c.split()),
+                )
+            )
+
+        def split_oversized_text(long_text: str) -> list[str]:
+            words = (long_text or "").split()
+            out = []
+            buf = ""
+            for w in words:
+                candidate = f"{buf} {w}".strip() if buf else w
+                if len(candidate) > MAX_CHARS and buf:
+                    out.append(buf.strip())
+                    buf = w
+                else:
+                    buf = candidate
+            if buf.strip():
+                out.append(buf.strip())
+            return out
+        
+        # Split by typical sentence boundaries, keeping delimiters
+        sentences = re.split(r'([.।!?])', text)
+        buffer = ""
+        
+        for i in range(0, len(sentences)-1, 2):
+            sentence = sentences[i]
+            delim = sentences[i+1] if i+1 < len(sentences) else ""
+            full_sentence = sentence + delim
+            
+            if len(buffer) + len(full_sentence) > MAX_CHARS and buffer:
+                flush_chunk(buffer)
+                buffer = full_sentence
+            else:
+                buffer += " " + full_sentence if buffer else full_sentence
+                
+        # Handle the last part if odd length or remaining buffer
+        if len(sentences) % 2 != 0:
+            last_part = sentences[-1]
+            if len(buffer) + len(last_part) > MAX_CHARS and buffer:
+                flush_chunk(buffer)
+                buffer = last_part
+            else:
+                buffer += " " + last_part if buffer else last_part
+
+        if buffer.strip():
+            if len(buffer.strip()) <= MAX_CHARS:
+                flush_chunk(buffer)
+            else:
+                for piece in split_oversized_text(buffer):
+                    flush_chunk(piece)
+            
+        return segments
 
 _global_segmenter = None
 

@@ -109,8 +109,14 @@ class ModelProcessor:
                 if not api_key:
                     logger.error("GROQ_API_KEY not set")
                     return
-                self.client = Groq(api_key=api_key)
-                logger.info(f"Groq client initialized with model {self.model}")
+                try:
+                    self.client = Groq(api_key=api_key)
+                    logger.info(f"Groq client initialized with model {self.model}")
+                except TypeError as te:
+                    # Handle version mismatch with proxies parameter
+                    logger.error(f"Failed to initialize Groq (version issue): {te}")
+                    logger.info("Falling back to basic processing")
+                    self.client = None
         except Exception as e:
             logger.error(f"Failed to load LLM: {e}")
 
