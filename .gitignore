@@ -80,3 +80,10 @@ vendor/
 target/
 
 
+.venv
+__pycache__
+*.pyc
+node_modules
+dist
+build
+*.egg-info
