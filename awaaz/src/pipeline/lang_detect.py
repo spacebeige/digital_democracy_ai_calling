@@ -199,7 +199,10 @@ class TokenLevelLangDetector:
         return None
 
     def _detect_devanagari_variant(self, text: str) -> str:
-        """Disambiguate which Devanagari language (Hindi, Marathi, Konkani, Sanskrit, etc.)"""
+        """Disambiguate which Devanagari language (Hindi, Marathi, Konkani, Sanskrit, etc.)
+        ENHANCED: Stricter Marathi detection to prevent Hindi override.
+        Priority: Marathi markers >> Konkani >> Bhojpuri >> Maithili >> Sanskrit >> Hindi (fallback)
+        """
         markers = self.LANGUAGE_MARKERS
         best_match = None
         max_score = 0
@@ -209,8 +212,25 @@ class TokenLevelLangDetector:
             token for token in re.split(r"[\s,.;:!?।،؛]+", text_lower) if token
         )
 
-        # Check marker frequencies for each Devanagari language
-        devanagari_langs = ["sa", "kok", "mai", "bho", "mr", "hi"]
+        # CRITICAL: Check Marathi FIRST with HIGH strictness to prevent Hindi override
+        marathi_markers = markers.get("mr", {}).get("native", [])
+        marathi_score = 0
+        marathi_strict_markers = ["आहे", "ला", "मुंबई", "महाराष्ट्र", "साहय", "नाही", "आणि", "पण", "मी", "छे", "ची", "चा", "झालं", "होता", "होती", "होते", "करून", "द्या", "येतो", "येते"]  # Highly specific to Marathi
+        for mark in marathi_strict_markers:
+            mark_norm = mark.lower()
+            if len(mark_norm) >= 2:
+                if mark_norm in native_tokens:
+                    marathi_score += 3  # TRIPLE weight for strict markers
+                elif mark_norm in text_lower:
+                    marathi_score += 1
+        
+        if marathi_score >= 3:
+            logger.debug(f"[DEVANAGARI-DETECT] MARATHI CONFIRMED: strict_score={marathi_score}")
+            return "mr"
+
+        # Check marker frequencies for other Devanagari languages (Konkani, Bhojpuri, Maithili, Sanskrit, Hindi)
+        # ORDER MATTERS: Check most specific first
+        devanagari_langs = ["kok", "bho", "mai", "sa", "hi"]
         for lang in devanagari_langs:
             if lang not in markers:
                 continue
@@ -224,7 +244,7 @@ class TokenLevelLangDetector:
                     if mark_norm in text_lower:
                         matches += 2
                 else:
-                    # Ignore 1-char markers to avoid cross-language collisions like "च"
+                    # Ignore 1-char markers to avoid cross-language collisions
                     if len(mark_norm) < 2:
                         continue
                     if mark_norm in native_tokens:
@@ -234,14 +254,24 @@ class TokenLevelLangDetector:
                 best_match = lang
 
         # If we found strong matches, return best
-        if max_score > 0:
+        if max_score >= 2:  # Increased threshold to reduce false positives
+            logger.debug(f"[DEVANAGARI-DETECT] BEST={best_match} score={max_score}")
             return best_match
+        
+        # If no language scored >= 2, be strict - don't default to Hindi
+        if max_score == 1 and best_match:
+            # Only return if it's not Hindi (too risky), prefer "Unknown" to let next stage handle it
+            if best_match != "hi":
+                logger.debug(f"[DEVANAGARI-DETECT] LOW-CONF={best_match} score={max_score}")
+                return best_match
 
         # Use key Sanskrit indicators
         if any(word in text_lower for word in ["नमस्ते", "अस्ति", "स्वागतम्", "कथम्"]):
+            logger.debug(f"[DEVANAGARI-DETECT] SANSKRIT INDICATORS FOUND")
             return "sa"
 
-        return None  # Let STT language payload or Sarvam fallback catch it instead of blindly dropping to Hindi
+        logger.debug(f"[DEVANAGARI-DETECT] NO CLEAR MATCH, scores={marker_scores if 'marker_scores' in locals() else {}}")
+        return None  # Let STT language payload or ensemble handle it
 
     def _count_script_chars(self, text: str, start: int, end: int) -> int:
         """Count how many characters from text fall into given Unicode range.

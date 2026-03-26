@@ -1,0 +1,45 @@
+{
+  "session_id": "bf19804e-7372",
+  "timestamp": "2026-03-26T10:07:37.619990",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "water_issue",
+    "secondary_intents": [
+      "water_issue"
+    ],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "water",
+    "service_name": "Jal Sansthan (Water Supply Board)",
+    "contact_info": "1800-233-1331 (Maharashtra Water Supply)",
+    "phone": "1800-233-1331 (Maharashtra Water Supply)",
+    "confidence": 0.8,
+    "reasoning": "Route: WATER | Intent: water_issue | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Here is a 1-sentence summary of the complaint:\n\nThe customer has a water issue at their home, complaining of inadequate water supply and low water flow, which is preventing them from drinking water.",
+  "issue_category": "Water Supply",
+  "severity_flags": [],
+  "follow_up_needed": true
+}

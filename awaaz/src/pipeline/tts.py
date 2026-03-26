@@ -111,15 +111,17 @@ def get_provider_order(lang: str) -> list[str]:
     return ["sarvam", "elevenlabs", "groq", "gtts", "google_cloud"]
 
 
-def _split_text_for_sarvam(text: str, max_chars: int = 450) -> list[str]:
-    """Split text into sentence-aware chunks under Sarvam's per-input limit."""
+def _split_text_for_sarvam(text: str, max_chars: int = 400) -> list[str]:
+    """Split text into sentence-aware chunks under Sarvam's per-input limit.
+    OPTIMIZED: Smaller chunks (400 chars) allow more natural pauses and smoother transitions.
+    """
     cleaned = (text or "").strip()
     if not cleaned:
         return []
     if len(cleaned) <= max_chars:
         return [cleaned]
 
-    # Split with punctuation retained (., !, ?, Hindi danda)
+    # Split with punctuation retained (., !, ?, Hindi danda) - OPTIMIZED for smooth audio transitions
     parts = re.split(r"([.!?।])", cleaned)
     chunks: list[str] = []
     buf = ""
@@ -173,6 +175,7 @@ def _split_text_for_sarvam(text: str, max_chars: int = 450) -> list[str]:
     return [c for c in chunks if c]
 
 ELEVENLABS_MODEL = "eleven_multilingual_v2"
+# Note: "pFZP5JQG7iQjIQuC4Bku" is Lily (Feminine, Warm, Expressive)
 ELEVENLABS_VOICE_MAP = {
     "en":   os.environ.get("ELEVENLABS_VOICE_EN",  "pFZP5JQG7iQjIQuC4Bku"),
     "mr":   os.environ.get("ELEVENLABS_VOICE_MR",  "pFZP5JQG7iQjIQuC4Bku"),
@@ -234,37 +237,42 @@ GOOGLE_CLOUD_LANG_FALLBACK_MAP = {
 }
 
 # ── Sarvam speaker settings - Ritu (female) voice for all languages
-# ENHANCED: Added expressiveness (pitch variation), pace, loudness for natural human-like speech
-# IMPROVED: Updated Tamil, Telugu, Kannada, Malayalam with better settings to enhance clarity and distinctiveness
+# ENHANCED v2: Optimized for smoother, more natural audio with improved prosody
+# IMPROVED: Natural delivery with consistent quality across all languages
 SARVAM_SPEAKER_MAP = {
-    "hi":   {"speaker": "ritu", "pace": 0.95, "pitch": 0.0, "loudness": 1.5, "emotion": "natural"},  # Neutral tone
-    "mr":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.25, "loudness": 1.6, "emotion": "expressive"}, # 0.90 pace but expressive for Marathi
-    # IMPROVED: Tamil - enhanced for better vowel clarity and melodic flow
-    "ta":   {"speaker": "ritu", "pace": 0.80, "pitch": 0.35, "loudness": 1.6, "emotion": "warm"},   # Slower pace for Tamil distinctiveness
-    # IMPROVED: Telugu - enhanced for better consonant clarity
-    "te":   {"speaker": "ritu", "pace": 0.85, "pitch": 0.25, "loudness": 1.6, "emotion": "natural"},# Natural flow with improved clarity
-    # IMPROVED: Kannada - enhanced for better pronunciation
-    "kn":   {"speaker": "ritu", "pace": 0.78, "pitch": 0.15, "loudness": 1.6, "emotion": "calm"},   # Slower, clear - Kannada needs careful pronunciation
-    # IMPROVED: Malayalam - enhanced for melodic language characteristics
-    "ml":   {"speaker": "ritu", "pace": 0.92, "pitch": 0.20, "loudness": 1.6, "emotion": "warm"},  # Melodic, slightly expressive
-    "bn":   {"speaker": "ritu", "pace": 0.92, "pitch": 0.1, "loudness": 1.5, "emotion": "natural"},# Neutral
-    "gu":   {"speaker": "ritu", "pace": 1.0, "pitch": 0.35, "loudness": 1.6, "emotion": "expressive"},  # Expressive & lively
-    "pa":   {"speaker": "ritu", "pace": 1.0, "pitch": 0.25, "loudness": 1.6, "emotion": "energetic"},   # Energetic tone
-    "or":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.2, "loudness": 1.5, "emotion": "friendly"},    # Friendly
-    "as":   {"speaker": "ritu", "pace": 0.95, "pitch": 0.15, "loudness": 1.5, "emotion": "natural"},    # Natural
-    "en":   {"speaker": "ritu", "pace": 1.0, "pitch": 0.0, "loudness": 1.5, "emotion": "professional"}, # Professional
-    "si":   {"speaker": "ritu", "pace": 0.95, "pitch": 0.2, "loudness": 1.5, "emotion": "warm"},        # Warm
-    "kok":  {"speaker": "ritu", "pace": 0.90, "pitch": 0.25, "loudness": 1.5, "emotion": "expressive"}, # 0.90 pace but expressive Konkani
-    "bho":  {"speaker": "ritu", "pace": 0.88, "pitch": 0.3, "loudness": 1.6, "emotion": "expressive"},  # Expressive
-    "mai":  {"speaker": "ritu", "pace": 0.92, "pitch": 0.2, "loudness": 1.5, "emotion": "warm"},        # Warm
-    "doi":  {"speaker": "ritu", "pace": 0.95, "pitch": 0.15, "loudness": 1.5, "emotion": "friendly"},   # Friendly
-    "awa":  {"speaker": "ritu", "pace": 0.92, "pitch": 0.25, "loudness": 1.5, "emotion": "warm"},       # Warm
-    "mwr":  {"speaker": "ritu", "pace": 0.95, "pitch": 0.2, "loudness": 1.5, "emotion": "natural"},     # Natural
-    "bgc":  {"speaker": "ritu", "pace": 1.0, "pitch": 0.3, "loudness": 1.6, "emotion": "energetic"},    # Energetic
-    # NEW: Tulu - similar to Kannada but with slight adjustments for clarity
-    "tcy":  {"speaker": "ritu", "pace": 0.80, "pitch": 0.18, "loudness": 1.6, "emotion": "calm"},  # Tulu - clear, calm delivery similar to Kannada
-    # IMPROVED: Urdu - with Arabic script considerations
-    "ur":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.20, "loudness": 1.6, "emotion": "warm"},       # Warm, expressive for Urdu
+    # NORTH INDIAN: Natural flow with slight expressiveness
+    "hi":   {"speaker": "ritu", "pace": 0.93, "pitch": 0.0, "loudness": 1.5, "emotion": "natural"},  # Smooth, natural tone
+    "mr":   {"speaker": "ritu", "pace": 0.88, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"}, # Smoother Marathi, slightly lower pitch
+    
+    # SOUTH INDIAN: Slower, clearer delivery for distinct phonetics
+    "ta":   {"speaker": "ritu", "pace": 0.78, "pitch": 0.15, "loudness": 1.5, "emotion": "warm"},   # Smooth Tamil with melodic flow
+    "te":   {"speaker": "ritu", "pace": 0.82, "pitch": 0.12, "loudness": 1.5, "emotion": "natural"},# Smooth Telugu
+    "kn":   {"speaker": "ritu", "pace": 0.76, "pitch": 0.08, "loudness": 1.5, "emotion": "calm"},   # Smooth, clear Kannada
+    "ml":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},  # Smooth Malayalam with natural flow
+    
+    # EASTERN: Smooth, neutral delivery
+    "bn":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.05, "loudness": 1.5, "emotion": "natural"},# Smooth Bengali
+    "or":   {"speaker": "ritu", "pace": 0.88, "pitch": 0.08, "loudness": 1.5, "emotion": "natural"},# Smooth Odia
+    "as":   {"speaker": "ritu", "pace": 0.91, "pitch": 0.07, "loudness": 1.5, "emotion": "natural"},# Smooth Assamese
+    
+    # WESTERN: Energetic but smooth
+    "gu":   {"speaker": "ritu", "pace": 0.96, "pitch": 0.15, "loudness": 1.5, "emotion": "warm"},  # Smooth Gujarati
+    "pa":   {"speaker": "ritu", "pace": 0.95, "pitch": 0.12, "loudness": 1.5, "emotion": "natural"},   # Smooth Punjabi
+    
+    # SPECIAL: English and Sinhala
+    "en":   {"speaker": "ritu", "pace": 0.98, "pitch": 0.0, "loudness": 1.5, "emotion": "natural"}, # Smooth English
+    "si":   {"speaker": "ritu", "pace": 0.91, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},        # Smooth Sinhala
+    
+    # REGIONAL VARIANTS: Optimized for smooth delivery
+    "kok":  {"speaker": "ritu", "pace": 0.87, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"}, # Smooth Konkani
+    "bho":  {"speaker": "ritu", "pace": 0.86, "pitch": 0.12, "loudness": 1.5, "emotion": "warm"},  # Smooth Bhojpuri
+    "mai":  {"speaker": "ritu", "pace": 0.90, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},        # Smooth Maithili
+    "doi":  {"speaker": "ritu", "pace": 0.92, "pitch": 0.08, "loudness": 1.5, "emotion": "warm"},   # Smooth Dogri
+    "awa":  {"speaker": "ritu", "pace": 0.90, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},       # Smooth Awadhi
+    "mwr":  {"speaker": "ritu", "pace": 0.92, "pitch": 0.08, "loudness": 1.5, "emotion": "natural"},     # Smooth Marwadi
+    "bgc":  {"speaker": "ritu", "pace": 0.94, "pitch": 0.10, "loudness": 1.5, "emotion": "natural"},    # Smooth Haryanvi
+    "tcy":  {"speaker": "ritu", "pace": 0.77, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},  # Smooth Tulu
+    "ur":   {"speaker": "ritu", "pace": 0.88, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},       # Smooth Urdu
 }
 
 SARVAM_DEFAULT_SPEAKER_CONFIG = {
@@ -291,7 +299,7 @@ GROQ_DEFAULT_VOICE = "playai-tts"
 
 
 
-def _elevenlabs_tts(text: str, lang: str, output_path: str) -> str:
+def _elevenlabs_tts(text: str, lang: str, output_path: str, session=None) -> str:
     lang = lang.split("-")[0]
     
     # Convert to phonetic for better pronunciation if available
@@ -303,13 +311,31 @@ def _elevenlabs_tts(text: str, lang: str, output_path: str) -> str:
     if not api_key: raise RuntimeError("ELEVENLABS_API_KEY missing")
     voice_id = ELEVENLABS_VOICE_MAP.get(lang, ELEVENLABS_DEFAULT_VOICE)
     url      = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    # Adjust style and stability based on intent/angriness for a human-like response
+    anger_score = getattr(session, "anger_score", 0.0) if session else 0.0
+    intent = getattr(session, "intent", "UNKNOWN") if session else "UNKNOWN"
+    
+    stability_val = 0.45
+    style_val = 0.35
+    similarity_boost_val = 0.85
+    
+    if anger_score > 0.6 or intent == "COMPLAINT":
+        # Make the voice more expressive/sympathetic for angry complaints
+        stability_val = 0.30
+        style_val = 0.75  
+        logger.debug(f"[ElevenLabs] High anger/complaint detected. Boosting style to {style_val}")
+    elif intent == "INQUIRY":
+        # Clear, calm, measured
+        stability_val = 0.60
+        style_val = 0.20
+
     payload  = {
         "text": text,
         "model_id": ELEVENLABS_MODEL,
         "voice_settings": {
-            "stability": 0.45,
-            "similarity_boost": 0.85,
-            "style": 0.35, # Adds more expressiveness and human-like smoothness
+            "stability": stability_val,
+            "similarity_boost": similarity_boost_val,
+            "style": style_val,
             "use_speaker_boost": True
         },
     }
@@ -346,7 +372,7 @@ def _elevenlabs_tts(text: str, lang: str, output_path: str) -> str:
     )
     return output_path
 
-def _sarvam_tts(text: str, lang: str, output_path: str) -> str:
+def _sarvam_tts(text: str, lang: str, output_path: str, session=None) -> str:
     lang = lang.split("-")[0]
     # NOTE: Keep native script for Sarvam. It handles Indic scripts best natively.
     
@@ -359,7 +385,20 @@ def _sarvam_tts(text: str, lang: str, output_path: str) -> str:
         )
     
     # Get language-specific speaker configuration (ritu - female voice)
-    speaker_config = SARVAM_SPEAKER_MAP.get(lang, SARVAM_DEFAULT_SPEAKER_CONFIG)
+    speaker_config = SARVAM_SPEAKER_MAP.get(lang, SARVAM_DEFAULT_SPEAKER_CONFIG).copy()
+    
+    # Analyze session for angriness/intent logic
+    anger_score = getattr(session, "anger_score", 0.0) if session else 0.0
+    intent = getattr(session, "intent", "UNKNOWN") if session else "UNKNOWN"
+    
+    # Adjust pace based on emotion to sound more human-like and responsive
+    if anger_score > 0.6 or intent == "COMPLAINT":
+        speaker_config["pace"] = min(1.15, speaker_config.get("pace", 1.0) * 1.1)
+        speaker_config["emotion"] = "expressive" # or 'angry' if supported later
+        logger.debug(f"[Sarvam] High anger detected. Adjusted pace to {speaker_config['pace']}")
+    elif intent == "INQUIRY":
+        speaker_config["pace"] = max(0.85, speaker_config.get("pace", 1.0) * 0.95)
+        speaker_config["emotion"] = "calm"
     
     chunks = _split_text_for_sarvam(text, max_chars=450)
     if not chunks:
@@ -431,7 +470,7 @@ def _sarvam_tts(text: str, lang: str, output_path: str) -> str:
     )
     return output_path
 
-def _groq_tts(text: str, lang: str, output_path: str) -> str:
+def _groq_tts(text: str, lang: str, output_path: str, session=None) -> str:
     lang = lang.split("-")[0]
     
     # Convert to phonetic for better pronunciation if available
@@ -442,10 +481,22 @@ def _groq_tts(text: str, lang: str, output_path: str) -> str:
     api_key = os.environ.get("GROQ_API_KEY")
     if not api_key: raise RuntimeError("GROQ_API_KEY missing")
     voice   = GROQ_VOICE_MAP.get(lang, GROQ_DEFAULT_VOICE)
+    
+    anger_score = getattr(session, "anger_score", 0.0) if session else 0.0
+    intent = getattr(session, "intent", "UNKNOWN") if session else "UNKNOWN"
+    
+    speed_val = 1.0
+    if anger_score > 0.6 or intent == "COMPLAINT":
+        speed_val = 1.15
+        logger.debug("[Groq] High anger detected. Increasing speed.")
+    elif intent == "INQUIRY":
+        speed_val = 0.95
+        
     payload = {
         "model": voice,
         "input": text,
-        "voice": "Celeste-PlayAI",
+        "voice": "Celeste-PlayAI", # Celeste is a feminine voice
+        "speed": speed_val
     }
     logger.debug(
         "[D3-REQUEST] provider=groq | voice=%r | lang=%r | text_len=%d",
@@ -480,7 +531,7 @@ def _groq_tts(text: str, lang: str, output_path: str) -> str:
     )
     return output_path
 
-def _gtts_tts(text: str, lang: str, output_path: str) -> str:
+def _gtts_tts(text: str, lang: str, output_path: str, session=None) -> str:
     try:
         from gtts import gTTS
     except ImportError:
@@ -498,7 +549,15 @@ def _gtts_tts(text: str, lang: str, output_path: str) -> str:
         lang, gtts_lang, len(text)
     )
     t0 = time.time()
-    tts = gTTS(text=text, lang=gtts_lang, slow=False)
+    
+    # Optional speed adjustment for gTTS based on emotion
+    anger_score = getattr(session, "anger_score", 0.0) if session else 0.0
+    intent = getattr(session, "intent", "UNKNOWN") if session else "UNKNOWN"
+    is_slow = False
+    if intent == "INQUIRY" and anger_score < 0.3:
+        pass # gTTS only supports slow=True/False, False is normal speed. Sometimes slow is too slow.
+    
+    tts = gTTS(text=text, lang=gtts_lang, slow=is_slow)
     tts.save(output_path)
     latency_ms = int((time.time() - t0) * 1000)
     import os as _os
@@ -510,7 +569,7 @@ def _gtts_tts(text: str, lang: str, output_path: str) -> str:
     )
     return output_path
 
-def _google_cloud_tts(text: str, lang: str, output_path: str) -> str:
+def _google_cloud_tts(text: str, lang: str, output_path: str, session=None) -> str:
     """Google Cloud Text-to-Speech (free tier available)."""
     try:
         from google.cloud import texttospeech
@@ -530,6 +589,17 @@ def _google_cloud_tts(text: str, lang: str, output_path: str) -> str:
     
     gc_lang_code = GOOGLE_CLOUD_LANG_FALLBACK_MAP.get(lang_code, "en-US")
     
+    # Adjust speaking rate based on emotion
+    anger_score = getattr(session, "anger_score", 0.0) if session else 0.0
+    intent = getattr(session, "intent", "UNKNOWN") if session else "UNKNOWN"
+    
+    speaking_rate = 1.0
+    if anger_score > 0.6 or intent == "COMPLAINT":
+        speaking_rate = 1.15
+        logger.debug("[GoogleCloud] High anger detected. Increasing speed.")
+    elif intent == "INQUIRY":
+        speaking_rate = 0.95
+    
     voice = texttospeech.VoiceSelectionParams(
         language_code=gc_lang_code,
         ssml_gender=texttospeech.SsmlVoiceGender.FEMALE,  # Female voice selection
@@ -538,6 +608,7 @@ def _google_cloud_tts(text: str, lang: str, output_path: str) -> str:
     audio_config = texttospeech.AudioConfig(
         audio_encoding=texttospeech.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
+        speaking_rate=speaking_rate
     )
     
     logger.debug(
@@ -614,7 +685,9 @@ def synthesize_speech(
     text: str,
     lang: str,
     output_path: str,
+    preferred_provider: str | None = None,
     force_provider: str | None = None,
+    session=None,
 ) -> dict:
     """
     Universal TTS with automatic provider fallback and multilingual support.
@@ -639,7 +712,14 @@ def synthesize_speech(
             error    (str | None): error message if all failed
     """
     native = is_native_script(text, lang)
-    order  = [force_provider] if force_provider else get_provider_order(lang)
+    base_order = get_provider_order(lang)
+    
+    provider_to_use = preferred_provider or force_provider
+    if provider_to_use:
+        # Move preferred_provider to front, but keep fallback chain!
+        order = [provider_to_use] + [p for p in base_order if p != provider_to_use]
+    else:
+        order = base_order
 
     # Detailed language support info
     lang_base = lang.split("-")[0]
@@ -669,7 +749,7 @@ def synthesize_speech(
             logger.warning("[TTS] Unknown provider %r — skipping", provider_name)
             continue
         try:
-            path = fn(text, lang, output_path)
+            path = fn(text, lang, output_path, session=session)
             result = {
                 "provider":   provider_name,
                 "path":       path,
@@ -706,24 +786,40 @@ class TTSProcessor:
     async def load(self):
         pass
         
-    async def synthesize(self, text: str, session, output_path: str) -> bool:
-        lang = getattr(session, "lang", "en")
+    async def synthesize(self, text: str, output_path: str, session=None, language: str = None) -> bool:
+        if session is None:
+            class MockSession:
+                pass
+            session = MockSession()
+            session.lang = language or "en"
+            session.intent = None
+            session.anger_score = 0.0
+            
+        lang = getattr(session, "lang", language or "en")
         try:
             from awaaz.src.pipeline.tts import synthesize_speech
-            res = synthesize_speech(text, lang, output_path, force_provider=self.preferred_provider)
+            res = synthesize_speech(text, lang, output_path, preferred_provider=self.preferred_provider, session=session)
             return res["path"] is not None
         except Exception as e:
             logger.error(f"TTSProcessor.synthesize error: {e}")
             return False
 
-    def synthesize_to_bytes(self, text: str, session) -> bytes | None:
-        lang = getattr(session, "lang", "en")
+    def synthesize_to_bytes(self, text: str, session=None, language: str = None) -> bytes | None:
+        if session is None:
+            class MockSession:
+                pass
+            session = MockSession()
+            session.lang = language or "en"
+            session.intent = None
+            session.anger_score = 0.0
+            
+        lang = getattr(session, "lang", language or "en")
         import tempfile
         try:
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
                 out_path = f.name
             # Honor the preferred provider if set
-            res = synthesize_speech(text, lang, out_path, force_provider=self.preferred_provider)
+            res = synthesize_speech(text, lang, out_path, preferred_provider=self.preferred_provider, session=session)
             if res["path"]:
                 with open(res["path"], "rb") as bf:
                     data = bf.read()

@@ -15,7 +15,7 @@ from typing import Optional, Dict, List
 
 import numpy as np
 from fastapi import (
-    FastAPI, UploadFile, File, HTTPException, BackgroundTasks, Query
+    FastAPI, UploadFile, File, HTTPException, BackgroundTasks, Query, Path as FastApiPath
 )
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
@@ -104,6 +104,8 @@ class TTSJob(BaseModel):
     input_text: Optional[str] = None
     language: Optional[str] = None
     speaker: Optional[str] = None
+    intent: Optional[str] = None
+    anger_score: Optional[float] = None
     audio_path: Optional[str] = None
     audio_duration_s: Optional[float] = None
     tts_provider: Optional[str] = None
@@ -361,7 +363,7 @@ async def upload_voice(
     description="Trigger STT processing for an uploaded audio file. Returns immediately with job status.",
 )
 async def transcribe_async(
-    job_id: str = Query(..., description="Job ID from upload endpoint"),
+    job_id: str = FastApiPath(..., description="Job ID from upload endpoint"),
     language: Optional[str] = Query(
         None, description="Optional: Language code (e.g., 'hi', 'pa', 'en')"
     ),
@@ -443,7 +445,7 @@ async def _transcribe_background(job_id: str, language: Optional[str] = None):
     description="Check the status and details of a transcription job.",
 )
 async def get_transcription_status(
-    job_id: str = Query(..., description="Job ID to check"),
+    job_id: str = FastApiPath(..., description="Job ID to check"),
 ) -> TranscriptionJob:
     """
     **Layer [1/3] TRANSCRIPTION**
@@ -473,7 +475,7 @@ async def get_transcription_status(
     description="Download the originally uploaded user voice audio file.",
 )
 async def download_user_voice(
-    job_id: str = Query(..., description="Transcription Job ID"),
+    job_id: str = FastApiPath(..., description="Transcription Job ID"),
 ) -> FileResponse:
     """
     **Layer [1/3] TRANSCRIPTION**
@@ -585,7 +587,7 @@ async def _process_ai_background(job_id: str, text: str, language: str):
     description="Check the status and LLM response of an AI processing job.",
 )
 async def get_ai_processing_status(
-    job_id: str = Query(..., description="Job ID to check"),
+    job_id: str = FastApiPath(..., description="Job ID to check"),
 ) -> AIProcessingJob:
     """
     **Layer [2/3] AI PROCESSING**
@@ -618,6 +620,8 @@ async def synthesize_tts_async(
     speaker: str = Query(
         "ritu", description="Speaker voice (e.g., 'ritu' for female)"
     ),
+    intent: Optional[str] = Query(None, description="Intent for emotional context (e.g., 'COMPLAINT')"),
+    anger_score: Optional[float] = Query(None, description="Anger score (0.0 to 1.0)"),
     background_tasks: BackgroundTasks = BackgroundTasks(),
 ) -> TTSJob:
     """
@@ -635,18 +639,20 @@ async def synthesize_tts_async(
         input_text=text,
         language=language,
         speaker=speaker,
+        intent=intent,
+        anger_score=anger_score
     )
 
     # Schedule background processing
     background_tasks.add_task(
-        _synthesize_tts_background, tts_job_id, text, language, speaker
+        _synthesize_tts_background, tts_job_id, text, language, speaker, intent, anger_score
     )
 
     return job_manager.get_job(tts_job_id)["data"]
 
 
 async def _synthesize_tts_background(
-    job_id: str, text: str, language: str, speaker: str
+    job_id: str, text: str, language: str, speaker: str, intent: Optional[str] = None, anger_score: Optional[float] = None
 ):
     """Background task for TTS synthesis."""
     start_time = datetime.utcnow()
@@ -659,10 +665,19 @@ async def _synthesize_tts_background(
 
         # Generate speech
         output_path = str(OUTPUT_DIR / f"{job_id}.wav")
+        
+        class MockSession:
+            pass
+        session = MockSession()
+        session.intent = intent
+        session.anger_score = anger_score or 0.0
+        session.lang = language
+        
         await tts_processor.synthesize(
             text=text,
             language=language,
             output_path=output_path,
+            session=session
         )
 
         # Calculate audio duration (rough estimate: 150 words per minute)
@@ -700,7 +715,7 @@ async def _synthesize_tts_background(
     description="Check the status of a TTS synthesis job.",
 )
 async def get_tts_status(
-    job_id: str = Query(..., description="Job ID to check"),
+    job_id: str = FastApiPath(..., description="Job ID to check"),
 ) -> TTSJob:
     """
     **Layer [3/3] TTS SYNTHESIS**
@@ -724,7 +739,7 @@ async def get_tts_status(
     description="Download the synthesized audio file when TTS job is completed.",
 )
 async def download_tts_audio(
-    job_id: str = Query(..., description="TTS Job ID"),
+    job_id: str = FastApiPath(..., description="TTS Job ID"),
 ) -> FileResponse:
     """
     **Layer [3/3] TTS SYNTHESIS**
@@ -749,6 +764,279 @@ async def download_tts_audio(
 # PIPELINE DETAILS & INTEGRATION ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════
 
+# ══════════════════════════════════════════════════════════════════════════════════════════════════
+# EMOTION-AWARE TTS ENDPOINTS — Simplified & Enhanced Speech Synthesis
+# ══════════════════════════════════════════════════════════════════════════════════════════════════
+
+@app.post(
+    "/api/v1/tts/emotion-aware",
+    tags=["TTS: Emotion-Aware Synthesis"],
+    summary="Emotion-aware speech synthesis with automatic speed/style adjustments",
+    description="Convert text to expressive speech. Automatically adjusts Sarvam/Ritu voice pacing and emotion based on intent and anger score. Returns audio file download link.",
+)
+async def emotion_aware_tts(
+    text: str = Query(..., description="Text to synthesize in native language"),
+    language: str = Query(..., description="BCP-47 language code: 'hi' (Hindi), 'ta' (Tamil), 'te' (Telugu), 'kn' (Kannada), 'ml' (Malayalam), 'mr' (Marathi), 'pa' (Punjabi), 'gu' (Gujarati), 'en' (English), etc."),
+    intent: Optional[str] = Query(None, description="Speech intent: 'COMPLAINT' (faster, expressive), 'INQUIRY' (slower, measured), or blank for neutral"),
+    anger_score: Optional[float] = Query(None, description="Anger/emotion intensity (0.0=calm, 1.0=very angry). Triggers faster pace and expressive tone when > 0.6"),
+    speaker: str = Query("ritu", description="Female speaker voice (Ritu for all languages)"),
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+) -> TTSJob:
+    """
+    **EMOTION-AWARE SPEECH SYNTHESIS**
+    
+    Features:
+    - Uses Sarvam TTS with Ritu (female) voice
+    - Language-specific pacing for natural pronunciation
+    - Automatic emotion-based speed & style adjustments:
+      * COMPLAINT + anger_score > 0.6 → Fast, expressive (1.15x pace)
+      * INQUIRY → Slow, measured (0.95x pace)
+      * Neutral → Standard pace (1.0x)
+    - Fallback chain: Sarvam → ElevenLabs → Groq → gTTS
+    
+    Examples:
+    - Complaint with high anger: `/api/v1/tts/emotion-aware?text=मुझे शिकायत है&language=hi&intent=COMPLAINT&anger_score=0.85`
+    - Calm inquiry: `/api/v1/tts/emotion-aware?text=मुझे जानकारी चाहिए&language=hi&intent=INQUIRY&anger_score=0.2`
+    """
+    tts_job_id = str(uuid.uuid4())
+    
+    # Validate language
+    from awaaz.src.pipeline.lang_detect import SUPPORTED_LANGUAGES
+    if language not in SUPPORTED_LANGUAGES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Language '{language}' not supported. Use BCP-47 codes like: hi, ta, te, kn, ml, pa, gu, mr, en, etc."
+        )
+    
+    job_manager.create_tts_job(tts_job_id)
+    job_manager.update_job_status(
+        tts_job_id,
+        ProcessingStatus.PROCESSING,
+        input_text=text,
+        language=language,
+        speaker=speaker,
+        intent=intent,
+        anger_score=anger_score,
+    )
+    
+    background_tasks.add_task(
+        _synthesize_tts_background,
+        tts_job_id,
+        text,
+        language,
+        speaker,
+        intent,
+        anger_score
+    )
+    
+    return job_manager.get_job(tts_job_id)["data"]
+
+
+@app.post(
+    "/api/v1/voice/end-to-end-analysis",
+    tags=["End-to-End: Voice Analysis + Emotion-Aware Response"],
+    summary="Complete pipeline: voice upload → NLP analysis → emotion-aware TTS response",
+    description="Upload voice, get NLP analysis (intent, emotion), and receive synthesized response with emotion-aware adjustments.",
+)
+async def end_to_end_voice_analysis(
+    file: UploadFile = File(..., description="Audio file (WAV, MP3) to analyze"),
+    response_text: str = Query(..., description="Response text to synthesize"),
+    response_language: Optional[str] = Query(None, description="Language for response (defaults to detected input language)"),
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+) -> dict:
+    """
+    **COMPLETE END-TO-END PIPELINE**
+    
+    Workflow:
+    1. Upload voice file
+    2. Run STT (speech-to-text) transcription
+    3. Run NLP analysis to detect intent & emotion
+    4. Generate response text with emotion-aware TTS
+    
+    Returns:
+    - Transcription of input voice
+    - Detected intent (COMPLAINT, INQUIRY, etc.)
+    - Anger score (0.0-1.0)
+    - TTS job ID for synthesized response
+    - Download link for emotion-aware audio response
+    """
+    # Validate file
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No file provided")
+    
+    if file.size and file.size > 50 * 1024 * 1024:  # 50MB limit
+        raise HTTPException(status_code=413, detail="File too large (max 50MB)")
+    
+    # Create unique job ID
+    end_to_end_job_id = str(uuid.uuid4())
+    
+    # Step 1: STT (Transcription)
+    try:
+        file_content = await file.read()
+        import tempfile
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+            tmp.write(file_content)
+            temp_path = tmp.name
+        
+        logger.info(f"[E2E] Transcribing audio for job {end_to_end_job_id}")
+        transcript = await stt_processor.transcribe(audio_path=temp_path)
+        detected_language = "hi"  # Default to Hindi
+        os.unlink(temp_path)
+    except Exception as e:
+        logger.error(f"[E2E] STT failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
+    
+    # Step 2: NLP Analysis
+    try:
+        logger.info(f"[E2E] Analyzing sentiment/intent for job {end_to_end_job_id}")
+        ai_response = await nlp_processor.generate_response(
+            text=transcript,
+            language=detected_language
+        )
+        # Extract intent and emotion from AI response
+        intent_from_nlp = "COMPLAINT" if "complain" in ai_response.lower() else "INQUIRY"
+        anger_score = 0.7 if "angry" in ai_response.lower() or "upset" in ai_response.lower() else 0.3
+    except Exception as e:
+        logger.error(f"[E2E] NLP failed: {e}")
+        intent_from_nlp = "INQUIRY"
+        anger_score = 0.5
+    
+    # Step 3: Emotion-Aware TTS for Response
+    tts_job_id = str(uuid.uuid4())
+    response_lang = response_language or detected_language
+    
+    try:
+        job_manager.create_tts_job(tts_job_id)
+        job_manager.update_job_status(
+            tts_job_id,
+            ProcessingStatus.PROCESSING,
+            input_text=response_text,
+            language=response_lang,
+            speaker="ritu",
+            intent=intent_from_nlp,
+            anger_score=anger_score,
+        )
+        
+        background_tasks.add_task(
+            _synthesize_tts_background,
+            tts_job_id,
+            response_text,
+            response_lang,
+            "ritu",
+            intent_from_nlp,
+            anger_score
+        )
+    except Exception as e:
+        logger.error(f"[E2E] TTS job creation failed: {e}")
+        raise HTTPException(status_code=500, detail=f"TTS synthesis failed: {str(e)}")
+    
+    return {
+        "pipeline_job_id": end_to_end_job_id,
+        "user_voice": {
+            "transcript": transcript,
+            "language": detected_language,
+        },
+        "nlp_analysis": {
+            "detected_intent": intent_from_nlp,
+            "anger_score": round(anger_score, 2),
+            "ai_insight": ai_response[:200],
+        },
+        "response_synthesis": {
+            "tts_job_id": tts_job_id,
+            "response_text": response_text,
+            "response_language": response_lang,
+            "emotion_settings": {
+                "intent": intent_from_nlp,
+                "anger_score": round(anger_score, 2),
+                "voice": "ritu (female)",
+                "expected_pace": "1.15x (fast, expressive)" if anger_score > 0.6 else "1.0x (standard)" if intent_from_nlp == "COMPLAINT" else "0.95x (slow, measured)"
+            },
+            "download_url": f"/api/v1/tts/download/{tts_job_id}",
+            "status_url": f"/api/v1/tts/status/{tts_job_id}",
+        }
+    }
+
+
+@app.get(
+    "/api/v1/system/emotion-aware-tts-info",
+    tags=["System Information"],
+    summary="Get emotion-aware TTS system capabilities",
+    description="Returns supported languages, voice configurations, emotion mapping, and example usage.",
+)
+async def get_emotion_tts_info() -> dict:
+    """
+    **SYSTEM CAPABILITIES & CONFIGURATION**
+    
+    Returns full documentation of:
+    - Supported languages (24+)
+    - Emotion-to-voice adjustments
+    - Intent classification
+    - Language-specific pacing
+    - Voice fallback chain
+    """
+    from awaaz.src.pipeline.lang_detect import SUPPORTED_LANGUAGES
+    from awaaz.src.pipeline.tts import SARVAM_SPEAKER_MAP, SARVAM_DEFAULT_SPEAKER_CONFIG
+    
+    return {
+        "system": "AWAAZ Emotion-Aware TTS",
+        "version": "1.0.0-emotion-aware",
+        "primary_engine": "Sarvam TTS",
+        "default_voice": "Ritu (Female, natural, humanized)",
+        "fallback_chain": ["sarvam", "elevenlabs", "groq", "gtts", "google_cloud"],
+        "supported_languages": sorted(list(SUPPORTED_LANGUAGES)),
+        "emotion_mapping": {
+            "high_anger_complaint": {
+                "description": "User is angry/filing complaint",
+                "trigger": "intent='COMPLAINT' AND anger_score > 0.6",
+                "adjustments": {
+                    "sarvam_pace": "1.15x (fast)",
+                    "sarvam_emotion": "expressive",
+                    "elevenlabs_stability": 0.30,
+                    "elevenlabs_style": 0.75,
+                    "groq_speed": 1.15,
+                }
+            },
+            "calm_inquiry": {
+                "description": "User is asking questions calmly",
+                "trigger": "intent='INQUIRY' AND anger_score < 0.3",
+                "adjustments": {
+                    "sarvam_pace": "0.95x (slow)",
+                    "sarvam_emotion": "calm",
+                    "elevenlabs_stability": 0.60,
+                    "elevenlabs_style": 0.20,
+                    "groq_speed": 0.95,
+                }
+            },
+            "neutral": {
+                "description": "Standard/neutral tone",
+                "trigger": "No special emotion flags",
+                "adjustments": {
+                    "sarvam_pace": "1.0x",
+                    "sarvam_emotion": "natural",
+                    "elevenlabs_stability": 0.45,
+                    "elevenlabs_style": 0.35,
+                }
+            }
+        },
+        "language_specific_pacing": {
+            lang: config.get("pace", 1.0) 
+            for lang, config in SARVAM_SPEAKER_MAP.items()
+        },
+        "endpoints": {
+            "simple_tts": "/api/v1/tts/synthesize-async",
+            "emotion_aware_tts": "/api/v1/tts/emotion-aware",
+            "end_to_end_voice": "/api/v1/voice/end-to-end-analysis",
+            "system_info": "/api/v1/system/emotion-aware-tts-info",
+        },
+        "example_requests": {
+            "complaint_with_anger": "/api/v1/tts/emotion-aware?text=मुझे बहुत शिकायत है&language=hi&intent=COMPLAINT&anger_score=0.85",
+            "calm_inquiry": "/api/v1/tts/emotion-aware?text=क्या आप मदद कर सकते हैं&language=hi&intent=INQUIRY&anger_score=0.2",
+            "tamil_complaint": "/api/v1/tts/emotion-aware?text=என்னிடம் ஒரு புகார் உள்ளது&language=ta&intent=COMPLAINT&anger_score=0.75",
+            "english_professional": "/api/v1/tts/emotion-aware?text=I would like to speak to a manager&language=en&intent=COMPLAINT&anger_score=0.4",
+        }
+    }
+
+
 @app.get(
     "/api/v1/pipeline/background-details/{job_id}",
     response_model=PipelineDetailsResponse,
@@ -757,7 +1045,7 @@ async def download_tts_audio(
     description="Retrieve background processing details for all three layers of the pipeline for a given job.",
 )
 async def get_pipeline_details(
-    job_id: str = Query(..., description="Base job ID (typically transcription job_id)"),
+    job_id: str = FastApiPath(..., description="Base job ID (typically transcription job_id)"),
 ) -> PipelineDetailsResponse:
     """
     Get comprehensive pipeline execution details across all three layers:

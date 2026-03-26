@@ -270,6 +270,12 @@ async def main():
     session.lang = lang_code
     session.lang_name = lang_name
     
+    # Pass emotion and intent for human-like TTS adjustments
+    session.anger_score = analytical_model.emotion.anger_score
+    session.intent = analytical_model.intent.primary_intent
+    session.emotion_name = analytical_model.emotion.detected_emotion.name
+    session.is_emergency = (urgency_level == "CRITICAL")
+    
     temp_wav = f"/tmp/{session_id}_reply.wav"
     
     print(f"  [TTS] Synthesizing human-like voice (Ritu) for {lang_name} using Sarvam AI...")

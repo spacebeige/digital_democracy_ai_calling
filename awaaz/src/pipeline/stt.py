@@ -797,14 +797,46 @@ class STTProcessor:
         add_vote(heuristic_lang, 0.35)
 
         # 5) Sarvam text language detection as strong tie-breaker
-        sarvam_text_lang = await self.sarvam.detect_language_from_text(text, fallback=None)
-        add_vote(sarvam_text_lang, 0.70)
+        # BUT: Skip if ensemble already has high confidence OR if script detection is confident
+        ensemble_max_conf = max(ensemble_scores.values()) if ensemble_scores else 0.0
+        script_conf = (script_dist or {}).get(script_lang, 0.0) if script_lang else 0.0
+        
+        # CRITICAL FIX: Don't let Sarvam override if:
+        #   1) Ensemble is confident (>0.88)
+        #   2) Script detection is very confident (>0.90) + is NOT ambiguous
+        #   3) Text belongs to Devanagari script (shared by Hindi+Marathi+Konkani)
+        is_devanagari = script_lang in ["hi", "mr", "kok", "bho", "mai", "sa", "doi", "awa", "mwr", "bgc"]
+        skip_sarvam_revote = (
+            ensemble_max_conf > 0.88  # Ensemble is confident
+            or (is_devanagari and script_conf > 0.85)  # Devanagari script clear, trust variant detection
+            or (script_lang and script_conf > 0.92)  # Any script very high confidence
+        )
+        
+        if not skip_sarvam_revote:
+            sarvam_text_lang = await self.sarvam.detect_language_from_text(text, fallback=None)
+            add_vote(sarvam_text_lang, 0.70)
+        else:
+            logger.debug(f"[LANG-RESOLVE] SKIPPED Sarvam re-vote: ensemble_conf={ensemble_max_conf:.3f}, "
+                        f"script_lang={script_lang}, script_conf={script_conf:.3f}, is_devanagari={is_devanagari}")
 
         if not vote_scores:
             return (self._normalize_lang_code(provider_lang), vote_scores)
 
         final_lang = max(vote_scores, key=vote_scores.get)
-        logger.info(f"[LANG-RESOLVE] provider={provider_lang} | final={final_lang} | votes={vote_scores}")
+        
+        # CRITICAL: Additional safety check for Devanagari confusion (prevent Hindi override of Marathi)
+        # If script detected Marathi but votes chose Hindi, reconsider
+        if script_lang == "mr" and final_lang == "hi" and vote_scores.get("mr", 0) > 0:
+            # Check if Marathi score is close to Hindi score
+            mr_vote = vote_scores.get("mr", 0)
+            hi_vote = vote_scores.get("hi", 0)
+            # If Marathi is within 20% of Hindi, prefer Marathi (more specific language)
+            if mr_vote >= hi_vote * 0.80:
+                final_lang = "mr"
+                logger.warning(f"[LANG-RESOLVE] OVERRIDE: Detected Marathi (mr) but system chose Hindi (hi). "
+                              f"Correcting to Marathi. votes={{mr={mr_vote:.2f}, hi={hi_vote:.2f}}}")
+        
+        logger.info(f"[LANG-RESOLVE] provider={provider_lang} | script={script_lang} | final={final_lang} | votes={vote_scores}")
         return (final_lang, vote_scores)
 
     async def transcribe(self, audio_path: str, language: str = "hi") -> Optional[STTResult]:
