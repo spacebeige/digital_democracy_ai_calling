@@ -1,8 +1,8 @@
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 import requests
 
 from app.config import LLM_API, STT_API, TTS_API
-from app.database import SessionLocal
+from app.middleware.db_middleware import get_request_db
 from app.models import Complaint
 from app.schemas import CallTurnResponse
 from app.services.llm_service import process_query
@@ -27,30 +27,28 @@ def check_service(url: str) -> dict:
         }
 
 
-def persist_complaint(transcript: str, department: str, call_id: str | None) -> int:
-    db = SessionLocal()
-    try:
-        complaint = Complaint(
-            phone=call_id or "unknown",
-            issue_text=transcript,
-            summary=f"Auto-categorized department: {department or 'general'}",
-            priority="MEDIUM",
-            status="OPEN",
-        )
-        db.add(complaint)
-        db.commit()
-        db.refresh(complaint)
-        return complaint.id
-    finally:
-        db.close()
+def persist_complaint(db, transcript: str, department: str, call_id: str | None) -> int:
+    complaint = Complaint(
+        phone=call_id or "unknown",
+        issue_text=transcript,
+        summary=f"Auto-categorized department: {department or 'general'}",
+        priority="MEDIUM",
+        status="OPEN",
+    )
+    db.add(complaint)
+    db.commit()
+    db.refresh(complaint)
+    return complaint.id
 
 
 @router.post("/handle-turn", response_model=CallTurnResponse)
 async def handle_turn(
+    request: Request,
     audio_file: UploadFile = File(...),
     call_id: str | None = Form(default=None),
 ):
     try:
+        db = get_request_db(request)
         audio_bytes = await audio_file.read()
         if not audio_bytes:
             raise HTTPException(status_code=400, detail="audio_file is empty")
@@ -71,7 +69,7 @@ async def handle_turn(
         if not audio_base64:
             raise HTTPException(status_code=502, detail="TTS service returned no audio")
 
-        complaint_id = persist_complaint(transcript, department, call_id)
+        complaint_id = persist_complaint(db, transcript, department, call_id)
 
         return {
             "success": True,

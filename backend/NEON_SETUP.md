@@ -58,3 +58,11 @@ cd backend
 $env:PYTHONPATH='.'
 ..\.venv\Scripts\python.exe -c "from app.database import engine; conn = engine.connect(); print('DB OK'); conn.close()"
 ```
+
+## 7. Schema and Middleware Change Checklist
+
+For every table or schema update, follow:
+
+- `backend/app/middleware/SCHEMA_CHANGE_CHECKLIST.md`
+
+This checklist explains what to update in models, schemas, routes, migration flow, and when middleware changes are actually required.
