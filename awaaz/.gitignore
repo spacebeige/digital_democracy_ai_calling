@@ -47,12 +47,12 @@ env/
 *.log
 logs/
 
-# Audio files (temp)
-*.wav
-*.ulaw
-*.mp3
-tmp/
-temp/
+# # Audio files (temp)
+# *.wav
+# *.ulaw
+# *.mp3
+# tmp/
+# temp/
 
 # Models (large, should not commit)
 *.bin
