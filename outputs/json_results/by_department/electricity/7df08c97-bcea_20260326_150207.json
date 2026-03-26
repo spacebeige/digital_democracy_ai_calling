@@ -1,0 +1,43 @@
+{
+  "session_id": "7df08c97-bcea",
+  "timestamp": "2026-03-26T15:02:07.842488",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.584261417388916,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "general_complaint",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "electricity",
+    "service_name": "Maharashtra State Electricity Distribution Company Limited (MSEDCL)",
+    "contact_info": "Toll Free: 1912 (local call); 9545909090",
+    "phone": "Toll Free: 1912 (local call); 9545909090",
+    "confidence": 0.8,
+    "reasoning": "Route: ELECTRICITY | Intent: general_complaint | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 4.5/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "General inquiry or non-urgent complaint. User submitted a complaint. Summary: पाइपलान तुटले, घरी पाणी नहीं येते, रंतियंस जाले, पाणी नहीं येते, अत्रेडिस ना कॉल किला, रिस्पंस नहीं ...",
+  "issue_category": "Water Supply",
+  "severity_flags": [],
+  "follow_up_needed": true
+}

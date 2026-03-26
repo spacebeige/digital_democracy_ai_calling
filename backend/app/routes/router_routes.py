@@ -191,6 +191,6 @@ async def health_check(
     return {
         "status": "healthy",
         "service": "smart_router",
-        "mode": "mock" if smart_router._use_mock else "real",
+        "mode": "mock" if SARVAM_API_KEY is None else "real",
         "timestamp": datetime.utcnow().isoformat() + "Z",
     }

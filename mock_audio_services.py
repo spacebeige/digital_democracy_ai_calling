@@ -4,6 +4,9 @@ import uvicorn
 from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 import asyncio
+from faster_whisper import WhisperModel
+import os
+import tempfile
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -13,6 +16,14 @@ logger = logging.getLogger("mock_services")
 # MOCK STT (Port 9000)
 # ═══════════════════════════════════════════════════════════════════════════════
 stt_app = FastAPI(title="Mock STT Service")
+_stt_model: WhisperModel | None = None
+
+
+def _get_stt_model() -> WhisperModel:
+    global _stt_model
+    if _stt_model is None:
+        _stt_model = WhisperModel("small", compute_type="int8")
+    return _stt_model
 
 @stt_app.get("/")
 def stt_health():
@@ -20,10 +31,28 @@ def stt_health():
 
 @stt_app.post("/transcribe")
 async def transcribe(file: UploadFile = File(...)):
-    logger.info(f"Mock STT: Transcribing {file.filename}")
-    # In a real scenario, this would use whisper. 
-    # For mocking, we'll return a deterministic string based on filename or just a default.
-    return {"text": "Mere ghar ke saamne pani ki pipeline tut gayi hai, bahut pani beh raha hai"}
+    logger.info(f"STT: Transcribing {file.filename}")
+    audio = await file.read()
+    if not audio:
+        return {"text": ""}
+
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+            temp_path = tmp.name
+            tmp.write(audio)
+
+        model = _get_stt_model()
+        segments, info = model.transcribe(temp_path, beam_size=1)
+        text = " ".join(seg.text.strip() for seg in segments).strip()
+        return {
+            "text": text,
+            "detected_language": getattr(info, "language", None),
+            "confidence": 1.0,
+        }
+    finally:
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

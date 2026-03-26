@@ -10,6 +10,7 @@ import json
 import time
 import logging
 import asyncio
+import requests
 from pathlib import Path
 from uuid import uuid4
 from datetime import datetime
@@ -97,6 +98,42 @@ def print_section(text):
     print(f"\n{Colors.BOLD}{Colors.CYAN}{'─'*80}{Colors.END}")
     print(f"{Colors.CYAN}  {text}{Colors.END}")
     print(f"{Colors.BOLD}{Colors.CYAN}{'─'*80}{Colors.END}\n")
+
+
+async def transcribe_with_stt_api(audio_file_path: str) -> Optional[dict]:
+    """Transcribe audio via HTTP STT service to avoid local model stalls."""
+    stt_api = os.getenv("STT_API", "http://127.0.0.1:9000").rstrip("/")
+    endpoint = f"{stt_api}/transcribe"
+
+    try:
+        with open(audio_file_path, "rb") as audio_file:
+            files = {
+                "file": (Path(audio_file_path).name, audio_file, "audio/wav")
+            }
+            response = requests.post(endpoint, files=files, timeout=60)
+            response.raise_for_status()
+            data = response.json()
+
+        text = (data.get("text") or "").strip()
+        if not text:
+            return None
+
+        # Normalize to the same fields expected by downstream logic.
+        return {
+            "text": text,
+            "native_script_text": data.get("native_script_text") or text,
+            "detected_language": data.get("detected_language") or "hi",
+            "confidence": float(data.get("confidence", 1.0)),
+        }
+    except Exception as exc:
+        logger.warning("STT API transcription failed: %s", exc)
+        return None
+
+
+def _is_canned_test_transcript(text: str) -> bool:
+    normalized = (text or "").strip().lower()
+    known = "mere ghar ke saamne pani ki pipeline tut gayi hai, bahut pani beh raha hai"
+    return normalized == known
 
 
 async def generate_groq_response(transcript: str, language: str, urgency: str, intent: str, service_name: str) -> str:
@@ -199,18 +236,38 @@ async def main():
     audio_file_path, audio_data = recording_result
     
     print_section("📝 STEP 2: STT TRANSCRIPTION & LANGUAGE DETECTION")
-    stt = STTProcessor(preferred_provider="groq_whisper")
-    await stt.load()
-    
-    stt_result = await stt.transcribe(audio_file_path, language="auto")
-    if not stt_result or not stt_result.text:
+
+    # Primary path: STT API service (transcribes real mic audio, avoids local hangs).
+    stt_result = await transcribe_with_stt_api(audio_file_path)
+    if stt_result and _is_canned_test_transcript(stt_result.get("text", "")):
+        stt_result = None
+
+    # Fallback path: local STT with timeout.
+    if not stt_result:
+        print("  ⚠️ STT API unavailable/invalid transcript, trying local STT fallback...")
+        stt = STTProcessor(preferred_provider="groq_whisper")
+        await stt.load()
+        try:
+            local_result = await asyncio.wait_for(stt.transcribe(audio_file_path, language="auto"), timeout=35)
+        except asyncio.TimeoutError:
+            local_result = None
+
+        if local_result and local_result.text and not _is_canned_test_transcript(local_result.text):
+            stt_result = {
+                "text": local_result.text,
+                "native_script_text": local_result.native_script_text or local_result.text,
+                "detected_language": local_result.detected_language or "hi",
+                "confidence": local_result.confidence,
+            }
+
+    if not stt_result or not stt_result.get("text"):
         print("  ❌ STT failed")
         return
-    
-    lang_code = stt_result.detected_language or "hi"
-    confidence = stt_result.confidence
-    transcript = stt_result.text
-    transcript_native = stt_result.native_script_text or transcript
+
+    lang_code = stt_result.get("detected_language") or "hi"
+    confidence = float(stt_result.get("confidence", 1.0))
+    transcript = stt_result.get("text", "")
+    transcript_native = stt_result.get("native_script_text") or transcript
     script = LANGUAGE_CONFIG.get(lang_code, {}).get('script', 'Unknown')
     lang_name = LANGUAGE_CONFIG.get(lang_code, {}).get('name', 'Unknown')
     
@@ -276,7 +333,8 @@ async def main():
     session.emotion_name = analytical_model.emotion.detected_emotion.name
     session.is_emergency = (urgency_level == "CRITICAL")
     
-    temp_wav = f"/tmp/{session_id}_reply.wav"
+    temp_wav = os.path.join(tempfile.gettempdir(), f"{session_id}_reply.wav")
+    os.makedirs(os.path.dirname(temp_wav), exist_ok=True)
     
     print(f"  [TTS] Synthesizing human-like voice (Ritu) for {lang_name} using Sarvam AI...")
     
@@ -293,7 +351,16 @@ async def main():
     if success:
         print(f"  ✓ TTS Generated successfully: {temp_wav}")
         print("  🔊 Playing audio response...")
-        os.system(f"afplay {temp_wav} 2>/dev/null")
+        try:
+            if sys.platform == "darwin":
+                os.system(f"afplay \"{temp_wav}\" 2>/dev/null")
+            elif os.name == "nt":
+                # Use default Windows media handler; some providers may return non-WAV bytes.
+                os.startfile(temp_wav)  # type: ignore[attr-defined]
+            else:
+                os.system(f"aplay \"{temp_wav}\" 2>/dev/null")
+        except Exception as playback_err:
+            logger.warning("Playback skipped: %s", playback_err)
     else:
         print(f"  ❌ [ERROR] TTS synthesis failed")
     
