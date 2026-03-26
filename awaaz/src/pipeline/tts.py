@@ -685,8 +685,8 @@ def synthesize_speech(
     text: str,
     lang: str,
     output_path: str,
-    preferred_provider: str | None = None,
-    force_provider: str | None = None,
+    preferred_provider: Optional[str] = None,
+    force_provider: Optional[str] = None,
     session=None,
 ) -> dict:
     """
@@ -804,7 +804,7 @@ class TTSProcessor:
             logger.error(f"TTSProcessor.synthesize error: {e}")
             return False
 
-    def synthesize_to_bytes(self, text: str, session=None, language: str = None) -> bytes | None:
+    def synthesize_to_bytes(self, text: str, session=None, language: str = None) -> Optional[bytes]:
         if session is None:
             class MockSession:
                 pass

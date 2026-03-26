@@ -156,15 +156,15 @@ def record_live_audio(duration_s: int = 15):
     
     print(f"\n{Colors.GREEN}🔴 RECORDING IN PROGRESS...{Colors.END}")
     print(f"{Colors.YELLOW}📣 Please speak your complaint clearly.{Colors.END}")
-    print(f"{Colors.CYAN}Ready — speak now (max {duration_s}s, silence cutoff 1500ms){Colors.END}")
+    print(f"{Colors.CYAN}Ready — speak now (max {duration_s}s, silence cutoff 20s){Colors.END}")
     
     try:
-        vad = VADEngine(aggressiveness=2)
+        vad = VADEngine(aggressiveness=1)  # Less aggressive VAD (1 instead of 2)
         recorder = Recorder(vad=vad, device_index=None)
         
         audio = recorder.record(
             max_duration_s=duration_s,
-            silence_ms=1500,
+            silence_ms=20000,  # 20 seconds silence before cutoff
             calibration=calibration
         )
         
