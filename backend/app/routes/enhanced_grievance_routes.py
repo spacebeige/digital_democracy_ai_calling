@@ -11,17 +11,17 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from backend.app.services.enhanced_summary_service import (
+from app.services.enhanced_summary_service import (
     EnhancedAISummaryService,
     EnhancedSummary,
     SummaryStyle,
     UrgencyLevel,
 )
-from backend.app.services.state_schemes_service import (
+from app.services.state_schemes_service import (
     SchemeCategory,
     StateSchemesService,
 )
-from backend.app.services.vulgarity_handler import VulgarityHandler, VulgarityResponse
+from app.services.vulgarity_handler import VulgarityHandler, VulgarityResponse
 
 logger = logging.getLogger(__name__)
 

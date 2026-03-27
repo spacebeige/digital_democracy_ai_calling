@@ -12,19 +12,19 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from backend.app.database import SessionLocal
-from backend.app.models import Complaint
-from backend.app.services.enhanced_summary_service import (
+from app.database import SessionLocal
+from app.models import Complaint
+from app.services.enhanced_summary_service import (
     EnhancedAISummaryService,
     EnhancedSummary,
     SummaryStyle,
     UrgencyLevel,
 )
-from backend.app.services.state_schemes_service import (
+from app.services.state_schemes_service import (
     SchemeCategory,
     StateSchemesService,
 )
-from backend.app.services.vulgarity_handler import VulgarityHandler, VulgarityResponse
+from app.services.vulgarity_handler import VulgarityHandler, VulgarityResponse
 
 logger = logging.getLogger(__name__)
 
