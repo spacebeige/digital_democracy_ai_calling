@@ -1,0 +1,62 @@
+2026-03-26 02:50:13,965  INFO  ============================================================
+2026-03-26 02:50:14,010  INFO  ============================================================
+2026-03-26 02:51:00,158  INFO  ============================================================
+2026-03-26 02:51:00,161  INFO  ============================================================
+2026-03-26 03:01:07,901  INFO  ============================================================
+2026-03-26 03:01:07,902  INFO  Schemes Scraper -> Neon DB
+2026-03-26 03:01:07,903  INFO  ============================================================
+2026-03-26 03:01:09,481  INFO  Fetching Next.js build ID from myscheme.gov.in ...
+2026-03-26 03:01:09,950  INFO  Build ID: 8QEVsWVGrP8LvdihH3SYP
+2026-03-26 03:01:09,954  INFO  Fetching all slugs from list API ...
+2026-03-26 03:01:10,271  WARNING  POST attempt 1/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:01:12,604  WARNING  POST attempt 2/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:01:16,969  WARNING  POST attempt 3/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:01:16,971  ERROR  Failed to fetch page 1
+2026-03-26 03:01:16,972  ERROR  No items fetched. Exiting.
+2026-03-26 03:01:33,790  INFO  ============================================================
+2026-03-26 03:01:33,790  INFO  Schemes Scraper -> Neon DB
+2026-03-26 03:01:33,790  INFO  ============================================================
+2026-03-26 03:01:35,446  INFO  Connected to Neon DB OK
+2026-03-26 03:01:35,446  INFO  Fetching Next.js build ID from myscheme.gov.in ...
+2026-03-26 03:01:36,159  INFO  Build ID: 8QEVsWVGrP8LvdihH3SYP
+2026-03-26 03:01:36,160  INFO  Fetching all slugs from list API ...
+2026-03-26 03:01:36,510  WARNING  POST attempt 1/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:01:38,827  WARNING  POST attempt 2/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:01:43,143  WARNING  POST attempt 3/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:01:43,144  ERROR  Failed to fetch page 1
+2026-03-26 03:01:43,145  ERROR  No items fetched. Exiting.
+2026-03-26 03:02:22,427  INFO  ============================================================
+2026-03-26 03:02:22,427  INFO  Schemes Scraper -> Neon DB
+2026-03-26 03:02:22,427  INFO  ============================================================
+2026-03-26 03:02:24,170  INFO  Connected to Neon DB OK
+2026-03-26 03:02:24,172  INFO  Fetching Next.js build ID from myscheme.gov.in ...
+2026-03-26 03:02:24,526  INFO  Build ID: 8QEVsWVGrP8LvdihH3SYP
+2026-03-26 03:02:24,529  INFO  Fetching all slugs from list API ...
+2026-03-26 03:02:24,811  WARNING  POST attempt 1/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:02:27,129  WARNING  POST attempt 2/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:02:31,441  WARNING  POST attempt 3/3 failed: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — 403 Client Error: Forbidden for url: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi
+2026-03-26 03:02:31,442  ERROR  Failed to fetch page 1
+2026-03-26 03:02:31,442  ERROR  No items fetched. Exiting.
+2026-03-26 03:38:43,447  INFO  ============================================================
+2026-03-26 03:38:43,451  INFO  ============================================================
+2026-03-26 03:39:53,018  INFO  ============================================================
+2026-03-26 03:39:53,018  INFO  Schemes Scraper -> Neon DB  (Official API + Browser Headers)
+2026-03-26 03:39:53,018  INFO  ============================================================
+2026-03-26 03:39:54,721  INFO  Connected to Neon OK
+2026-03-26 03:39:54,721  INFO  Phase 1: Fetching slug list ...
+2026-03-26 03:39:55,248  INFO  Total schemes: 0 | Pages: 0
+2026-03-26 03:39:55,249  INFO  Slug collection done: 0 total
+2026-03-26 03:39:55,253  ERROR  No slugs fetched. Possible causes:
+2026-03-26 03:39:55,254  ERROR    1. Cookie in LIST_HEADERS has expired — refresh it from browser
+2026-03-26 03:39:55,254  ERROR    2. india.gov.in changed their anti-bot rules
+2026-03-26 03:40:33,701  INFO  ============================================================
+2026-03-26 03:40:33,701  INFO  Schemes Scraper -> Neon DB  (Official API + Browser Headers)
+2026-03-26 03:40:33,702  INFO  ============================================================
+2026-03-26 03:40:35,631  INFO  Connected to Neon OK
+2026-03-26 03:40:35,631  INFO  Phase 1: Fetching slug list ...
+2026-03-26 03:40:51,098  WARNING  POST attempt 1/3: https://www.india.gov.in/my-government/schemes/search/dataservices/getSchemeByFilterFromApi — HTTPSConnectionPool(host='www.india.gov.in', port=443): Read timed out. (read timeout=15)
+2026-03-26 03:40:53,686  INFO  Total schemes: 0 | Pages: 0
+2026-03-26 03:40:53,686  INFO  Slug collection done: 0 total
+2026-03-26 03:40:53,687  ERROR  No slugs fetched. Possible causes:
+2026-03-26 03:40:53,687  ERROR    1. Cookie in LIST_HEADERS has expired — refresh it from browser
+2026-03-26 03:40:53,688  ERROR    2. india.gov.in changed their anti-bot rules
