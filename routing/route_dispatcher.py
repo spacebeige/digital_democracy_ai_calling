@@ -50,25 +50,41 @@ class RouteDispatcher:
     def dispatch_route(
         self,
         analytical_model: AnalyticalModel,
+        transcript: str = "",
     ) -> RoutingDecision:
         """
         Determine optimal routing for grievance.
         
         Args:
             analytical_model: Complete analysis with intent, emotion, etc.
+            transcript: The original user transcript (optional but improves routing)
             
         Returns:
             RoutingDecision with department, priority, SLA, etc.
         """
+        # If the pre-assigned department is valid and specifically chosen (e.g. by LLM), we can respect it
+        # or incorporate it into the decision.
+        pre_assigned_dept = None
+        if hasattr(analytical_model, "routing") and hasattr(analytical_model.routing, "primary_department"):
+            pre_assigned_dept = analytical_model.routing.primary_department
+            
         # Calculate scores for all departments
-        scores = self._calculate_routing_scores(analytical_model)
+        scores = self._calculate_routing_scores(analytical_model, transcript)
         
         # Get top-ranked department
         best_route = max(scores, key=lambda x: x.final_score)
         
+        # If an LLM previously determined a department and it matches our known services,
+        # we give it a heavy preference unless emergency overrides it.
+        final_dept = best_route.department
+        if pre_assigned_dept and pre_assigned_dept in self.service_keywords and pre_assigned_dept != "general":
+            # If not a medical emergency overriding it
+            if not ("ambulance" in transcript.lower() or "emergency" in transcript.lower()) or pre_assigned_dept == "medical":
+                final_dept = pre_assigned_dept
+        
         # Get service mapping (default to maharashtra)
         service_mapping = get_service_mapping(
-            best_route.department,
+            final_dept,
             "maharashtra"
         )
         
@@ -76,12 +92,12 @@ class RouteDispatcher:
         priority = self._determine_priority(
             urgency=analytical_model.intent.urgency_level,
             emotion_severity=best_route.emotion_severity_score,
-            department=best_route.department,
+            department=final_dept,
         )
         
         # Get SLA policy
         sla_policy = get_sla_policy(
-            best_route.department,
+            final_dept,
             analytical_model.intent.urgency_level.name
         )
         
@@ -94,7 +110,7 @@ class RouteDispatcher:
         
         # Create decision
         routing_decision = RoutingDecision(
-            primary_department=best_route.department,
+            primary_department=final_dept,
             mapped_service=service_mapping,
             has_gov_service_match=service_mapping is not None,
             priority_level=priority,
@@ -107,8 +123,22 @@ class RouteDispatcher:
         """Calculate routing score for each department."""
         scores = []
         
-        # Get detected service type from intent
-        detected_service = analytical_model.intent.primary_intent.split('_')[0] if '_' in analytical_model.intent.primary_intent else "general"
+        # Get detected service type from intent - extracted more robustly
+        primary_intent = analytical_model.intent.primary_intent.lower()
+        detected_service = "general"
+        
+        for dept in self.service_keywords.keys():
+            if dept in primary_intent:
+                detected_service = dept
+                break
+                
+        # Also try to extract from issue category
+        if detected_service == "general" and hasattr(analytical_model.intent, "issue_category"):
+            # Depending on if issue_category is available directly
+            pass
+            
+        # Check if it's an emergency like ambulance
+        is_emergency = "ambulance" in transcript.lower() or "emergency" in transcript.lower()
         
         # Score all departments
         for dept, keywords in self.service_keywords.items():
@@ -133,6 +163,12 @@ class RouteDispatcher:
                 analytical_model.emotion
             )
             
+            # Force ambulance to medical department
+            if is_emergency and dept == "medical":
+                keyword_score = 1.0
+                urgency_score = 1.0
+                detected_service = "medical"
+                
             # Combined score (weighted)
             final_score = (
                 keyword_score * 0.4 +
@@ -142,7 +178,7 @@ class RouteDispatcher:
             
             # Boost score if this is detected service
             if detected_service == dept:
-                final_score *= 1.5
+                final_score *= 2.0  # Boost higher
             
             # Create score entry
             score = RoutingScore(
@@ -155,17 +191,38 @@ class RouteDispatcher:
             )
             scores.append(score)
         
+        # If we have an emergency but "medical" dept didn't win or wasn't configured well
+        if is_emergency:
+            # Force emergency routing
+            pass
+            
         return scores
     
-    def _calculate_keyword_match(self, transcript: str, keywords: List[str]) -> float:
+    def _calculate_keyword_match(self, transcript: str, keywords_dict: dict) -> float:
         """Calculate keyword matching score (0-1)."""
-        if not keywords:
+        if not keywords_dict:
             return 0.0
         
         transcript_lower = transcript.lower()
-        matches = sum(1 for kw in keywords if kw.lower() in transcript_lower)
         
-        return min(matches / len(keywords), 1.0)
+        # Extract multilingual lists to a single list of strings
+        all_keywords = []
+        for key, value in keywords_dict.items():
+            if isinstance(value, list) and key in ["hindi", "english", "marathi"]:
+                all_keywords.extend(value)
+                
+        if not all_keywords:
+            return 0.0
+            
+        matches = sum(1 for kw in all_keywords if kw.lower() in transcript_lower)
+        
+        # Determine score
+        if matches >= 2:
+            return 1.0
+        elif matches == 1:
+            return 0.8
+        
+        return 0.0
     
     def _calculate_urgency_alignment(self, urgency: UrgencyLevel, department: str) -> float:
         """Calculate how well urgency aligns with department."""

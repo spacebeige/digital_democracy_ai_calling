@@ -39,8 +39,8 @@ class JSONStorageManager:
         for urgency in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
             (self.base_dir / "by_urgency" / urgency).mkdir(parents=True, exist_ok=True)
         
-        # By department
-        for dept in ["fire", "police", "electricity", "water", "gas", "municipal"]:
+        # By department - enhanced for dynamic departments like scheme and agriculture
+        for dept in ["fire", "police", "electricity", "water", "gas", "municipal", "agriculture", "scheme", "general", "roads", "sanitation", "health", "telecom"]:
             (self.base_dir / "by_department" / dept).mkdir(parents=True, exist_ok=True)
         
         # By date (YYYY-MM-DD structure)
@@ -100,6 +100,7 @@ class JSONStorageManager:
     def _save_json(self, filepath: Path, data: Dict[str, Any]):
         """Save JSON to file with error handling."""
         try:
+            filepath.parent.mkdir(parents=True, exist_ok=True)
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
             logger.debug(f"Saved: {filepath}")

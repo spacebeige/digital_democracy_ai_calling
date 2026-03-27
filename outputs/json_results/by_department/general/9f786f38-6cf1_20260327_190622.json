@@ -1,0 +1,56 @@
+{
+  "session_id": "9f786f38-6cf1",
+  "timestamp": "2026-03-27T19:06:22.547089",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "ml",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6969394401343105,
+    "frustration_score": 0.6,
+    "stress_level": 0.5800000006080122
+  },
+  "intent": {
+    "primary_intent": "clarification_needed",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "general",
+    "service_name": "Government Helpdesk",
+    "contact_info": "181 (State Helpline) or 1800-111-555",
+    "phone": "181 (State Helpline) or 1800-111-555",
+    "confidence": 0.8,
+    "reasoning": "Route: GENERAL | Intent: clarification_needed | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.8/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The complaint appears to be incomplete or nonsensical, and a summary cannot be accurately provided due to the lack of clear information.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": null,
+    "state_service": "Delhi Government Helpline - 1031",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 2,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "നിങ്ങളുടെ പ്രശ്നം വ്യക്തമല്ല, ദയവായി നിങ്ങളുടെ പ്രശ്നം വ്യക്തമായി പറയുക. നിങ്ങൾക്ക് സഹായം ആവശ്യമുണ്ടെങ്കിൽ ദില്ലി ഗവൺമെന്റ് ഹെൽപ്ലൈൻ നമ്പരായ 1031 നെ ബന്ധപ്പെടുക. അടിയന്തര സഹായത്തിന് 1100 അല്ലെങ്ക"
+}

@@ -1,0 +1,56 @@
+{
+  "session_id": "6bf0db10-944b",
+  "timestamp": "2026-03-27T14:12:53.782065",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "panjabi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.6,
+    "stress_level": 0.5600000012160244
+  },
+  "intent": {
+    "primary_intent": "clarification_needed",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "electricity",
+    "service_name": "Maharashtra State Electricity Distribution Company Limited (MSEDCL)",
+    "contact_info": "Toll Free: 1912 (local call); 9545909090",
+    "phone": "Toll Free: 1912 (local call); 9545909090",
+    "confidence": 0.8,
+    "reasoning": "Route: ELECTRICITY | Intent: clarification_needed | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 4.5/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Here's a brief 1-sentence summary:\n\nThe complainant is expressing general dissatisfaction with a situation (not clearly specified) and is seeking a resolution or redressal in a low-urgency context.\n\nNote: The complaint text is in Punjabi, and my analysis is based on the available information, which appears to be a poetic expression of a problem rather than a specific, factual complaint. \n\nIt might be helpful to translate the complaint text to English or obtain more context to better understand the",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "DL",
+    "state_service": "BSES Yamuna/Rajdhani Power Limited",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 60
+  },
+  "ai_response": "It seems like there's a lot of frustration in your message, but unfortunately, I couldn't quite understand the specific issue you're facing. Please explain your specific problem clearly so we can help you. Your concern has been assigned to BSES Yamuna/Rajdhani Power Limited, and they will be happy to assist you once we have a clear understanding of the issue. If you could provide more details, I'd be more than happy to guide you further."
+}

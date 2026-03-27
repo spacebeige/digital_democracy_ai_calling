@@ -1,0 +1,47 @@
+{
+  "session_id": "db343ca1-f0a0",
+  "timestamp": "2026-03-27T12:40:27.120260",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "report_fire",
+    "secondary_intents": [
+      "report_fire"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "fire",
+    "service_name": "Maharashtra Fire and Emergency Services",
+    "contact_info": "101 (All Emergency)",
+    "phone": "101 (All Emergency)",
+    "confidence": 0.8,
+    "reasoning": "Route: FIRE | Intent: report_fire | Urgency: CRITICAL | Priority: P1 | Emotion: FRUSTRATED | Confidence: 6.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "A fire has broken out in Vartak Nagar, and the urgency level is critical.\n\nAnalysis:\n\n- The keywords \"आग\" and \"आग लगली\" both translate to \"fire,\" indicating the core issue.\n- The repetition of \"लगली है\" with slight variations emphasizes the importance and urgency of the situation.\n- The tone of the complaint suggests a high level of concern and requires immediate attention.\n- Considering the urgency level is \"CRITICAL,\" a brief response with",
+  "issue_category": "Fire/Emergency",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE"
+  ],
+  "follow_up_needed": true
+}

@@ -1,0 +1,54 @@
+{
+  "session_id": "e621d136-a9b7",
+  "timestamp": "2026-03-27T18:40:01.567817",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "hi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Summary: The complainant from Uttar Pradesh is seeking information about government schemes and updates related to agriculture in the state that can help them in planning their farming.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "UP",
+    "state_service": "UP Jan Sewa Kendra / Jan Suvidha Portal",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 1,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "मैं आपकी सहायता करूंगी, उत्तर प्रदेश में खेती से संबंधित सरकारी योजनाओं के बारे में जानकारी प्राप्त करने के लिए आप यूपी जन सेवा केंद्र / जन सुविधा पोर्टल से संपर्क कर सकते हैं। इस संबंध में आपको 18004190001 पर संपर्क करना होगा। कृपया अपने क्षेत्र का नाम बताएं ताकि मैं आपको अधिक विशिष्ट जानकारी प्रदान कर सकूं।"
+}

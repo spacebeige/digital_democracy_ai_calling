@@ -272,7 +272,7 @@ class AnalyticalModelProcessor:
             Tuple of (updated_analytical_model, escalation_info)
         """
         # Apply intelligent routing
-        routing_decision = self.route_dispatcher.dispatch_route(analytical_model)
+        routing_decision = self.route_dispatcher.dispatch_route(analytical_model, transcript)
         analytical_model.routing = routing_decision
         
         logger.info(f"🚦 Routed to: {routing_decision.primary_department} (Priority: P{routing_decision.priority_level})")
@@ -311,6 +311,7 @@ class AnalyticalModelProcessor:
         self,
         analytical_model: AnalyticalModel,
         escalation_info: Optional[dict] = None,
+        extra_data: Optional[dict] = None,
     ) -> dict:
         """
         Save grievance result to organized folder structure.
@@ -323,6 +324,7 @@ class AnalyticalModelProcessor:
         Args:
             analytical_model: Analyzed and routed grievance
             escalation_info: Escalation decision information
+            extra_data: Additional data like ticket_number, state, etc.
             
         Returns:
             Dictionary with file paths where result was saved
@@ -377,6 +379,21 @@ class AnalyticalModelProcessor:
             "severity_flags": analytical_model.severity_flags,
             "follow_up_needed": analytical_model.follow_up_needed,
         }
+        
+        # Add extra data if provided (ticket_number, state, etc.)
+        if extra_data:
+            result_doc["ticket"] = {
+                "number": extra_data.get("ticket_number"),
+                "state_code": extra_data.get("state_code"),
+                "state_service": extra_data.get("state_service"),
+                "is_scheme_enquiry": extra_data.get("is_scheme_enquiry", False),
+            }
+            result_doc["sentiment"] = {
+                "frustration_level": extra_data.get("frustration_level", 0),
+                "aggressiveness_score": extra_data.get("aggressiveness_score", 0),
+            }
+            if extra_data.get("ai_response"):
+                result_doc["ai_response"] = extra_data.get("ai_response")
         
         # Determine urgency level for folder organization
         urgency_str = analytical_model.intent.urgency_level.name if analytical_model.intent.urgency_level else "MEDIUM"

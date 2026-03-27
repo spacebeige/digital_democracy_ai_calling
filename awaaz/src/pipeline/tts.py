@@ -105,9 +105,7 @@ CJK_LANGS           = {"zh", "ja", "ko"}
 CYRILLIC_LANGS      = {"ru", "uk", "bg", "sr", "mk", "be", "kk"}
 
 def get_provider_order(lang: str) -> list[str]:
-    # Extract base language if formatted like "mr-IN"
-    lang = lang.split("-")[0]
-    # Primary logic: use Sarvam (specifically Ritu voice for smooth Indic scripts) first
+    # Prioritize sarvam to ensure Ritu voice is used across all supported languages uniformly
     return ["sarvam", "elevenlabs", "groq", "gtts", "google_cloud"]
 
 
@@ -200,6 +198,11 @@ SARVAM_LANG_MAP = {
     "doi": "hi-IN", "awa": "hi-IN", "mwr": "hi-IN", "bgc": "hi-IN",
     "tcy": "kn-IN",  # Tulu uses Kannada script in Sarvam
     "ur": "ur-IN",   # Urdu support
+    "punjabi": "pa-IN", "panjabi": "pa-IN",
+    "hindi": "hi-IN", "marathi": "mr-IN", "gujarati": "gu-IN",
+    "bengali": "bn-IN", "tamil": "ta-IN", "telugu": "te-IN",
+    "kannada": "kn-IN", "malayalam": "ml-IN", "english": "en-IN",
+    "odia": "or-IN", "assamese": "as-IN",
     # Additional AWAAZ regional variants -> closest supported Sarvam voice
     "brx": "hi-IN", "dcc": "ur-IN", "gbm": "hi-IN", "hne": "hi-IN",
     "kfy": "hi-IN", "kru": "hi-IN", "ks": "ur-IN", "lmn": "te-IN",
@@ -421,9 +424,12 @@ def _sarvam_tts(text: str, lang: str, output_path: str, session=None) -> str:
         speaker_config.get("emotion"), len(text), len(chunks)
     )
 
-    audio_buffers: list[bytes] = []
+    import concurrent.futures
+    
+    audio_buffers: list[bytes] = [b""] * len(chunks)
     t0 = time.time()
-    for idx, chunk in enumerate(chunks):
+    
+    def fetch_chunk(idx, chunk):
         payload = {
             "inputs":               [chunk],
             "target_language_code": sarvam_lang,
@@ -447,7 +453,16 @@ def _sarvam_tts(text: str, lang: str, output_path: str, session=None) -> str:
                 f"lang={lang!r} | chunk={idx+1}/{len(chunks)} | body={resp.text[:300]}"
             )
         audio_b64 = resp.json()["audios"][0]
-        audio_buffers.append(base64.b64decode(audio_b64))
+        return base64.b64decode(audio_b64)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        future_to_idx = {executor.submit(fetch_chunk, i, c): i for i, c in enumerate(chunks)}
+        for future in concurrent.futures.as_completed(future_to_idx):
+            idx = future_to_idx[future]
+            try:
+                audio_buffers[idx] = future.result()
+            except Exception as e:
+                raise RuntimeError(f"Error fetching chunk {idx}: {e}")
 
     latency_ms = int((time.time() - t0) * 1000)
 

@@ -1,0 +1,54 @@
+{
+  "session_id": "89efc7e4-b783",
+  "timestamp": "2026-03-27T13:48:05.585896",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "clarification_needed",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "electricity",
+    "service_name": "Maharashtra State Electricity Distribution Company Limited (MSEDCL)",
+    "contact_info": "Toll Free: 1912 (local call); 9545909090",
+    "phone": "Toll Free: 1912 (local call); 9545909090",
+    "confidence": 0.8,
+    "reasoning": "Route: ELECTRICITY | Intent: clarification_needed | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 4.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The complainant, who appears to be from India based on the language used, seems to be unhappy with their bus service, specifically their bus driver, who has failed to make an effort to improve despite the complainant's trust in the company not changing.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "MH",
+    "state_service": "Maharashtra State Electricity Distribution Co. (MSEDCL)",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 80
+  },
+  "ai_response": "आपल्या समस्येबद्दल मला माहिती द्या असे विनंती आहे, कारण आपण पाठवलेल्या संदेशातून समस्या समजत नाहीये. कृपया आपली समस्या स्पष्टपणे सांगा जेणेकरून आम्ही तुमच्या मदतीला येऊ शकू. महाराष्ट्र राज्य विद्युत वितरण कंपनी (एमएसईडीसीएल) तुमच्या समस्येचे निराकरण करण्यासाठी मदतीला येईल."
+}

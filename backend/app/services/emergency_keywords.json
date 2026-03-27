@@ -97,8 +97,33 @@
       "gandu", "goor", "lavda", "bhikari", "sala", "teri", "tere",
       "badmash", "bewkoof", "besharam", "jhagri", "jhunjhuna", "ladaki",
       "chakka", "hijra", "randighor", "randi-ana", "paimano", "fateh",
-      "साला", "बकवास", "चुटिया", "मादरचोद", "हरामी",
       "bewkuff", "bewakoofana", "bewkuffiana", "badshah", "balyakari"
+    ],
+    "hindi_devanagari": [
+      "साला", "बकवास", "चुटिया", "चूतिया", "मादरचोद", "हरामी", "कुत्ता", "कुत्ते",
+      "भड़वा", "भड़वे", "भोसड़ीके", "भोसड़ी", "गांड", "गांडू", "गाण्डू", "लवडा", "लौड़ा", "लोडा", "लोड़ा",
+      "चोद", "चूस", "रंडी", "रांड", "छिनाल", "हिजड़ा", "बहनचोद", "बेहनचोद", "बेनचोद",
+      "मादर", "पादर", "पादरचोद", "भेनचोद", "भैंचोद", "बीके", "लुल्ली", "लुंड", "लण्ड",
+      "झाट", "झाटू", "टट्टी", "पेशाब", "थूक", "चूसना", "चूसो", "चूसले", "मुंह", "मूत",
+      "बोकाचोदा", "बोका", "बोकाचोद", "मुर्गा", "मुर्गी", "बाप", "माँ", "मा", "बेटीचोद"
+    ],
+    "marathi_devanagari": [
+      "झवाड्या", "माधरचोद", "बहिणचोद", "बहिनचोद", "आयला", "आईला", "भाड्या",
+      "गांड", "गांडू", "लवडा", "लवड्या", "चूत", "चूतमारी", "चूतिया", "चोद", "चोदायला",
+      "मादरझवाड", "बोका", "बोकड", "बायको", "रांड", "रंडी", "छिनाल", "भडवा",
+      "भोसडी", "भोसड्या", "हरामी", "हरामखोर", "कुत्रा", "कुत्री", "डुक्कर", "गाढव",
+      "मूर्ख", "बेवकूफ", "पागल", "वेडा", "झाटू", "थेरड्या", "भिकारी", "नालायक",
+      "बदमाश", "गुंड", "झवाडी", "झवणे", "झवलं", "झवायला"
+    ],
+    "tamil_transliterated": [
+      "otha", "thevdiya", "thevidiya", "sunni", "punda", "pundai", "pundamavan",
+      "koothi", "ommala", "thayoli", "baadu", "loosu", "puluthi", "mayiru",
+      "thookku", "sombu", "mokkai", "kena", "kenathala", "myru", "naaye"
+    ],
+    "bengali_transliterated": [
+      "sala", "chudmarani", "banchod", "maagi", "khankir", "khankir-chele",
+      "bhosdiwala", "bokachoda", "haramjada", "haramzada", "shala", "chodu",
+      "gandu", "gudmarani", "madarchod", "chodna", "lora", "bichi", "gud"
     ],
     "english": [
       "stupid", "idiot", "moron", "asshole", "asshat", "fuck", "shit",
@@ -106,11 +131,86 @@
       "dickhead", "motherfucker", "douchebag", "twat", "wanker", "shithead",
       "retard", "crazy", "insane", "psycho", "loser", "slut", "whore",
       "bitch", "hoe", "witch", "devil", "demon", "beast", "animal",
-      "scum", "filth", "dirt", "trash", "garbage", "waste", "useless"
+      "scum", "filth", "dirt", "trash", "garbage", "waste", "useless",
+      "fucking", "fucked", "fucker", "wtf", "stfu", "fck"
     ],
     "universal": [
       "kill", "die", "death-threat", "bomb-threat", "attack-threat",
       "violence-threat", "harm-threat", "rape-threat", "murder-threat"
+    ],
+    "hindi_phrases": [
+      "teri maa ki", "tera baap", "teri behen ki", "tere muh mein", "gand mara",
+      "bhag yahan se", "nikal yahan se", "apni maa chuda", "apni behen chuda",
+      "maa ka bhosda", "baap ka lund", "maa ki chut", "behen ki chut",
+      "tere muh pe mootna", "tera khoon piyunga", "mar ja saale", "marna chahiye",
+      "tujhe maar dunga", "tujhe kaat dunga", "tere ghar pe aake marunga"
+    ],
+    "hindi_phrases_devanagari": [
+      "तेरी माँ की", "तेरा बाप", "तेरी बहन की", "तेरे मुंह में", "गांड मरा",
+      "भाग यहाँ से", "निकल यहाँ से", "अपनी माँ चुदा", "अपनी बहन चुदा",
+      "माँ का भोसड़ा", "बाप का लंड", "माँ की चूत", "बहन की चूत",
+      "तेरे मुंह पे मूतना", "तेरा खून पियूंगा", "मर जा साले", "मरना चाहिए",
+      "तुझे मार दूंगा", "तुझे काट दूंगा", "तेरे घर पे आके मारूंगा",
+      "तू चूतिया है", "तू गधा है", "तू कुत्ता है", "तेरी औकात नहीं",
+      "तू हरामी है", "तू नालायक है", "तुझे शर्म नहीं आती",
+      "मादरचोद है तू", "बहनचोद है तू", "गांडू है तू"
+    ],
+    "marathi_phrases_devanagari": [
+      "तुझी आई", "तुझा बाप", "तुझी बहीण", "तुझ्या तोंडात", "गांड मार",
+      "जा इथून", "निघ इथून", "तुझी आई झव", "तुझी बहीण झव",
+      "आईचा भोसडा", "बापाचा लंड", "आईची गांड", "बहिणीची गांड",
+      "तुला मारीन", "तुला ठार करीन", "मर साल्या", "मरायला हवे",
+      "तू झवाड्या आहेस", "तू बोकड आहेस", "तू गाढव आहेस",
+      "तुझी लायकी नाही", "तू हरामी आहेस", "तू नालायक आहेस",
+      "माधरचोद आहेस तू", "बहिणचोद आहेस तू", "गांडू आहेस तू"
+    ],
+    "tamil_phrases": [
+      "un amma", "un appa", "un akka", "un vaaila", "un thevdiya",
+      "po inga", "odum inga", "un amma odi", "un akka odi",
+      "amma koothi", "appa sunni", "poda dei", "podi di",
+      "un veettu thevdiya", "nee naai", "nee pandi", "nee kazhdai"
+    ],
+    "telugu_phrases": [
+      "nee amma", "nee nanna", "nee akka", "nee noothilo", "dengey",
+      "po ikkada", "padha ikkada", "nee amma dengu", "nee akka dengu",
+      "amma gudda", "nanna modda", "pooku", "gudda",
+      "nuvvu kukka", "nuvvu pandi", "nuvvu gadidha"
+    ],
+    "bengali_phrases": [
+      "tor maa", "tor bap", "tor bon", "tor mukhe", "gud mara",
+      "ja ekhane", "bhag ekhane", "tor maa chod", "tor bon chod",
+      "maar chele", "tor baal", "bokachoda", "maagi",
+      "tui kukur", "tui shuor", "tui gadha"
+    ],
+    "gujarati_phrases": [
+      "tari maa", "taro baap", "tari bahen", "tara mooma", "gand mara",
+      "ja aahithi", "bhaag aahithi", "tari maa chod", "tari bahen chod",
+      "maa ni chut", "baap no lund", "gandu", "randi",
+      "tu kutra chhe", "tu gadedho chhe", "tu harami chhe"
+    ],
+    "punjabi_phrases": [
+      "teri maa di", "tera pyo", "teri bhain di", "tere munh vich", "gand mara",
+      "ja ehon", "bhaj ehon", "teri maa chod", "teri bhain chod",
+      "maa di phudi", "pyo da lund", "kutta", "kutti",
+      "tu gadha hai", "tu harami hai", "tu nalayak hai"
+    ],
+    "kannada_phrases": [
+      "nin amma", "nin appa", "nin akka", "nin baayalli", "gooda",
+      "hogu illi", "odu illi", "nin amma kelsa", "nin akka kelsa",
+      "amma tullu", "appa tulla", "sule", "boli",
+      "neen nayi", "neen handi", "neen katthe"
+    ],
+    "malayalam_phrases": [
+      "ninte amma", "ninte achan", "ninte chechi", "ninte vaayil", "kunna",
+      "po ivide", "odu ivide", "ninte amma kayari", "ninte chechi kayari",
+      "ammede pooru", "achante kunna", "thendi", "pooran",
+      "nee patti", "nee panni", "nee kadha"
+    ],
+    "odia_phrases": [
+      "to maa", "to bapa", "to bhauni", "to pakare", "gua mara",
+      "ja etharu", "bhaga etharu", "to maa chodiba", "to bhauni chodiba",
+      "maa bhosdika", "bapa landa", "randi", "bhosdi",
+      "tu kukura", "tu suara", "tu gadha"
     ]
   },
   "prank_indicators": {

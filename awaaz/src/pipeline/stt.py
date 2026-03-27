@@ -21,6 +21,14 @@ try:
 except ImportError:
     PHONETIC_CONVERTER_AVAILABLE = False
 
+# Sentence-level multilingual detection
+try:
+    from .sentence_language_detector import SentenceLevelLanguageDetector, MultilingualPrediction
+    SENTENCE_DETECTOR_AVAILABLE = True
+except ImportError:
+    SENTENCE_DETECTOR_AVAILABLE = False
+    MultilingualPrediction = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -32,7 +40,8 @@ class STTResult:
     def __init__(self, text: str, provider: str, confidence: float, 
                  detected_language: Optional[str] = None, processing_time_ms: float = 0.0,
                  phonetic_text: Optional[str] = None, native_script_text: Optional[str] = None,
-                 accent_type: Optional[str] = None, english_meaning: Optional[str] = None):
+                 accent_type: Optional[str] = None, english_meaning: Optional[str] = None,
+                 multilingual_prediction: Optional['MultilingualPrediction'] = None):
         self.text = text
         self.provider = provider
         self.confidence = confidence
@@ -42,6 +51,10 @@ class STTResult:
         self.native_script_text = native_script_text
         self.accent_type = accent_type or "standard"  # "standard" or "thick_village"
         self.english_meaning = english_meaning
+        # NEW: Sentence-level multilingual language detection
+        self.multilingual_prediction = multilingual_prediction
+        self.is_code_switched = False
+        self.segment_languages = []  # List of {text, language_code, confidence}
 
 
 class SarvamLanguageTools:
@@ -491,20 +504,21 @@ class STTProcessor:
         self.providers: List[BaseSTTProvider] = []
         self.sarvam = SarvamLanguageTools()
 
-        if os.getenv("BHASHINI_API_KEY"):
-            self.providers.append(BhashiniSTT())
-
-        if os.getenv("ELEVENLABS_API_KEY"):
-            self.providers.append(ElevenLabsSTT())
-
+        # Just load Groq to ensure absolute minimum latency (if available)
         if os.getenv("GROQ_API_KEY"):
             self.providers.append(GroqWhisperSTT())
+        else:
+            if os.getenv("ELEVENLABS_API_KEY"):
+                self.providers.append(ElevenLabsSTT())
+            if os.getenv("BHASHINI_API_KEY"):
+                self.providers.append(BhashiniSTT())
+            if os.getenv("HF_API_KEY"):
+                self.providers.append(HuggingFaceSTT())
 
-        if os.getenv("HF_API_KEY"):
-            self.providers.append(HuggingFaceSTT())
-
-        self.local_whisper = LocalWhisperSTT(model_size, device)
-        self.providers.append(self.local_whisper)
+        # Removed local_whisper to drastically reduce latency
+        # self.local_whisper = LocalWhisperSTT(model_size, device)
+        # self.providers.append(self.local_whisper)
+        self.local_whisper = None
 
         pref = (preferred_provider or os.getenv("STT_PRIMARY") or "elevenlabs").strip().lower()
         self._prioritize_provider(pref)
@@ -554,7 +568,8 @@ class STTProcessor:
 
     async def load(self):
         logger.info("Initializing multi-provider STT pipeline...")
-        await self.local_whisper.load()
+        # Local whisper disabled for latency optimization 
+        # if self.local_whisper: await self.local_whisper.load()
         logger.info(f"Loaded STT providers: {[p.name for p in self.providers]}")
 
     async def detect_language_with_elevenlabs(self, audio_path: str) -> Tuple[Optional[str], float]:
@@ -655,7 +670,7 @@ class STTProcessor:
         Detect language using local Whisper model (fallback - works offline)
         Returns: (language_code, confidence)
         """
-        if not self.local_whisper.model:
+        if not self.local_whisper or not self.local_whisper.model:
             logger.warning("[LANG-DETECT] Local Whisper not available")
             return (None, 0.0)
 
@@ -679,20 +694,26 @@ class STTProcessor:
     async def detect_language(self, audio_path: str) -> Tuple[str, float]:
         """
         Multi-provider language detection chain
-        (priority: ElevenLabs → Groq → Sarvam → Local Whisper)
+        (priority: Sarvam → ElevenLabs → Groq → Local Whisper)
         
         Strategy:
-        1. ElevenLabs STT (best accuracy for all languages, especially European/CJK/Cyrillic)
-        2. Groq Whisper (strong multilingual baseline)
-        3. Sarvam (excellent for Indic languages: Marathi, Hindi, Tamil, etc.)
+        1. Sarvam (excellent for Indic languages: Marathi, Hindi, Tamil, etc., <2s latency constraint)
+        2. ElevenLabs STT (fallback/primary for all other languages)
+        3. Groq Whisper (strong multilingual baseline)
         4. Local Whisper (fallback, works offline)
-        4. Default to 'hi' if all fail
+        5. Default to 'hi' if all fail
         
         Returns: (language_code, confidence)
         """
         logger.debug(f"[LANG-DETECT] Starting multi-provider language detection for {audio_path}")
         
-        # Try ElevenLabs first (primary - most accurate overall)
+        # Try Sarvam first (primary - excellent for Indic languages like Marathi)
+        sarvam_lang, sarvam_conf = await self.detect_language_with_sarvam(audio_path)
+        if sarvam_lang and sarvam_conf >= 0.7:
+            logger.info(f"[LANG-DETECT] ✓ Using Sarvam result: {sarvam_lang}")
+            return (sarvam_lang, sarvam_conf)
+            
+        # Try ElevenLabs next (most accurate fallback overall)
         lang, conf = await self.detect_language_with_elevenlabs(audio_path)
         if lang and conf >= 0.7:  # High confidence
             logger.info(f"[LANG-DETECT] ✓ Using ElevenLabs result: {lang}")
@@ -704,13 +725,10 @@ class STTProcessor:
             logger.info(f"[LANG-DETECT] ✓ Using Groq result: {groq_lang}")
             return (groq_lang, groq_conf)
         
-        # Try Sarvam (secondary - excellent for Indic languages)
-        sarvam_lang, sarvam_conf = await self.detect_language_with_sarvam(audio_path)
-        if sarvam_lang and sarvam_conf >= 0.7:
-            logger.info(f"[LANG-DETECT] ✓ Using Sarvam result: {sarvam_lang}")
+        # If any had medium confidence, use it in order
+        if sarvam_lang and sarvam_conf > 0.0:
+            logger.info(f"[LANG-DETECT] ✓ Using Sarvam result (medium confidence): {sarvam_lang}")
             return (sarvam_lang, sarvam_conf)
-        
-        # If ElevenLabs/Groq or Sarvam had medium confidence, use it
         if lang and conf > 0.0:
             logger.info(f"[LANG-DETECT] ✓ Using ElevenLabs result (medium confidence): {lang}")
             return (lang, conf)
@@ -841,13 +859,16 @@ class STTProcessor:
 
     async def transcribe(self, audio_path: str, language: str = "hi") -> Optional[STTResult]:
         last_error = None
-        ensemble_lang, ensemble_scores = await self.detect_language_ensemble(audio_path)
+        
+        # Bypass time-consuming ensemble for latency optimization
+        ensemble_lang, ensemble_scores = None, {}
         
         for provider in self.providers:
             try:
                 # auto/unspecified is better for code-mixed speech models
                 transcribe_lang = None if language in ['hi', 'auto'] else language
                 
+                # FAST PATH: Just transcribe directly!
                 result = await provider.transcribe(audio_path, language=transcribe_lang)
                 
                 if result.confidence < self.confidence_threshold:
@@ -915,3 +936,43 @@ class STTProcessor:
     async def to_native_script_text(self, text: str, lang: Optional[str]) -> str:
         """Best-effort conversion from phonetic/latin text to native script."""
         return await self.sarvam.transliterate_to_native(text, lang)
+
+    async def detect_sentence_languages(
+        self,
+        text: str,
+        fallback_language: str = "hi"
+    ) -> Optional['MultilingualPrediction']:
+        """
+        Detect language at sentence/segment level using Sarvam.
+        
+        Returns MultilingualPrediction with:
+          - segments: List of text segments with per-segment language codes
+          - primary_language: Most common language detected
+          - is_code_switched: True if multiple languages detected
+          - language_distribution: Percentage distribution of languages
+        
+        Usage:
+            result = await stt_processor.transcribe(audio_path)
+            if result:
+                prediction = await stt_processor.detect_sentence_languages(result.text)
+                if prediction and prediction.is_code_switched:
+                    for segment in prediction.segments:
+                        # Process each segment with its specific language
+                        await synthesize_tts(segment.text, segment.language_code)
+        """
+        if not SENTENCE_DETECTOR_AVAILABLE:
+            logger.warning("Sentence-level detector not available")
+            return None
+        
+        try:
+            detector = SentenceLevelLanguageDetector()
+            prediction = await detector.detect_multilingual_sentences(text, fallback_language)
+            logger.info(
+                f"[SENTENCE-LANGS] Detected {len(prediction.segments)} segments, "
+                f"primary={prediction.primary_language}, "
+                f"code_switched={prediction.is_code_switched}"
+            )
+            return prediction
+        except Exception as e:
+            logger.warning(f"Sentence-level detection failed: {e}")
+            return None

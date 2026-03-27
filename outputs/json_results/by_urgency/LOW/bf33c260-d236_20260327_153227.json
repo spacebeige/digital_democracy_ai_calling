@@ -1,0 +1,56 @@
+{
+  "session_id": "bf33c260-d236",
+  "timestamp": "2026-03-27T15:32:27.954560",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "bho",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.6,
+    "stress_level": 0.5600000012160244
+  },
+  "intent": {
+    "primary_intent": "clarification_needed",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "general",
+    "service_name": "Government Helpdesk",
+    "contact_info": "181 (State Helpline) or 1800-111-555",
+    "phone": "181 (State Helpline) or 1800-111-555",
+    "confidence": 0.8,
+    "reasoning": "Route: GENERAL | Intent: clarification_needed | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Summary: The complaint is non-specific but seems to be expressing frustration or dissatisfaction with a situation or issue, but lacks clarity or detail, which results in a low urgency level.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "BR",
+    "state_service": "Delhi Government Helpline - 1031",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "आपका मेसेज मिला लेकिन आपकी समस्या स्पष्ट नहीं है। कृपया अपनी समस्या स्पष्ट रूप से बताएं ताकि हम आपकी मदद कर सकें। दिल्ली सरकार के हेल्पलाइन 1031 के माध्यम से आपकी समस्या का समाधान किया जाएगा। कृपया अपनी समस्या बताएं ताकि हम आगे की कार्रवाई कर सकें।"
+}

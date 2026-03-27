@@ -1,0 +1,56 @@
+{
+  "session_id": "737d56c8-cc1b",
+  "timestamp": "2026-03-27T18:41:23.660564",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Here's a 1-sentence summary of the complaint:\n\nThe complainant, a farmer, is expressing disappointment and frustration with the lack of relevant government schemes for agriculture development and is seeking an alternative that could help him shift from conventional farming to modern farming practices.\n\nUrgency level: LOW.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "MH",
+    "state_service": "Maharashtra Social Welfare - Jan Seva Kendra",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 6,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "मी तुमच्या शेती संबंधित समस्येची कल्पना करते, आणि तुम्हाला शासनाने सुरू केलेल्या योजनांबद्दल माहिती पाहिजे असेल तर महाराष्ट्र सामाजिक कल्याण विभागाच्या जनसेवा केंद्राशी संपर्क साधा. तुम्ही १८०० २६७ ०००० या हेल्पलाइन नंबरवर संपर्क करू शकता. कृपया तुमचे स्थान सांगा जेणेकरून आम्ही तुमच्या जवळच्या कार्यालयाशी तुमचा संपर्क करू शकू."
+}

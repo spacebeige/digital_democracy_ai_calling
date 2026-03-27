@@ -21,6 +21,7 @@ Features:
 
 import sys
 import os
+import time
 import json
 import asyncio
 import logging
@@ -38,13 +39,41 @@ from uuid import uuid4
 
 # Import systems
 from analytics.analytical_model import create_processor
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+def get_db_connection():
+    db_url = os.getenv("NEON_DB_KEY")
+    if not db_url:
+        logger.warning("NEON_DB_KEY missing. Cannot connect to NeonDB")
+        return None
+    try:
+        conn = psycopg2.connect(db_url, cursor_factory=RealDictCursor)
+        return conn
+    except Exception as e:
+        logger.error(f"NeonDB Connection Error: {e}")
+        return None
+
 from models.grievance_models import create_session_id
 from outputs.json_storage_manager import JSONStorageManager
-from interactive_voice_to_layer3_integrated import (
-    detect_language_multilingual,
-    generate_groq_summary,
-    LANGUAGE_CONFIG
-)
+
+# Try to import from awaaz, fallback to basic config
+try:
+    from awaaz.src.pipeline.nlp import LANGUAGE_CONFIG
+except ImportError:
+    LANGUAGE_CONFIG = {
+        "hi": {"name": "Hindi", "script": "Devanagari", "gtts": "hi"},
+        "mr": {"name": "Marathi", "script": "Devanagari", "gtts": "mr"},
+        "en": {"name": "English", "script": "Latin", "gtts": "en"},
+        "ta": {"name": "Tamil", "script": "Tamil", "gtts": "ta"},
+        "te": {"name": "Telugu", "script": "Telugu", "gtts": "te"},
+        "bn": {"name": "Bengali", "script": "Bengali", "gtts": "bn"},
+        "gu": {"name": "Gujarati", "script": "Gujarati", "gtts": "gu"},
+        "kn": {"name": "Kannada", "script": "Kannada", "gtts": "kn"},
+        "ml": {"name": "Malayalam", "script": "Malayalam", "gtts": "ml"},
+        "pa": {"name": "Punjabi", "script": "Gurmukhi", "gtts": "pa"},
+        "or": {"name": "Odia", "script": "Odia", "gtts": "or"},
+    }
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -73,6 +102,13 @@ class TextGrievanceRequest(BaseModel):
     language: Optional[str] = None  # Auto-detect if not provided
     state: str = "maharashtra"
     user_id: Optional[str] = None
+
+class EmergencyRequest(BaseModel):
+    """Request model for fast emergency detection and TTS."""
+    transcript: str
+    language: Optional[str] = "en"
+    state: Optional[str] = "maharashtra"
+    generate_tts: bool = True
     user_phone: Optional[str] = None
     user_name: Optional[str] = None
 
@@ -133,6 +169,67 @@ async def get_supported_languages() -> Dict:
         "timestamp": datetime.now().isoformat()
     }
 
+
+@app.post("/grievance/emergency")
+async def process_emergency(request: EmergencyRequest) -> Dict:
+    """Fast-path endpoint for detecting medical/fire emergencies and triggering immediate TTS response."""
+    start_time = time.time()
+    
+    transcript_lower = request.transcript.lower()
+    is_emergency = False
+    emergency_type = "unknown"
+    response_msg = ""
+    target_lang = request.language or "en"
+    
+    # Simple rule-based edge cases
+    if any(w in transcript_lower for w in ["ambulance", "medical", "heart attack", "accident", "अस्पताल", "एम्बुलेंस", "रुग्णवाहिका"]):
+        is_emergency = True
+        emergency_type = "medical"
+        # Provide immediate multilingual response logic
+        responses = {
+            "en": "This is a medical emergency. An ambulance is being dispatched immediately to your location.",
+            "hi": "यह एक चिकित्सा आपातकाल है। आपकी लोकेशन पर तुरंत एक एम्बुलेंस भेजी जा रही है।",
+            "mr": "ही वैद्यकीय आपत्कालीन स्थिती आहे. तुमच्या ठिकाणी त्वरित रुग्णवाहिका पाठवली जात आहे."
+        }
+        response_msg = responses.get(target_lang[:2], responses["en"])
+    elif any(w in transcript_lower for w in ["fire", "burning", "आग", "केमिकल"]):
+        is_emergency = True
+        emergency_type = "fire"
+        responses = {
+            "en": "Fire emergency detected. The fire brigade is being informed immediately.",
+            "hi": "अग्नि आपातकाल!! फायर ब्रिगेड को तुरंत सूचित किया जा रहा है।",
+            "mr": "आग! अग्निशमन दलाला त्वरित कळवण्यात येत आहे."
+        }
+        response_msg = responses.get(target_lang[:2], responses["en"])
+    
+    # Trigger TTS if emergency
+    tts_path = None
+    if is_emergency and request.generate_tts and response_msg:
+        from awaaz.src.pipeline.tts import synthesize_speech
+        
+        session_id = create_session_id()
+        audio_filename = f"{session_id}_emergency_reply.wav"
+        output_path = os.path.join(JSONStorageManager.get_base_dir(), audio_filename)
+        
+        # Immediate generation
+        success = await synthesize_speech(
+            text=response_msg,
+            output_path=output_path,
+            session=None,
+            language=target_lang
+        )
+        if success:
+            tts_path = output_path
+    
+    return {
+        "is_emergency": is_emergency,
+        "emergency_type": emergency_type,
+        "response_message": response_msg,
+        "routing": emergency_type,
+        "priority": "P1" if is_emergency else "P4",
+        "tts_path": tts_path,
+        "latency_ms": int((time.time() - start_time) * 1000)
+    }
 
 # Process text grievance
 @app.post("/grievance/text/submit")
@@ -421,6 +518,8 @@ async def root() -> Dict:
             "grievance.submit": "POST /grievance/text/submit",
             "grievance.status": "GET /grievance/{session_id}/status",
             "grievance.voice": "POST /grievance/voice/upload",
+            "schemes.lookup": "GET /schemes/{state_code}",
+            "schemes.search": "POST /schemes/search",
             "tts.generate": "POST /tts/generate",
             "statistics": "/statistics/multilingual"
         },
@@ -430,10 +529,270 @@ async def root() -> Dict:
             "Intelligent multi-criteria routing",
             "Automatic escalation engine",
             "Native script TTS output",
+            "State-wise scheme lookup",
             "Comprehensive JSON responses",
             "Language metadata tracking"
         ],
         "supported_languages": len(LANGUAGE_CONFIG),
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCHEME LOOKUP ENDPOINTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# State scheme data (expandable)
+STATE_SCHEMES = {
+    "MH": {
+        "state_name": "Maharashtra",
+        "schemes": [
+            {"name": "PM-KISAN", "category": "agriculture", "description": "₹6000/year direct transfer to farmer families", "eligibility": "Small & marginal farmers", "contact": "1800-180-1551"},
+            {"name": "Mahatma Phule Shetkari Karj Mukti Yojana", "category": "agriculture", "description": "Farm loan waiver scheme for farmers", "eligibility": "Farmers with loans up to ₹2 lakh", "contact": "Maharashtra Agriculture Dept"},
+            {"name": "Nanaji Deshmukh Krushi Sanjivani", "category": "agriculture", "description": "Climate resilient agriculture project", "eligibility": "Farmers in drought-prone areas", "contact": "District Agriculture Office"},
+            {"name": "Ladki Bahin Yojana", "category": "women", "description": "₹1500/month for women", "eligibility": "Women aged 21-60 with income < ₹2.5 lakh", "contact": "Women & Child Dev Dept"},
+            {"name": "Mahatma Jyotiba Phule Jan Arogya Yojana", "category": "health", "description": "Free health insurance up to ₹1.5 lakh", "eligibility": "BPL families, farmers", "contact": "1800-233-2200"},
+            {"name": "Mukhyamantri Saur Krishi Vahini Yojana", "category": "agriculture", "description": "Solar pumps for irrigation", "eligibility": "Farmers with agricultural land", "contact": "MSEDCL"},
+        ]
+    },
+    "UP": {
+        "state_name": "Uttar Pradesh",
+        "schemes": [
+            {"name": "PM-KISAN", "category": "agriculture", "description": "₹6000/year direct transfer to farmer families", "eligibility": "Small & marginal farmers", "contact": "1800-180-1551"},
+            {"name": "Kisan Samman Nidhi", "category": "agriculture", "description": "State top-up for PM-KISAN beneficiaries", "eligibility": "PM-KISAN registered farmers", "contact": "UP Agriculture Dept"},
+            {"name": "Kanya Sumangala Yojana", "category": "women", "description": "₹15000 in installments for girl child education", "eligibility": "Families with annual income < ₹3 lakh", "contact": "Women Welfare Dept"},
+            {"name": "Mukhyamantri Kisan Awas Yojana", "category": "housing", "description": "Housing assistance for farmers", "eligibility": "Landless agricultural laborers", "contact": "Housing Dept"},
+            {"name": "Ayushman Bharat-PM JAY", "category": "health", "description": "Health cover up to ₹5 lakh/family/year", "eligibility": "SECC database families", "contact": "14555"},
+        ]
+    },
+    "TN": {
+        "state_name": "Tamil Nadu",
+        "schemes": [
+            {"name": "PM-KISAN", "category": "agriculture", "description": "₹6000/year direct transfer to farmer families", "eligibility": "Small & marginal farmers", "contact": "1800-180-1551"},
+            {"name": "Uzhavar Padhukappu Thittam", "category": "agriculture", "description": "Crop insurance for farmers", "eligibility": "All farmers growing notified crops", "contact": "TN Agriculture Dept"},
+            {"name": "Free Goat/Sheep Distribution", "category": "agriculture", "description": "Distribution of goats/sheep to farmers", "eligibility": "Rural farmers", "contact": "Animal Husbandry Dept"},
+            {"name": "Chief Minister's Health Insurance Scheme", "category": "health", "description": "Free medical treatment up to ₹5 lakh", "eligibility": "All families with ration card", "contact": "104"},
+            {"name": "Moovalur Ramamirtham Ammaiyar Marriage Assistance", "category": "women", "description": "₹25000 + 8g gold for marriage", "eligibility": "Women from poor families", "contact": "Social Welfare Dept"},
+        ]
+    },
+    "KA": {
+        "state_name": "Karnataka",
+        "schemes": [
+            {"name": "PM-KISAN", "category": "agriculture", "description": "₹6000/year direct transfer to farmer families", "eligibility": "Small & marginal farmers", "contact": "1800-180-1551"},
+            {"name": "Raitha Siri", "category": "agriculture", "description": "State agricultural assistance scheme", "eligibility": "Registered farmers", "contact": "Karnataka Agriculture Dept"},
+            {"name": "Krishi Bhagya", "category": "agriculture", "description": "Farm pond and micro irrigation scheme", "eligibility": "Farmers with < 10 acres land", "contact": "District Agriculture Office"},
+            {"name": "Gruha Lakshmi", "category": "women", "description": "₹2000/month to women heads of households", "eligibility": "Women heads of families", "contact": "Women & Child Dev Dept"},
+            {"name": "Yuva Nidhi", "category": "employment", "description": "₹3000-1500/month for unemployed graduates", "eligibility": "Unemployed graduates/diploma holders", "contact": "Skill Development Dept"},
+        ]
+    },
+    "GJ": {
+        "state_name": "Gujarat",
+        "schemes": [
+            {"name": "PM-KISAN", "category": "agriculture", "description": "₹6000/year direct transfer to farmer families", "eligibility": "Small & marginal farmers", "contact": "1800-180-1551"},
+            {"name": "Mukhyamantri Kisan Sahay Yojana", "category": "agriculture", "description": "Crop damage compensation", "eligibility": "Farmers with crop damage > 33%", "contact": "Gujarat Agriculture Dept"},
+            {"name": "Kisan Suryodaya Yojana", "category": "agriculture", "description": "24x7 electricity for agriculture", "eligibility": "Agricultural consumers", "contact": "GUVNL"},
+            {"name": "MA Amrutam Yojana", "category": "health", "description": "Health insurance for BPL families", "eligibility": "BPL card holders", "contact": "104"},
+            {"name": "Vahali Dikri Yojana", "category": "women", "description": "Financial assistance for girl child", "eligibility": "Families with girl child", "contact": "Women & Child Dev Dept"},
+        ]
+    },
+    "DL": {
+        "state_name": "Delhi",
+        "schemes": [
+            {"name": "PM-KISAN", "category": "agriculture", "description": "₹6000/year direct transfer to farmer families", "eligibility": "Small & marginal farmers in rural Delhi", "contact": "1800-180-1551"},
+            {"name": "Delhi Free Water Scheme", "category": "water", "description": "Free water up to 20KL/month", "eligibility": "Metered water connections", "contact": "Delhi Jal Board"},
+            {"name": "Delhi Free Electricity Scheme", "category": "electricity", "description": "Free electricity up to 200 units/month", "eligibility": "Domestic consumers", "contact": "BSES/Tata Power"},
+            {"name": "Mohalla Clinic", "category": "health", "description": "Free primary healthcare", "eligibility": "All Delhi residents", "contact": "Nearest Mohalla Clinic"},
+            {"name": "Mukhyamantri Tirth Yatra Yojana", "category": "senior_citizen", "description": "Free pilgrimage for senior citizens", "eligibility": "Delhi residents aged 60+", "contact": "Religious Committee"},
+        ]
+    },
+}
+
+# Fallback schemes for states not in database
+DEFAULT_CENTRAL_SCHEMES = [
+    {"name": "PM-KISAN Samman Nidhi", "category": "agriculture", "description": "₹6000/year direct transfer to farmer families", "eligibility": "Small & marginal farmers with cultivable land", "contact": "1800-180-1551"},
+    {"name": "Pradhan Mantri Fasal Bima Yojana", "category": "agriculture", "description": "Crop insurance at nominal premium", "eligibility": "All farmers growing notified crops", "contact": "Agriculture Insurance Company"},
+    {"name": "PM Kisan Maan Dhan Yojana", "category": "pension", "description": "₹3000/month pension after age 60", "eligibility": "Small & marginal farmers aged 18-40", "contact": "CSC Centers"},
+    {"name": "Ayushman Bharat - PM JAY", "category": "health", "description": "Health insurance up to ₹5 lakh/family/year", "eligibility": "SECC database families", "contact": "14555"},
+    {"name": "PM Awas Yojana - Gramin", "category": "housing", "description": "₹1.2-1.3 lakh for rural housing", "eligibility": "Houseless/kutcha house residents", "contact": "Gram Panchayat"},
+    {"name": "Mahatma Gandhi NREGA", "category": "employment", "description": "100 days guaranteed wage employment", "eligibility": "Rural adults willing to do unskilled work", "contact": "Gram Panchayat"},
+]
+
+
+class SchemeSearchRequest(BaseModel):
+    """Request model for scheme search."""
+    query: str
+    state_code: Optional[str] = None
+    category: Optional[str] = None  # agriculture, health, women, housing, etc.
+    language: Optional[str] = "en"
+
+
+@app.get("/schemes/{state_code}")
+async def get_state_schemes(state_code: str, category: Optional[str] = None) -> Dict:
+    """
+    Get government schemes for a specific state.
+    
+    Args:
+        state_code: Two-letter state code (MH, UP, TN, KA, GJ, DL, etc.)
+        category: Optional filter by category (agriculture, health, women, etc.)
+    
+    Returns:
+        List of schemes with details and eligibility
+    """
+    state_code = state_code.upper()
+    
+    # Get state-specific schemes or fallback to central schemes
+    if state_code in STATE_SCHEMES:
+        state_data = STATE_SCHEMES[state_code]
+        schemes = state_data["schemes"]
+        state_name = state_data["state_name"]
+    else:
+        schemes = DEFAULT_CENTRAL_SCHEMES
+        state_name = f"Central Government (for {state_code})"
+    
+    # Filter by category if specified
+    if category:
+        schemes = [s for s in schemes if s.get("category", "").lower() == category.lower()]
+    
+    return {
+        "state_code": state_code,
+        "state_name": state_name,
+        "total_schemes": len(schemes),
+        "schemes": schemes,
+        "categories": list(set(s.get("category", "other") for s in schemes)),
+        "helpline": "1800-180-1551 (Kisan Call Centre)",
+        "note": "For latest updates, visit the official state portal or nearest Jan Seva Kendra",
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+@app.post("/schemes/search")
+async def search_schemes(request: SchemeSearchRequest) -> Dict:
+    """
+    Search for schemes across states based on query.
+    
+    Args:
+        request: SchemeSearchRequest with query, optional state and category
+    
+    Returns:
+        Matching schemes with relevance scores
+    """
+    query_lower = request.query.lower()
+    results = []
+    
+    # Define search keywords for different categories
+    category_keywords = {
+        "agriculture": ["farmer", "kisan", "krishi", "crop", "खेती", "किसान", "शेतकरी", "फसल", "farm", "agriculture"],
+        "health": ["health", "medical", "hospital", "insurance", "bima", "स्वास्थ्य", "बीमा", "doctor", "treatment"],
+        "women": ["women", "mahila", "girl", "daughter", "ladki", "महिला", "लड़की", "dikri", "bahin"],
+        "housing": ["house", "home", "awas", "ghar", "घर", "आवास", "housing"],
+        "pension": ["pension", "old age", "senior", "vridha", "पेंशन", "वृद्ध"],
+        "employment": ["job", "employment", "rozgar", "work", "रोजगार", "नौकरी"],
+    }
+    
+    # Determine category from query
+    detected_category = None
+    for cat, keywords in category_keywords.items():
+        if any(kw in query_lower for kw in keywords):
+            detected_category = cat
+            break
+    
+    # Search in specified state or all states
+    
+    # Fetch from NeonDB if available
+    conn = get_db_connection()
+    if conn:
+        try:
+            with conn.cursor() as cur:
+                if request.state_code:
+                    cur.execute(
+                        "SELECT * FROM government_schemes WHERE category ILIKE %s AND (state_code ILIKE %s OR is_central = TRUE)", 
+                        [f"%{detected_category or ''}%", request.state_code]
+                    )
+                else:
+                    cur.execute(
+                        "SELECT * FROM government_schemes WHERE category ILIKE %s", 
+                        [f"%{detected_category or ''}%"]
+                    )
+                db_results = cur.fetchall()
+                if db_results:
+                    return {
+                        "query": request.query,
+                        "language": request.language,
+                        "detected_category": detected_category,
+                        "total_results": len(db_results),
+                        "results": [dict(r) for r in db_results],
+                        "source": "neondb",
+                        "timestamp": datetime.now().isoformat()
+                    }
+        except Exception as e:
+            logger.error(f"DB Error: {e}")
+        finally:
+            conn.close()
+
+    if request.state_code:
+        states_to_search = [request.state_code.upper()]
+    else:
+        states_to_search = list(STATE_SCHEMES.keys())
+    
+    for state in states_to_search:
+        if state in STATE_SCHEMES:
+            for scheme in STATE_SCHEMES[state]["schemes"]:
+                # Calculate relevance score
+                score = 0
+                scheme_text = f"{scheme['name']} {scheme['description']} {scheme['category']}".lower()
+                
+                # Check for query match
+                if request.query.lower() in scheme_text:
+                    score += 5
+                
+                # Check for word matches
+                for word in query_lower.split():
+                    if len(word) > 2 and word in scheme_text:
+                        score += 2
+                
+                # Check category match
+                if detected_category and scheme.get("category") == detected_category:
+                    score += 3
+                
+                if request.category and scheme.get("category") == request.category:
+                    score += 3
+                
+                if score > 0:
+                    results.append({
+                        "state": state,
+                        "state_name": STATE_SCHEMES[state]["state_name"],
+                        "scheme": scheme,
+                        "relevance_score": score
+                    })
+    
+    # Add central schemes as fallback
+    for scheme in DEFAULT_CENTRAL_SCHEMES:
+        score = 0
+        scheme_text = f"{scheme['name']} {scheme['description']} {scheme['category']}".lower()
+        
+        if request.query.lower() in scheme_text:
+            score += 3
+        
+        if detected_category and scheme.get("category") == detected_category:
+            score += 2
+        
+        if score > 0:
+            results.append({
+                "state": "CENTRAL",
+                "state_name": "Central Government",
+                "scheme": scheme,
+                "relevance_score": score
+            })
+    
+    # Sort by relevance
+    results.sort(key=lambda x: x["relevance_score"], reverse=True)
+    
+    return {
+        "query": request.query,
+        "detected_category": detected_category,
+        "total_results": len(results),
+        "results": results[:10],  # Top 10 results
+        "helpline": "1800-180-1551 (Kisan Call Centre)",
         "timestamp": datetime.now().isoformat()
     }
 

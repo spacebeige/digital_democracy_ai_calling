@@ -1,0 +1,56 @@
+{
+  "session_id": "562db869-03e2",
+  "timestamp": "2026-03-27T17:56:08.630319",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "hi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.6,
+    "stress_level": 0.5600000012160244
+  },
+  "intent": {
+    "primary_intent": "clarification_needed",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "general",
+    "service_name": "Government Helpdesk",
+    "contact_info": "181 (State Helpline) or 1800-111-555",
+    "phone": "181 (State Helpline) or 1800-111-555",
+    "confidence": 0.8,
+    "reasoning": "Route: GENERAL | Intent: clarification_needed | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Summary: The complainant is struggling to understand and respond in the Angrez (Hindi for English) language when integrating with something, causing frustration but requiring minimal urgency.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "UP",
+    "state_service": "UP State Helpline - 1076",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 6,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "आपकी समस्या को समझने की कोशिश कर रहा हूँ, लेकिन आपके संदेश में स्पष्ट समस्या नहीं बताई गई है। कृपया अपनी विशिष्ट समस्या स्पष्ट रूप से बताएं ताकि हम आपकी मदद कर सकें। यदि आपको किसी योजना या समस्या के बारे में जानकारी चाहिए, तो उत्तर प्रदेश राज्य हेल्पलाइन - 1076 से संपर्क करने के लिए 1100 या 181 पर कॉल करें।"
+}

@@ -1,0 +1,56 @@
+{
+  "session_id": "4f56f892-7e8a",
+  "timestamp": "2026-03-27T18:51:49.774643",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6286211218159923,
+    "frustration_score": 0.6,
+    "stress_level": 0.5800000006080122
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The trader from Punjab is seeking information about government policies or initiatives introduced for the benefit of traders in their region, requiring a low-urgency response.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "PB",
+    "state_service": "Delhi e-District Portal - Jan Seva Kendra",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 1,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "I understand you're a trader from Punjab and you're looking for information on government schemes. Since you're inquiring about schemes, I'd like to inform you that the Delhi e-District Portal - Jan Seva Kendra is assigned to help you. For more information, you can call the assigned helpline number 011-23935730. Please note that you can also visit the official government website to explore various schemes available for traders in Punjab."
+}

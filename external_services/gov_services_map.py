@@ -48,6 +48,13 @@ SERVICE_KEYWORDS = {
         "department_codes": ["PD", "PS"],
         "may_escalate_to_fire": True,
     },
+    "medical": {
+        "hindi": ["अस्पताल", "डॉक्टर", "एम्बुलेंस", "बीमार", "स्वास्थ्य", "दुर्घटना"],
+        "english": ["hospital", "doctor", "ambulance", "health", "sick", "accident", "emergency"],
+        "marathi": ["रुग्णालय", "डॉक्टर", "रुग्णवाहिका", "आरोग्य"],
+        "department_codes": ["MOH", "PHRD", "MED"],
+        "is_emergency": True,
+    },
     "municipal": {
         "hindi": ["सड़क", "गड्ढा", "पार्क", "स्कूल", "अस्पताल", "कूड़ा", "कचरा", "सफाई"],
         "english": ["pothole", "street", "road", "garbage", "dirt", "maintenance", "park", "public"],
@@ -66,6 +73,37 @@ SERVICE_KEYWORDS = {
         "english": ["phone", "network", "signal", "internet", "connection", "data"],
         "marathi": ["फोन", "नेट"],
         "department_codes": ["TRAI", "DOT"],
+    },
+    # NEW: Agriculture & Farmer schemes
+    "agriculture": {
+        "hindi": ["किसान", "खेती", "फसल", "कृषि", "बीज", "खाद", "सिंचाई", "ट्रैक्टर", "मंडी", "उपज", "खेत", "शेती"],
+        "english": ["farmer", "farming", "agriculture", "crop", "seed", "fertilizer", "irrigation", "tractor", "harvest", "farm"],
+        "marathi": ["शेतकरी", "शेती", "पीक", "कृषी", "बियाणे", "खत", "सिंचन", "शेत", "उत्पादन"],
+        "tamil": ["விவசாயி", "விவசாயம்", "பயிர்", "விதை", "உரம்"],
+        "telugu": ["రైతు", "వ్యవసాయం", "పంట", "విత్తనం"],
+        "bengali": ["কৃষক", "চাষ", "ফসল", "বীজ"],
+        "gujarati": ["ખેડૂત", "ખેતી", "પાક", "બીજ"],
+        "kannada": ["ರೈತ", "ಕೃಷಿ", "ಬೆಳೆ", "ಬೀಜ"],
+        "department_codes": ["AGRI", "DAC", "FW"],
+    },
+    # NEW: Government schemes category
+    "scheme": {
+        "hindi": ["योजना", "स्कीम", "सब्सिडी", "अनुदान", "लाभ", "सरकारी योजना", "पेंशन", "बीमा", "राशन", "आवास"],
+        "english": ["scheme", "subsidy", "benefit", "grant", "pension", "insurance", "ration", "housing", "welfare", "pm kisan", "pmay"],
+        "marathi": ["योजना", "अनुदान", "लाभ", "सरकारी योजना", "पेन्शन", "विमा", "रेशन", "आवास"],
+        "tamil": ["திட்டம்", "மானியம்", "ஓய்வூதியம்", "காப்பீடு"],
+        "telugu": ["పథకం", "సబ్సిడీ", "పెన్షన్", "బీమా"],
+        "bengali": ["প্রকল্প", "ভর্তুকি", "পেনশন", "বীমা"],
+        "gujarati": ["યોજના", "સબસિડી", "પેન્શન", "વીમા"],
+        "kannada": ["ಯೋಜನೆ", "ಸಬ್ಸಿಡಿ", "ಪಿಂಚಣಿ", "ವಿಮೆ"],
+        "department_codes": ["SW", "RD", "PMO"],
+    },
+    # NEW: General/Clarification category (lowest priority)
+    "general": {
+        "hindi": ["मदद", "सहायता", "जानकारी", "पूछना", "बताना"],
+        "english": ["help", "information", "query", "question", "assistance", "support"],
+        "marathi": ["मदत", "माहिती", "विचारणा"],
+        "department_codes": ["GEN", "HELP"],
     },
 }
 
@@ -128,6 +166,16 @@ STATE_SERVICES: Dict[str, Dict[str, GovServiceMapping]] = {
             priority=0,  # Highest
             sla_minutes=5,
             handling_team="Local Police Station + Patrol Units",
+        ),
+        "medical": GovServiceMapping(
+            service_type="medical",
+            service_name="Medical Emergency & Ambulance Services",
+            department_code="MED",
+            contact_method="phone",
+            contact_info="108 (Ambulance Options)",
+            priority=0,  # Highest
+            sla_minutes=5,
+            handling_team="Health Emergency Team + Nearby Hospitals",
         ),
         "municipal": GovServiceMapping(
             service_type="municipal",
@@ -240,6 +288,47 @@ GENERIC_SERVICES = {
         contact_info="100 or 112",
         priority=0,
         sla_minutes=5,
+    ),
+    "medical": GovServiceMapping(
+        service_type="medical",
+        service_name="Medical/Ambulance Services",
+        department_code="MED",
+        contact_method="phone",
+        contact_info="108",
+        priority=0,
+        sla_minutes=5,
+    ),
+    # NEW: Agriculture Department
+    "agriculture": GovServiceMapping(
+        service_type="agriculture",
+        service_name="Department of Agriculture & Farmer Welfare",
+        department_code="DAC",
+        contact_method="phone",
+        contact_info="1800-180-1551 (Kisan Call Centre)",
+        priority=3,
+        sla_minutes=1440,  # 24 hours
+        regional_office="District Agriculture Office",
+    ),
+    # NEW: Scheme/Welfare Department
+    "scheme": GovServiceMapping(
+        service_type="scheme",
+        service_name="Social Welfare & Schemes Department",
+        department_code="SW",
+        contact_method="phone",
+        contact_info="1800-180-1111 (Govt Helpline)",
+        priority=3,
+        sla_minutes=1440,
+        regional_office="District Collector Office",
+    ),
+    # NEW: General Helpdesk
+    "general": GovServiceMapping(
+        service_type="general",
+        service_name="Government Helpdesk",
+        department_code="HELP",
+        contact_method="phone",
+        contact_info="181 (State Helpline) or 1800-111-555",
+        priority=4,
+        sla_minutes=2880,  # 48 hours
     ),
 }
 

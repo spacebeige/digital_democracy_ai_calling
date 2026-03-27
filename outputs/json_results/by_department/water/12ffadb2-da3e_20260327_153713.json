@@ -1,0 +1,54 @@
+{
+  "session_id": "12ffadb2-da3e",
+  "timestamp": "2026-03-27T15:37:13.249760",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.6,
+    "stress_level": 0.5600000012160244
+  },
+  "intent": {
+    "primary_intent": "report_water_issue",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "water",
+    "service_name": "Jal Sansthan (Water Supply Board)",
+    "contact_info": "1800-233-1331 (Maharashtra Water Supply)",
+    "phone": "1800-233-1331 (Maharashtra Water Supply)",
+    "confidence": 0.8,
+    "reasoning": "Route: WATER | Intent: report_water_issue | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "A customer is expressing frustration about not receiving soft drinking water from Midshipal Corporation and is seeking information on the next step to resolve the issue, indicating a low level of urgency and general dissatisfaction with the service.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": "WAT-MH-20260327-16298",
+    "state_code": "MH",
+    "state_service": "Maharashtra Jal Sansthan",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "आपल्या पाणी संबंधित समस्येबद्दल दुःख वाटते, आपल्याला पाणी मिळण्यात समस्या येत आहे हे समजले. आपल्या तक्रारीचा टिकट नंबर WAT-MH-20260327-16298 आहे. महाराष्ट्र जल संस्थेने आपल्या समस्येचे निराकरण करण्यासाठी मदत करेल."
+}

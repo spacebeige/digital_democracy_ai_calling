@@ -1,0 +1,54 @@
+{
+  "session_id": "4c52427c-4500",
+  "timestamp": "2026-03-27T18:44:45.899670",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The user is seeking information about government farming initiatives and schemes available in Maharashtra, particularly as a new farmer, and requests a list of these schemes.\n\nSummary: The user requests information about government farming initiatives in Maharashtra suitable for new farmers. \n\nUrgency level: LOW\n\nAnalysis: This is a general inquiry seeking information, rather than a complaint about a particular issue. The user is seeking guidance and has not expressed dissatisfaction or frustration with any specific government action or policy.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "MH",
+    "state_service": "Maharashtra Social Welfare - Jan Seva Kendra",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 1,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "I understand you're a newbie in farming and looking for government initiatives in Maharashtra, which is really great. Since you're in Maharashtra, I'd like to inform you that the Maharashtra Social Welfare - Jan Seva Kendra department can assist you with this query. You can reach out to them at the assigned helpline number, 1800 120 8040, for more information on the available schemes. They can guide you through the various farming initiatives and schemes provided by the government."
+}

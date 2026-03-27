@@ -1,0 +1,58 @@
+{
+  "session_id": "95d6b1eb-48b3",
+  "timestamp": "2026-03-27T18:24:29.872914",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "hi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "report_fire",
+    "secondary_intents": [
+      "report_fire"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "fire",
+    "service_name": "Maharashtra Fire and Emergency Services",
+    "contact_info": "101 (All Emergency)",
+    "phone": "101 (All Emergency)",
+    "confidence": 0.8,
+    "reasoning": "Route: FIRE | Intent: report_fire | Urgency: CRITICAL | Priority: P1 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "**Summary:** A critical situation has been reported - a fire has erupted on the third floor of Corus Nakshatra Tower's Wartak building, and immediate assistance is needed to address the fire and potential danger to inhabitants.",
+  "issue_category": "Fire/Emergency",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": "FIR-UP-20260327-71847",
+    "state_code": "UP",
+    "state_service": "UP Fire Service",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "आपकी समस्या को समझते हुए मैं आपको बताना चाहता हूं कि आपकी शिकायत का टिकट नंबर FIR-UP-20260327-71847 है। आपकी सोसाइटी में आग लगने की घटना बहुत ही गंभीर है और इसके लिए तुरंत मदद की आवश्यकता है। उत्तर प्रदेश फायर सेवा विभाग आपकी मदद के लिए नियुक्त किया गया है, इसलिए मैं आपको 101 या 112 पर तुरंत कॉल करने की सलाह देता हूं।"
+}

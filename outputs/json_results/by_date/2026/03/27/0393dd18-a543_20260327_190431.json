@@ -1,0 +1,54 @@
+{
+  "session_id": "0393dd18-a543",
+  "timestamp": "2026-03-27T19:04:31.204290",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "kn",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.6,
+    "stress_level": 0.5600000012160244
+  },
+  "intent": {
+    "primary_intent": "clarification_needed",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "general",
+    "service_name": "Government Helpdesk",
+    "contact_info": "181 (State Helpline) or 1800-111-555",
+    "phone": "181 (State Helpline) or 1800-111-555",
+    "confidence": 0.8,
+    "reasoning": "Route: GENERAL | Intent: clarification_needed | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The user is making an explicit, yet cryptic complaint with a low urgency level, suggesting they are frustrated, but the exact nature of their issue is unclear.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": null,
+    "state_service": "Delhi Government Helpline - 1031",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 10,
+    "aggressiveness_score": 90
+  },
+  "ai_response": "ನಿಮ್ಮ ಸಮಸ್ಯೆಯನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ವಿವರಿಸಿಕೊಡಲು ಕೋರುತ್ತೇನೆ, ನಾನು ನಿಮ್ಮ ಸಹಾಯ ಮಾಡಲು ಬಯಸುತ್ತೇನೆ. ನಿಮ್ಮ ಸಮಸ್ಯೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಾಗದೆ ಕ್ಷಮಿಸಿ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸಮಸ್ಯೆಯನ್ನು"
+}

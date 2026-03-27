@@ -1,0 +1,54 @@
+{
+  "session_id": "4b08a478-a274",
+  "timestamp": "2026-03-27T18:23:10.376557",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "hi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Summary: A farmer from Uttar Pradesh is unsure about what agricultural schemes are available and wants to know what the government offers for farmers and if they can be made aware of any applicable schemes.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "UP",
+    "state_service": "UP Jan Sewa Kendra / Jan Suvidha Portal",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 2,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "उत्तर प्रदेश में खेती करने वाले किसानों के लिए कई सरकारी योजनाएं हैं, जैसे कि प्रधानमंत्री फसल बीमा योजना और प्रधानमंत्री किसान सम्मान निधि। आप जन सेवा केंद्र या जन सुविधा पोर्टल से संपर्क कर सकते हैं और अपने जिले के कृषि विभाग से जानकारी प्राप्त कर सकते हैं। उत्तर प्रदेश जन सेवा केंद्र के हेल्पलाइन नंबर पर संपर्क करें और अपनी समस्या का समाधान प्राप्त करें।"
+}

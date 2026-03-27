@@ -1,0 +1,58 @@
+{
+  "session_id": "a6bd45af-5f52",
+  "timestamp": "2026-03-27T17:31:38.554906",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.6,
+    "stress_level": 0.5600000012160244
+  },
+  "intent": {
+    "primary_intent": "report_fire",
+    "secondary_intents": [
+      "report_fire"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "fire",
+    "service_name": "Maharashtra Fire and Emergency Services",
+    "contact_info": "101 (All Emergency)",
+    "phone": "101 (All Emergency)",
+    "confidence": 0.8,
+    "reasoning": "Route: FIRE | Intent: report_fire | Urgency: CRITICAL | Priority: P1 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "A fire has broken out in a society in Vartak Nagar, and emergency services are required immediately.",
+  "issue_category": "Fire/Emergency",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": "FIR-MH-20260327-50030",
+    "state_code": "MH",
+    "state_service": "Maharashtra Fire Service",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "वर्तक नगरमध्ये आग लागल्याची बाब आपल्याला कळली आहे आणि त्याबद्दल आपणास सहानुभूती व्यक्त करतो. आपल्या तक्रारीचा टिकट नंबर FIR-MH-20260327-50030 आहे. महाराष्ट्र अग्निशमन सेवा विभाग आपली मदत करण्यासाठी नियुक्त केला आहे. कृपया शांत राहा आणि आपल्या तक्रारीची पुढील कार्यवाही सुरू आहे."
+}

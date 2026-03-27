@@ -1,0 +1,58 @@
+{
+  "session_id": "c00c6f39-36aa",
+  "timestamp": "2026-03-27T18:31:36.465266",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "hi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "report_fire",
+    "secondary_intents": [
+      "report_fire"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "fire",
+    "service_name": "Maharashtra Fire and Emergency Services",
+    "contact_info": "101 (All Emergency)",
+    "phone": "101 (All Emergency)",
+    "confidence": 0.8,
+    "reasoning": "Route: FIRE | Intent: report_fire | Urgency: CRITICAL | Priority: P1 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Here's a 1-sentence summary:\n\nA fire has reportedly broken out on the third floor of the Corus Nakshtra building in Maharashtra, and immediate action is needed to address the situation.\n\nNote: I've translated and analyzed the complaint in English, preserving the original intent and urgency.",
+  "issue_category": "Power/Electricity",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": "FIR-MH-20260328-33995",
+    "state_code": "MH",
+    "state_service": "Maharashtra Fire Service",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "मैं आपकी सहायता करूंगी और आपकी समस्या को समझने की कोशिश करूंगी। आपके द्वारा दी गई जानकारी के अनुसार, महाराष्ट्र में कोरस नक्षत्र उदर बिल्डिंग में आग लगी है, जिसका टिकट नंबर FIR-MH-20260328-33995 है। महाराष्ट्र फायर सर्विस आपकी मदद के लिए नियुक्त की गई है, इसलिए मैं आपको 101 या 112 पर कॉल करने के लिए कहती हूं ताकि तुरंत सहायता मिल सके। कृपया तुरंत इस नंबर पर कॉल करें और अपना स्थान बताएं ताकि हम आपको जल्द से जल्द मदद पहुंचा सकें।"
+}

@@ -1,0 +1,56 @@
+{
+  "session_id": "5531a1de-213f",
+  "timestamp": "2026-03-27T15:38:23.669290",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "hi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "general_complaint",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "general",
+    "service_name": "Government Helpdesk",
+    "contact_info": "181 (State Helpline) or 1800-111-555",
+    "phone": "181 (State Helpline) or 1800-111-555",
+    "confidence": 0.8,
+    "reasoning": "Route: GENERAL | Intent: general_complaint | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.7/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "1-sentence summary: आप अपना समय में लेट कर रहे हैं और हमें परिणामस्वरूप देरी का सामना करना पड़ रहा है।\n\n(Note: This summary is in Hindi as the original complaint text is in Hindi. If you want the summary in English, please let me know)",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "UP",
+    "state_service": "UP State Helpline - 1076",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 6,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "आपकी बात सुनने के लिए धन्यवाद, लेकिन आपकी समस्या स्पष्ट नहीं है। कृपया अपनी विशिष्ट समस्या स्पष्ट रूप से बताएं ताकि हम आपकी मदद कर सकें। उत्तर प्रदेश राज्य हेल्पलाइन - 1076 आपकी सहायता के लिए नियुक्त किया गया है, और हम आपकी समस्या का समाधान करने के लिए तैयार हैं।"
+}

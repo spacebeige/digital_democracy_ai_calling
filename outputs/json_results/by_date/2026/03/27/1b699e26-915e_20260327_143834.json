@@ -1,0 +1,56 @@
+{
+  "session_id": "1b699e26-915e",
+  "timestamp": "2026-03-27T14:38:34.494167",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.6,
+    "stress_level": 0.5600000012160244
+  },
+  "intent": {
+    "primary_intent": "report_water_issue",
+    "secondary_intents": [
+      "water_issue"
+    ],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "electricity",
+    "service_name": "Maharashtra State Electricity Distribution Company Limited (MSEDCL)",
+    "contact_info": "Toll Free: 1912 (local call); 9545909090",
+    "phone": "Toll Free: 1912 (local call); 9545909090",
+    "confidence": 0.8,
+    "reasoning": "Route: ELECTRICITY | Intent: report_water_issue | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 4.5/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "A resident is complaining that their house has been without water supply for several areas in their city, citing the local municipal corporation's failure to rectify the issue, and expressing frustration in a low-urgency tone.\n\n1-Sentence Summary: A Maharastra resident is frustrated about the ongoing water supply issue in their area, which the municipal corporation has failed to address.",
+  "issue_category": "Water Supply",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": "ELE-MH-20260327-75906",
+    "state_code": "MH",
+    "state_service": "Maharashtra State Electricity Distribution Co. (MSEDCL)",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "तुमच्या घरी पाण्याच्या पुरवठ्याबाबतच्या समस्येबद्दल मला खेद वाटतो. तुमची तक्रार नोंदवण्यात आली आहे आणि तुमच्या समस्येचे निराकरण करण्यासाठी आम्ही प्रयत्नशील आहोत, तुमचा टिकिट नंबर ELE-MH-20260327-75906 आहे. महाराष्ट्र राज्य विद्युत वितरण कंपनी (MSEDCL) तुमच्या समस्येचे निराकरण करण्यासाठी जबाबदार आहे. कृपया थोडा वेळ द्या आणि आम्ही तुमच्या समस्येचे निराकरण करण्याचा प्रयत्न करू."
+}

@@ -1,0 +1,54 @@
+{
+  "session_id": "784c83ee-3e06",
+  "timestamp": "2026-03-27T18:55:51.579948",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6199092849791554,
+    "frustration_score": 0.6,
+    "stress_level": 0.5800000006080122
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: AGRICULTURE | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 7.3/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Here is a 1-sentence summary of the complaint:\n\nThe complainant, a farmer in Kerala, expresses frustration and seeks information on the challenges faced by the government in supporting farmers, questioning how a particular individual can be considered the \"best farmer\" in the state, suggesting a lack of awareness about government initiatives supporting the agricultural sector.\n\nUrgency level: LOW",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "KL",
+    "state_service": "Kerala e-Sevana Portal",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 2,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "I understand you're a farmer in Kerala and are concerned about the problems the government faces in supporting farmers. However, your message seems to be unclear and repetitive. Please explain your specific problem clearly so we can help you. You can reach out to the Kerala e-Sevana Portal department for assistance, and for any queries, you can call their helpline number, 1961, for support."
+}

@@ -1,0 +1,45 @@
+{
+  "session_id": "ae7e1621-9d57",
+  "timestamp": "2026-03-26T16:10:37.869660",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6400000013897423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6300000006080122
+  },
+  "intent": {
+    "primary_intent": "water_issue",
+    "secondary_intents": [
+      "water_issue"
+    ],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "water",
+    "service_name": "Jal Sansthan (Water Supply Board)",
+    "contact_info": "1800-233-1331 (Maharashtra Water Supply)",
+    "phone": "1800-233-1331 (Maharashtra Water Supply)",
+    "confidence": 0.8,
+    "reasoning": "Route: WATER | Intent: water_issue | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Here is a 1-sentence summary of the complaint:\n\nThe caller is experiencing a water shortage at home, claims the municipal corporation has cut off the water supply, but suspects it's actually due to a diversion from the nearby \"grandfather\" (likely a nearby water source), and seeks guidance on resolving the issue.",
+  "issue_category": "Water Supply",
+  "severity_flags": [],
+  "follow_up_needed": true
+}
