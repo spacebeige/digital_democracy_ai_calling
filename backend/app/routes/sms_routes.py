@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.config import QR_IMAGE_DIR, TWILIO_PUBLIC_BASE_URL
 from app.schemas import SendTicketSMSRequest, SendTicketSMSResponse
-from app.services.qr_service import generate_ticket_qr
+from app.services.qr_service import generate_ticket_qr_media
 from app.services.sms_service import send_ticket_sms
 
 
@@ -37,7 +37,7 @@ def send_ticket(payload: SendTicketSMSRequest) -> SendTicketSMSResponse:
         if payload.include_qr_image:
             if not payload.qr_link or not payload.qr_link.strip():
                 raise ValueError("qr_link is required when include_qr_image is true")
-            image_path = generate_ticket_qr(
+            image_path, s3_media_url = generate_ticket_qr_media(
                 payload.ticket_id,
                 payload.session_id,
                 qr_link=payload.qr_link,
@@ -45,7 +45,7 @@ def send_ticket(payload: SendTicketSMSRequest) -> SendTicketSMSResponse:
             )
             if QR_IMAGE_DIR not in image_path.parents and image_path.parent != QR_IMAGE_DIR:
                 raise RuntimeError("Generated QR path is invalid")
-            media_url = _build_public_media_url(image_path)
+            media_url = s3_media_url or _build_public_media_url(image_path)
 
         result = send_ticket_sms(
             to=payload.to,

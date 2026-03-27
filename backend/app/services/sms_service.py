@@ -8,6 +8,7 @@ from twilio.rest import Client
 from app.config import (
     SMS_DEFAULT_COUNTRY_CODE,
     SMS_DRY_RUN,
+    SMS_MMS_FALLBACK_TO_TEXT,
     TWILIO_ACCOUNT_SID,
     TWILIO_AUTH_TOKEN,
     TWILIO_FROM_NUMBER,
@@ -82,6 +83,22 @@ def _append_ticket_metadata(lines: list[str], metadata: dict | None) -> None:
             lines.append(f"{label}: {text}")
 
 
+def _create_twilio_message(
+    client: Client,
+    to: str,
+    body: str,
+    media_url: str | None = None,
+):
+    payload = {
+        "to": to,
+        "from_": TWILIO_FROM_NUMBER,
+        "body": body,
+    }
+    if media_url:
+        payload["media_url"] = [media_url]
+    return client.messages.create(**payload)
+
+
 def send_ticket_sms(
     to: str,
     custom_text: str,
@@ -123,16 +140,45 @@ def send_ticket_sms(
 
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     try:
-        payload = {
-            "to": normalized_to,
-            "from_": TWILIO_FROM_NUMBER,
-            "body": body,
-        }
-        if normalized_media_url:
-            payload["media_url"] = [normalized_media_url]
-
-        message = client.messages.create(**payload)
+        message = _create_twilio_message(
+            client=client,
+            to=normalized_to,
+            body=body,
+            media_url=normalized_media_url,
+        )
     except TwilioException as exc:
+        if normalized_media_url and SMS_MMS_FALLBACK_TO_TEXT:
+            try:
+                fallback_message = _create_twilio_message(
+                    client=client,
+                    to=normalized_to,
+                    body=body,
+                    media_url=None,
+                )
+                twilio_url = _twilio_message_url(fallback_message.sid)
+                return {
+                    "success": True,
+                    "to": normalized_to,
+                    "ticket_id": ticket_id,
+                    "body": body,
+                    "qr_link": normalized_qr_link,
+                    "media_url": twilio_url,
+                    "status": fallback_message.status or "queued",
+                    "sid": fallback_message.sid,
+                    "detail": f"MMS failed and fallback to text SMS was used: {exc}",
+                }
+            except TwilioException as fallback_exc:
+                return {
+                    "success": False,
+                    "to": normalized_to,
+                    "ticket_id": ticket_id,
+                    "body": body,
+                    "qr_link": normalized_qr_link,
+                    "media_url": None,
+                    "status": "failed",
+                    "detail": f"MMS failed: {exc}; text fallback failed: {fallback_exc}",
+                }
+
         return {
             "success": False,
             "to": normalized_to,
