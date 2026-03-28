@@ -1,0 +1,25 @@
+{
+  "meera_processing": {
+    "session_id": "be33ac2f-f047",
+    "lang_code": "hi",
+    "lang_name": "Hindi",
+    "confidence": "high",
+    "original_text": "मेरा बिजली बिल बहुत ज्यादा आया है। कृपया तुरंत ठीक करो!!",
+    "cleaned_text": "मेरा बिजली बिल बहुत ज्यादा आया है। कृपया तुरंत ठीक करो!!",
+    "intent": "escalation",
+    "emotion": "NEUTRAL",
+    "anger_score": 0.2,
+    "urgency": "CRITICAL",
+    "entities": {},
+    "response": "मैं अभी इस पर हूँ: यह तुरंत के लिए चिह्नित किया गया है। हमारी टीम आपसे जल्द संपर्क करेगी।"
+  },
+  "session_info": {
+    "session_id": "be33ac2f-f047",
+    "timestamp": "2026-03-27T19:21:23.063548",
+    "test_data": {
+      "complaints_count": 1,
+      "success_rate": 1.0,
+      "numpy_int_test": 42
+    }
+  }
+}

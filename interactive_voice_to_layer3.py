@@ -189,10 +189,12 @@ def route_to_layer3(transcript: str) -> dict:
     
     try:
         response = requests.post(
-            f"{BACKEND_API}/v1/router/route-call",
+            f"{BACKEND_API}/grievance/text/submit",
             json={
-                "session_id": session_id,
-                "transcript": transcript,
+                "complaint_text": transcript,
+                "user_name": "Voice User",
+                "user_phone": "0000000000",
+                "user_location": "Unknown",
             },
             timeout=30,
         )

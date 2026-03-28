@@ -1,0 +1,30 @@
+{
+  "meera_processing": {
+    "session_id": "cacd4953-8aa8",
+    "lang_code": "hi",
+    "lang_name": "Hindi",
+    "confidence": "high",
+    "original_text": "वेदांदई ट्रन जला जाती तो दरगे टुउराजी वांद नोट्टैसा़ सांगर कार्यावुदा डरचल बायारू तंता। 50 वासा फरे भारत, 2000 वासा बायारे, 21 novels वापका, 15 marked range ,important",
+    "cleaned_text": "वेदांदई ट्रन जला जाती तो दरगे टुउराजी वांद नोट्टैसा़ सांगर कार्यावुदा डरचल बायारू तंता। 50 वासा फरे भारत, 2000 वासा बायारे, 21 novels वापका, 15 marked range ,important ।",
+    "intent": "query",
+    "emotion": "NEUTRAL",
+    "anger_score": 0.0,
+    "urgency": "MEDIUM",
+    "entities": {},
+    "response": "आपकी प्रश्न प्राप्त हुआ है। हम आपकी मदद करेंगे।"
+  },
+  "session_info": {
+    "session_id": "cacd4953-8aa8",
+    "timestamp": "2026-03-27T19:05:38.437466",
+    "grievance_summary": {
+      "session_id": "cacd4953-8aa8",
+      "timestamp": "2026-03-27T13:35:30.722155",
+      "transcription": {
+        "engine_used": "groq_whisper",
+        "language_detected": "mr",
+        "language_confidence": 0.95,
+        "transcript_quality": "good",
+        "transcription_corrections": []
+      },
+      "vad_analysis": {
+        "speech_segments": 

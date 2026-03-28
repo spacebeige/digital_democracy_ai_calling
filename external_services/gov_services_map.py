@@ -50,8 +50,8 @@ SERVICE_KEYWORDS = {
     },
     "municipal": {
         "hindi": ["सड़क", "गड्ढा", "पार्क", "स्कूल", "अस्पताल", "कूड़ा", "कचरा", "सफाई"],
-        "english": ["pothole", "street", "road", "garbage", "dirt", "maintenance", "park", "public"],
-        "marathi": ["रस्ता", "खड्डा", "कचरा"],
+        "english": ["pothole", "street", "road", "garbage", "dirt", "maintenance", "park", "public", "trash", "waste", "litter", "clean"],
+        "marathi": ["रस्ता", "खड्डा", "कचरा", "गली"],
         "department_codes": ["MC", "BMC", "UMC"],
     },
     "gas": {
@@ -261,11 +261,11 @@ def detect_service_type(
         (service_type, matched_keywords, may_escalate_to_fire)
     """
     text_lower = transcript.lower()
-    matched_keywords = []
-    service_type = "general"
+    service_match_scores = {}
+    service_matched_keywords = {}
     may_escalate = False
     
-    # Check each service's keywords
+    # Score each service based on keyword matches
     for stype, keywords_dict in SERVICE_KEYWORDS.items():
         all_keywords = (
             keywords_dict.get("hindi", []) +
@@ -273,17 +273,30 @@ def detect_service_type(
             keywords_dict.get("marathi", [])
         )
         
+        matched = []
         for keyword in all_keywords:
-            if keyword.lower() in text_lower or keyword in keywords_found:
-                matched_keywords.append(keyword)
-                if service_type == "general":
-                    service_type = stype
+            keyword_lower = keyword.lower()
+            # Exact match search (case-insensitive)
+            if keyword_lower in text_lower or keyword in keywords_found:
+                matched.append(keyword)
+        
+        if matched:
+            service_match_scores[stype] = len(matched)  # Score = number of matches
+            service_matched_keywords[stype] = matched
     
-    # Check for escalation patterns
-    if service_type in ["gas", "fire", "police"]:
-        may_escalate = SERVICE_KEYWORDS.get(service_type, {}).get("may_escalate_to_fire", False)
+    # Select service with highest match score
+    if service_match_scores:
+        # Find service with most keyword matches (better accuracy than first match)
+        service_type = max(service_match_scores, key=service_match_scores.get)
+        matched_keywords = list(set(service_matched_keywords[service_type]))
+        
+        if service_type in ["gas", "fire", "police"]:
+            may_escalate = SERVICE_KEYWORDS.get(service_type, {}).get("may_escalate_to_fire", False)
+    else:
+        service_type = "general"
+        matched_keywords = []
     
-    return service_type, list(set(matched_keywords)), may_escalate
+    return service_type, matched_keywords, may_escalate
 
 
 def get_service_mapping(

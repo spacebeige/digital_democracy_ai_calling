@@ -1,0 +1,152 @@
+version: '3.8'
+
+services:
+  # Main Meera Application - Voice Grievance Processing
+  meera-main:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meera-app
+    ports:
+      - "8000:8000"
+    environment:
+      # API Keys - Replace with actual values
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - SARVAM_API_KEY=${SARVAM_API_KEY:-}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY:-}
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS:-}
+      
+      # Feature Flags
+      - STT_CONFIDENCE_THRESHOLD=0.3
+      - STT_PRIMARY=groq
+      - TTS_PRIMARY=groq
+      - LOG_LEVEL=INFO
+      
+      # Database
+      - DATABASE_URL=postgresql://${DB_USER:-meera}:${DB_PASSWORD:-meera123}@postgres:5432/grievances
+      - REDIS_URL=redis://redis:6379/0
+      
+      # System
+      - CUDA_VISIBLE_DEVICES=
+      - OMP_NUM_THREADS=1
+      - PYTHONUNBUFFERED=1
+    
+    volumes:
+      # Mount output directories to host for inspection
+      - ./outputs:/app/outputs
+      - ./awaaz:/app/awaaz
+      - /tmp/recordings:/tmp/recordings
+      # Optional: Mount audio device for microphone input
+      # - /dev/snd:/dev/snd
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    restart: unless-stopped
+    networks:
+      - meera-network
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  # PostgreSQL Database for grievance storage
+  postgres:
+    image: postgres:16-alpine
+    container_name: meera-postgres
+    environment:
+      - POSTGRES_DB=grievances
+      - POSTGRES_USER=${DB_USER:-meera}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-meera123}
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./setup_database.py:/docker-entrypoint-initdb.d/setup.py
+    
+    ports:
+      - "5432:5432"
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-meera}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    restart: unless-stopped
+    networks:
+      - meera-network
+
+  # Redis Cache for session management
+  redis:
+    image: redis:7-alpine
+    container_name: meera-redis
+    command: redis-server --appendonly yes
+    
+    volumes:
+      - redis_data:/data
+    
+    ports:
+      - "6379:6379"
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    restart: unless-stopped
+    networks:
+      - meera-network
+
+  # Optional: API Mock Services (for testing without real APIs)
+  mock-sarvam:
+    image: python:3.12-slim
+    container_name: meera-mock-sarvam
+    working_dir: /app
+    command: python -m http.server 9000
+    
+    volumes:
+      - ./mock_audio_services.py:/app/mock_services.py
+    
+    ports:
+      - "9000:9000"
+    
+    restart: unless-stopped
+    networks:
+      - meera-network
+
+  # Optional: Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: meera-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    
+    depends_on:
+      - meera-main
+    
+    restart: unless-stopped
+    networks:
+      - meera-network
+
+networks:
+  meera-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

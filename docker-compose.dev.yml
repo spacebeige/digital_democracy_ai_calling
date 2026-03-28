@@ -1,0 +1,125 @@
+version: '3.8'
+
+# Development-only docker-compose with additional debugging tools
+services:
+  meera-main:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meera-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - SARVAM_API_KEY=${SARVAM_API_KEY:-}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY:-}
+      - LOG_LEVEL=DEBUG
+      - DATABASE_URL=postgresql://meera:meera123@postgres:5432/grievances
+      - REDIS_URL=redis://redis:6379/0
+      - CUDA_VISIBLE_DEVICES=
+      - OMP_NUM_THREADS=1
+    
+    volumes:
+      - .:/app
+      - ./outputs:/app/outputs
+      - /tmp/recordings:/tmp/recordings
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    restart: unless-stopped
+    networks:
+      - meera-dev-network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: meera-postgres-dev
+    environment:
+      - POSTGRES_DB=grievances
+      - POSTGRES_USER=meera
+      - POSTGRES_PASSWORD=meera123
+    
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    
+    ports:
+      - "5432:5432"
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meera"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    restart: unless-stopped
+    networks:
+      - meera-dev-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: meera-redis-dev
+    ports:
+      - "6379:6379"
+    
+    volumes:
+      - redis_data_dev:/data
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    restart: unless-stopped
+    networks:
+      - meera-dev-network
+
+  # pgAdmin for database inspection
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: meera-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@meera.local
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    
+    ports:
+      - "5050:80"
+    
+    depends_on:
+      - postgres
+    
+    networks:
+      - meera-dev-network
+
+  # Redis Commander for cache inspection
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: meera-redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    
+    ports:
+      - "8081:8081"
+    
+    depends_on:
+      - redis
+    
+    networks:
+      - meera-dev-network
+
+networks:
+  meera-dev-network:
+    driver: bridge
+
+volumes:
+  postgres_data_dev:
+  redis_data_dev:

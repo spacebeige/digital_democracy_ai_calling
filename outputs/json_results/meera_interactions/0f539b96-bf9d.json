@@ -1,0 +1,30 @@
+{
+  "meera_processing": {
+    "session_id": "0f539b96-bf9d",
+    "lang_code": "hi",
+    "lang_name": "Hindi",
+    "confidence": "high",
+    "original_text": "आप्शान्त भाणता है, त्विलियो इंटेक्रेट नाय थाले, मला खुब जासल झोपाली है, सो मैं आदा काय दरू, कोप पर मस्ता लागतो है, फीजा पर ताला, आग आग आग, आग आग आग, आम्बिलेंच, आम्बिलेंच, आग लागली, दूर दूर दूर,",
+    "cleaned_text": "आप्शान्त भाणता है, त्विलियो इंटेक्रेट नाय थाले, मला खुब जासल झोपाली है, सो मैं आदा काय दरू, कोप पर मस्ता लागतो है, फीजा पर ताला, आग आग आग, आग आग आग, आम्बिलेंच, आम्बिलेंच, आग लागली, दूर दूर दूर, ।",
+    "intent": "query",
+    "emotion": "NEUTRAL",
+    "anger_score": 0.0,
+    "urgency": "MEDIUM",
+    "entities": {},
+    "response": "आपकी प्रश्न प्राप्त हुआ है। हम आपकी मदद करेंगे।"
+  },
+  "session_info": {
+    "session_id": "0f539b96-bf9d",
+    "timestamp": "2026-03-27T17:19:17.815935",
+    "grievance_summary": {
+      "session_id": "0f539b96-bf9d",
+      "timestamp": "2026-03-27T11:49:10.305898",
+      "transcription": {
+        "engine_used": "groq_whisper",
+        "language_detected": "mr",
+        "language_confidence": 0.95,
+        "transcript_quality": "good",
+        "transcription_corrections": []
+      },
+      "vad_analysis": {
+        "speech_segments": 

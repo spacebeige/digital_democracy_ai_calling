@@ -1,0 +1,47 @@
+{
+  "session_id": "0f539b96-bf9d",
+  "timestamp": "2026-03-27T11:49:10.305898",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.573972761631012,
+    "frustration_score": 0.6,
+    "stress_level": 0.5800000011920929
+  },
+  "intent": {
+    "primary_intent": "report_fire",
+    "secondary_intents": [
+      "report_fire"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "fire",
+    "service_name": "Maharashtra Fire and Emergency Services",
+    "contact_info": "101 (All Emergency)",
+    "phone": "101 (All Emergency)",
+    "confidence": 0.8,
+    "reasoning": "Route: FIRE | Intent: report_fire | Urgency: CRITICAL | Priority: P1 | Emotion: FRUSTRATED | Confidence: 5.9/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "URGENT: Critical emergency requiring immediate response. User emergency fire situation. Summary: आप्शान्त भाणता है, त्विलियो इंटेक्रेट नाय थाले, मला खुब जासल झोपाली है, सो मैं आदा काय दरू, कोप पर म...",
+  "issue_category": "Power/Electricity",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE"
+  ],
+  "follow_up_needed": true
+}

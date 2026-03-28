@@ -1,0 +1,97 @@
+[
+  {
+    "test_name": "Hindi - Angry",
+    "input": "मेरा ऑर्डर 5 दिन से नहीं आया!! बहुत गुस्से में हूँ!! तुरंत डिलीवरी करो या रिफंड दो!",
+    "meera_result": {
+      "session_id": "14e99e57-a8a2",
+      "lang_code": "hi",
+      "lang_name": "Hindi",
+      "confidence": "high",
+      "original_text": "मेरा ऑर्डर 5 दिन से नहीं आया!! बहुत गुस्से में हूँ!! तुरंत डिलीवरी करो या रिफंड दो!",
+      "cleaned_text": "मेरा ऑर्डर 5 दिन से नहीं आया!! बहुत गुस्से में हूँ!! तुरंत डिलीवरी करो या रिफंड दो!",
+      "intent": "escalation",
+      "emotion": "NEUTRAL",
+      "anger_score": 0.3,
+      "urgency": "CRITICAL",
+      "entities": {},
+      "response": "मैं अभी इस पर हूँ: यह तुरंत के लिए चिह्नित किया गया है। हमारी टीम आपसे जल्द संपर्क करेगी।"
+    },
+    "timestamp": "2026-03-27T16:40:46.934440"
+  },
+  {
+    "test_name": "English - Urgent",
+    "input": "IMMEDIATELY I need this resolved! I've been waiting for 2 weeks with no response. This is unacceptable!",
+    "meera_result": {
+      "session_id": "14e99e57-a8a2",
+      "lang_code": "en",
+      "lang_name": "English",
+      "confidence": "medium",
+      "original_text": "IMMEDIATELY I need this resolved! I've been waiting for 2 weeks with no response. This is unacceptable!",
+      "cleaned_text": "IMMEDIATELY I need this resolved! I've been waiting for 2 weeks with no response. This is unacceptable!",
+      "intent": "greeting",
+      "emotion": "NEUTRAL",
+      "anger_score": 0.3,
+      "urgency": "CRITICAL",
+      "entities": {},
+      "response": "Hello! I'm Meera. How can I help you today?"
+    },
+    "timestamp": "2026-03-27T16:40:46.934555"
+  },
+  {
+    "test_name": "Marathi - Query",
+    "input": "नमस्कार, मला माझ्या ऑर्डर क्रमांक OR2024-5678 चे स्टेटस जाणून घायचे आहे. कृपया सहाय्य करा.",
+    "meera_result": {
+      "session_id": "14e99e57-a8a2",
+      "lang_code": "hi",
+      "lang_name": "Hindi",
+      "confidence": "high",
+      "original_text": "नमस्कार, मला माझ्या ऑर्डर क्रमांक OR2024-5678 चे स्टेटस जाणून घायचे आहे. कृपया सहाय्य करा.",
+      "cleaned_text": "नमस्कार, मला माझ्या ऑर्डर क्रमांक OR2024-5678 चे स्टेटस जाणून घायचे आहे. कृपया सहाय्य करा.",
+      "intent": "greeting",
+      "emotion": "NEUTRAL",
+      "anger_score": 0.0,
+      "urgency": "MEDIUM",
+      "entities": {},
+      "response": "नमस्ते! मैं मीरा हूँ। आज मैं आपकी कैसे मदद कर सकती हूँ?"
+    },
+    "timestamp": "2026-03-27T16:40:46.934656"
+  },
+  {
+    "test_name": "Tamil - Problem",
+    "input": "எனது பரிமாண விவரங்கள் தவறாக உள்ளன. தயவுசெய்து உடனடியாக சரிசெய்யவும்.",
+    "meera_result": {
+      "session_id": "14e99e57-a8a2",
+      "lang_code": "ta",
+      "lang_name": "Tamil",
+      "confidence": "high",
+      "original_text": "எனது பரிமாண விவரங்கள் தவறாக உள்ளன. தயவுசெய்து உடனடியாக சரிசெய்யவும்.",
+      "cleaned_text": "எனது பரிமாண விவரங்கள் தவறாக உள்ளன. தயவுசெய்து உடனடியாக சரிசெய்யவும்.",
+      "intent": "query",
+      "emotion": "NEUTRAL",
+      "anger_score": 0.0,
+      "urgency": "CRITICAL",
+      "entities": {},
+      "response": "இதை இப்போதே கவனிக்கிறேன்: உங்கள் கேள்வி பெறப்பட்டுவிட்டது. நாங்கள் உங்களுக்கு உதவியாக இருப்போம்."
+    },
+    "timestamp": "2026-03-27T16:40:46.934761"
+  },
+  {
+    "test_name": "Urdu - High Urgency",
+    "input": "براہ کرم فوری طور پر مدد کریں! آپ کی طرف سے کوئی جواب نہیں ملا۔ ہزار روپے کی ادائیگی روک دی گئی ہے۔",
+    "meera_result": {
+      "session_id": "14e99e57-a8a2",
+      "lang_code": "ur",
+      "lang_name": "Urdu",
+      "confidence": "high",
+      "original_text": "براہ کرم فوری طور پر مدد کریں! آپ کی طرف سے کوئی جواب نہیں ملا۔ ہزار روپے کی ادائیگی روک دی گئی ہے۔",
+      "cleaned_text": "براہ کرم فوری طور پر مدد کریں! آپ کی طرف سے کوئی جواب نہیں ملا۔ ہزار روپے کی ادائیگی روک دی گئی ہے۔",
+      "intent": "query",
+      "emotion": "NEUTRAL",
+      "anger_score": 0.0,
+      "urgency": "MEDIUM",
+      "entities": {},
+      "response": "Your query has been received. We will help you soon."
+    },
+    "timestamp": "2026-03-27T16:40:46.934872"
+  }
+]

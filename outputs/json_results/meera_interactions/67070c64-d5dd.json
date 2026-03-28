@@ -1,0 +1,54 @@
+{
+  "meera_processing": {
+    "session_id": "67070c64-d5dd",
+    "lang_code": "hi",
+    "lang_name": "Hindi",
+    "confidence": "high",
+    "original_text": "आपका लाश्ची बच्चा नहीं रहा है, ताकि आपका लाश्ची बच्चा नहीं रहा है।",
+    "cleaned_text": "आपका लाश्ची बच्चा नहीं रहा है, ताकि आपका लाश्ची बच्चा नहीं रहा है।",
+    "intent": "query",
+    "emotion": "NEUTRAL",
+    "anger_score": 0.0,
+    "urgency": "MEDIUM",
+    "entities": {},
+    "response": "आपकी प्रश्न प्राप्त हुआ है। हम आपकी मदद करेंगे।"
+  },
+  "session_info": {
+    "session_id": "67070c64-d5dd",
+    "timestamp": "2026-03-27T19:35:36.793587",
+    "grievance_summary": {
+      "session_id": "67070c64-d5dd",
+      "timestamp": "2026-03-27T14:05:29.122456",
+      "transcription": {
+        "engine_used": "groq_whisper",
+        "language_detected": "mr",
+        "language_confidence": 0.95,
+        "transcript_quality": "good",
+        "transcription_corrections": []
+      },
+      "vad_analysis": {
+        "speech_segments": 0,
+        "total_speech_duration": 19.98,
+        "total_silence_duration": 0.0,
+        "longest_utterance": 0.0,
+        "speech_intensity_peaks": [
+          0.014040091075003147,
+          0.009773529134690762,
+          0.013599080964922905,
+          0.011882485821843147,
+          0.011122699826955795,
+          0.011114608496427536,
+          0.010936380364000797,
+          0.01190593559294939,
+          0.01615629903972149,
+          0.028141440823674202
+        ],
+        "pause_patterns": "continuous"
+      },
+      "emotion": {
+        "detected_emotion": "FRUSTRATED",
+        "anger_score": 0.64000004529953,
+        "frustration_score": 0.6,
+        "stress_level": 0.5600000023841858,
+        "tone_changes": 0,
+        "speech_rate_abnormal": 
