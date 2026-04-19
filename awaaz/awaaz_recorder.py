@@ -24,7 +24,7 @@ TARGET_SR          = 16000    # Hz — optimal for Whisper / faster-whisper
 CALIBRATION_SECS   = 1.5      # seconds of silence to sample for noise floor
 SILENCE_THRESHOLD  = 700      # ms of silence = end of utterance (VAD)
 MAX_DURATION_SECS  = 30       # hard cutoff
-MIN_SPEECH_SECS    = 0.5      # reject if less speech than this
+MIN_SPEECH_SECS    = 0.1      # reject if less speech than this (lowered to accept short realistic phrases)
 CHUNK_MS           = 30       # ms per VAD frame (webrtcvad requires 10/20/30)
 MIN_SNR_DB         = 6.0      # reject recording if SNR below this after denoising
 ENERGY_THRESHOLD   = 0.005    # RMS threshold for energy-based VAD fallback

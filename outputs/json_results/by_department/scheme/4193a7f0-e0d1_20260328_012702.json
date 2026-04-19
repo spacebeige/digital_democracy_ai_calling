@@ -1,0 +1,57 @@
+{
+  "session_id": "4193a7f0-e0d1",
+  "timestamp": "2026-03-28T01:27:02.842610",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "panjabi",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "ANGRY",
+    "anger_score": 0.756416916847229,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: ANGRY | Confidence: 7.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Summary: The complaint appears to be an incomprehensible expression of displeasure directed towards the government, likely related to a local issue in Punjab, India, indicating a low level of urgency.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "ANGRY_CUSTOMER",
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": null,
+    "state_service": "Delhi e-District Portal - Jan Seva Kendra",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 2,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "I couldn't quite understand your specific issue, it seems like there's a lot of confusion in your message. Please explain your specific problem clearly so we can help you. If you're looking for information on government schemes, the Delhi e-District Portal - Jan Seva Kendra department is here to assist you, and you can reach out to them at their assigned helpline number, 011-23935714. Could you please provide more details about your query so I can help you better?"
+}

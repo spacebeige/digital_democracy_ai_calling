@@ -1,0 +1,54 @@
+{
+  "session_id": "1f7365d1-bd54",
+  "timestamp": "2026-03-28T04:02:07.096593",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.5950758457183838,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The complainant expresses general dissatisfaction with government policies and requests the government to explain its actions, suggesting a low level of urgency.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "MH",
+    "state_service": "Maharashtra Social Welfare - Jan Seva Kendra",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 2,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "मी तुमच्या शेतकऱ्यांसाठी सरकारी योजनांबद्दलच्या प्रश्नाची ओळख करते, आणि तुमच्या शेतकऱ्यांना मदत करण्यासाठी इच्छुक आहे. Relevant Schemes Found in Database मध्ये महाराष्ट्र शासनाच्या शेतकऱ्यांसाठी विविध योजना आहेत, जसे की शेतकरी सन्मान योजना, कृषि सिंचाई योजना आणि शेतकऱ्यांसाठी वित्तीय सहाय्य योजना. तुम्ही अधिक माहिती करण्यासाठी महाराष्ट्र सामाजिक कल्याण - जन सेवा केंद्र यांच्या हेल्पलाइन नंबर 180۰233३४४४ वर संपर्क करू शकता."
+}

@@ -1,0 +1,57 @@
+{
+  "session_id": "9ce52a88-9a55",
+  "timestamp": "2026-03-28T01:06:30.202495",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "ANGRY",
+    "anger_score": 0.7304643392562866,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "general_complaint",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "agriculture",
+    "service_name": "Department of Agriculture & Farmer Welfare",
+    "contact_info": "1800-180-1551 (Kisan Call Centre)",
+    "phone": "1800-180-1551 (Kisan Call Centre)",
+    "confidence": 0.8,
+    "reasoning": "Route: AGRICULTURE | Intent: general_complaint | Urgency: LOW | Priority: P4 | Emotion: ANGRY | Confidence: 7.5/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "General inquiry or non-urgent complaint. User submitted a complaint. Summary: Hello, I am a farmer from Maharashtra. I don't know if the government has come up with any schemes o...",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "ANGRY_CUSTOMER",
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": null,
+    "state_service": "Delhi Agriculture Department",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 5,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "Complaint received: Hello, I am a farmer from Maharashtra. I don't kno..."
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Asterisk GSM to MP4 Recording Converter
+After=network.target asterisk.service
+Wants=asterisk.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/convert_recordings.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

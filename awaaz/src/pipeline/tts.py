@@ -240,43 +240,43 @@ GOOGLE_CLOUD_LANG_FALLBACK_MAP = {
 }
 
 # ── Sarvam speaker settings - Ritu (female) voice for all languages
-# ENHANCED v2: Optimized for smoother, more natural audio with improved prosody
-# IMPROVED: Natural delivery with consistent quality across all languages
+# ENHANCED: Optimized for smoother, highly expressive human-like delivery
 SARVAM_SPEAKER_MAP = {
     # NORTH INDIAN: Natural flow with slight expressiveness
-    "hi":   {"speaker": "ritu", "pace": 0.93, "pitch": 0.0, "loudness": 1.5, "emotion": "natural"},  # Smooth, natural tone
-    "mr":   {"speaker": "ritu", "pace": 0.88, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"}, # Smoother Marathi, slightly lower pitch
+    "hi":   {"speaker": "ritu", "pace": 1.05, "emotion": "expressive"},
+    "mr":   {"speaker": "ritu", "pace": 1.00, "emotion": "warm"},
     
-    # SOUTH INDIAN: Slower, clearer delivery for distinct phonetics
-    "ta":   {"speaker": "ritu", "pace": 0.78, "pitch": 0.15, "loudness": 1.5, "emotion": "warm"},   # Smooth Tamil with melodic flow
-    "te":   {"speaker": "ritu", "pace": 0.82, "pitch": 0.12, "loudness": 1.5, "emotion": "natural"},# Smooth Telugu
-    "kn":   {"speaker": "ritu", "pace": 0.76, "pitch": 0.08, "loudness": 1.5, "emotion": "calm"},   # Smooth, clear Kannada
-    "ml":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},  # Smooth Malayalam with natural flow
+    # SOUTH INDIAN: Clear but more conversational pace
+    "ta":   {"speaker": "ritu", "pace": 0.95, "emotion": "warm"},
+    "te":   {"speaker": "ritu", "pace": 1.00, "emotion": "expressive"},
+    "kn":   {"speaker": "ritu", "pace": 0.95, "emotion": "calm"},
+    "ml":   {"speaker": "ritu", "pace": 0.98, "emotion": "warm"},
     
-    # EASTERN: Smooth, neutral delivery
-    "bn":   {"speaker": "ritu", "pace": 0.90, "pitch": 0.05, "loudness": 1.5, "emotion": "natural"},# Smooth Bengali
-    "or":   {"speaker": "ritu", "pace": 0.88, "pitch": 0.08, "loudness": 1.5, "emotion": "natural"},# Smooth Odia
-    "as":   {"speaker": "ritu", "pace": 0.91, "pitch": 0.07, "loudness": 1.5, "emotion": "natural"},# Smooth Assamese
+    # EASTERN: Smooth, conversational delivery
+    "bn":   {"speaker": "ritu", "pace": 1.05, "emotion": "expressive"},
+    "or":   {"speaker": "ritu", "pace": 1.00, "emotion": "expressive"},
+    "as":   {"speaker": "ritu", "pace": 1.02, "emotion": "natural"},
     
-    # WESTERN: Energetic but smooth
-    "gu":   {"speaker": "ritu", "pace": 0.96, "pitch": 0.15, "loudness": 1.5, "emotion": "warm"},  # Smooth Gujarati
-    "pa":   {"speaker": "ritu", "pace": 0.95, "pitch": 0.12, "loudness": 1.5, "emotion": "natural"},   # Smooth Punjabi
+    # WESTERN: Energetic and human-like flow
+    "gu":   {"speaker": "ritu", "pace": 1.08, "emotion": "warm"},
+    "pa":   {"speaker": "ritu", "pace": 1.10, "emotion": "expressive"},
     
     # SPECIAL: English and Sinhala
-    "en":   {"speaker": "ritu", "pace": 0.98, "pitch": 0.0, "loudness": 1.5, "emotion": "natural"}, # Smooth English
-    "si":   {"speaker": "ritu", "pace": 0.91, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},        # Smooth Sinhala
+    "en":   {"speaker": "ritu", "pace": 1.05, "emotion": "expressive"},
+    "si":   {"speaker": "ritu", "pace": 1.00, "emotion": "warm"},
     
-    # REGIONAL VARIANTS: Optimized for smooth delivery
-    "kok":  {"speaker": "ritu", "pace": 0.87, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"}, # Smooth Konkani
-    "bho":  {"speaker": "ritu", "pace": 0.86, "pitch": 0.12, "loudness": 1.5, "emotion": "warm"},  # Smooth Bhojpuri
-    "mai":  {"speaker": "ritu", "pace": 0.90, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},        # Smooth Maithili
-    "doi":  {"speaker": "ritu", "pace": 0.92, "pitch": 0.08, "loudness": 1.5, "emotion": "warm"},   # Smooth Dogri
-    "awa":  {"speaker": "ritu", "pace": 0.90, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},       # Smooth Awadhi
-    "mwr":  {"speaker": "ritu", "pace": 0.92, "pitch": 0.08, "loudness": 1.5, "emotion": "natural"},     # Smooth Marwadi
-    "bgc":  {"speaker": "ritu", "pace": 0.94, "pitch": 0.10, "loudness": 1.5, "emotion": "natural"},    # Smooth Haryanvi
-    "tcy":  {"speaker": "ritu", "pace": 0.77, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},  # Smooth Tulu
-    "ur":   {"speaker": "ritu", "pace": 0.88, "pitch": 0.10, "loudness": 1.5, "emotion": "warm"},       # Smooth Urdu
+    # REGIONAL VARIANTS
+    "kok":  {"speaker": "ritu", "pace": 1.00, "emotion": "warm"},
+    "bho":  {"speaker": "ritu", "pace": 1.02, "emotion": "warm"},
+    "mai":  {"speaker": "ritu", "pace": 1.00, "emotion": "warm"},
+    "doi":  {"speaker": "ritu", "pace": 1.02, "emotion": "warm"},
+    "awa":  {"speaker": "ritu", "pace": 1.00, "emotion": "warm"},
+    "mwr":  {"speaker": "ritu", "pace": 1.02, "emotion": "expressive"},
+    "bgc":  {"speaker": "ritu", "pace": 1.05, "emotion": "expressive"},
+    "tcy":  {"speaker": "ritu", "pace": 0.95, "emotion": "warm"},
+    "ur":   {"speaker": "ritu", "pace": 1.00, "emotion": "calm"},
 }
+SARVAM_DEFAULT_SPEAKER_CONFIG = {"speaker": "ritu", "pace": 1.0, "emotion": "natural"}
 
 SARVAM_DEFAULT_SPEAKER_CONFIG = {
     "speaker": "ritu",  # Female voice - Ritu for all
@@ -407,20 +407,10 @@ def _sarvam_tts(text: str, lang: str, output_path: str, session=None) -> str:
     if not chunks:
         raise RuntimeError("[D5-ERROR] sarvam: empty text after chunking")
     
-    # ── BUGFIX: Sarvam Bulbul V3 does NOT support pitch and loudness yet.
-    # We must remove these parameters from the payload while keeping the logic
-    # intact for when they upgrade their API or if we switch back to V2
-    # if "pitch" in speaker_config:
-    #     payload["pitch"] = speaker_config["pitch"]
-    # 
-    # if "loudness" in speaker_config:
-    #     payload["loudness"] = speaker_config["loudness"]
-    
     logger.debug(
         "[D3-REQUEST] provider=sarvam | lang=%r | sarvam_lang=%r | "
-        "speaker=%r | pace=%r | pitch=%r(skipped_for_v3) | loudness=%r(skipped_for_v3) | emotion=%r | text_len=%d | chunks=%d",
+        "speaker=%r | pace=%r | emotion=%r | text_len=%d | chunks=%d",
         lang, sarvam_lang, speaker_config.get("speaker"), speaker_config.get("pace"),
-        speaker_config.get("pitch"), speaker_config.get("loudness"),
         speaker_config.get("emotion"), len(text), len(chunks)
     )
 
@@ -435,6 +425,8 @@ def _sarvam_tts(text: str, lang: str, output_path: str, session=None) -> str:
             "target_language_code": sarvam_lang,
             "speaker":              speaker_config["speaker"],
             "pace":                 speaker_config.get("pace", 1.0),
+            # "pitch":                speaker_config.get("pitch", 0.0), # Removed as Sarvam V3 strictly forbids these parameters 
+            # "loudness":             speaker_config.get("loudness", 1.5),
             "enable_preprocessing": True,
             "model":                "bulbul:v3",
         }
@@ -477,10 +469,9 @@ def _sarvam_tts(text: str, lang: str, output_path: str, session=None) -> str:
     with open(output_path, "wb") as f:
         f.write(merged_audio)
     logger.info(
-        "[D6-SUCCESS] provider=sarvam | lang=%r | speaker=%r | pace=%r | pitch=%r | loudness=%r | emotion=%r | "
+        "[D6-SUCCESS] provider=sarvam | lang=%r | speaker=%r | pace=%r | emotion=%r | "
         "path=%s | bytes=%d | latency=%dms",
         lang, speaker_config.get("speaker"), speaker_config.get("pace"), 
-        speaker_config.get("pitch"), speaker_config.get("loudness"),
         speaker_config.get("emotion"), output_path, len(merged_audio), latency_ms
     )
     return output_path

@@ -1,0 +1,58 @@
+{
+  "session_id": "a7e9a169-c9f5",
+  "timestamp": "2026-03-28T04:03:23.190215",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6055943965911865,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "report_fire",
+    "secondary_intents": [
+      "report_fire"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "fire",
+    "service_name": "Maharashtra Fire and Emergency Services",
+    "contact_info": "101 (All Emergency)",
+    "phone": "101 (All Emergency)",
+    "confidence": 0.8,
+    "reasoning": "Route: FIRE | Intent: report_fire | Urgency: CRITICAL | Priority: P1 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Here's a 1-sentence summary:\n\n\"Fire has broken out at Maharashtram (a residential building) in Vartak Nagar, and the urgency is CRITICAL, requesting immediate attention to prevent further damage.\"",
+  "issue_category": "Fire/Emergency",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": "FIR-MH-20260328-62258",
+    "state_code": "MH",
+    "state_service": "Maharashtra Fire Service",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 8,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "मी तुमच्या मदतीला आहे, तुमच्या आग लागल्याच्या समस्येबद्दल मला खूप दुःख वाटते. तुमच्या समस्येचा टिकट नंबर FIR-MH-20260328-62258 आहे, तुम्ही तात्काळ मदतीसाठी 101 किंवा 112 या हेल्पलाइन नंबरवर संपर्क साधा. कृपया तुम्ही या नंबरवर लगेच संपर्क साधा आणि तुमच्या समस्येबद्दल माहिती द्या, जेणेकरून तुम्हाला योग्य मदत मिळेल."
+}

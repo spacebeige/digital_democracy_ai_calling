@@ -1,0 +1,54 @@
+{
+  "session_id": "bd5abf75-12e3",
+  "timestamp": "2026-03-28T04:05:01.431887",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "hi",
+    "language_confidence": 0.95,
+    "transcript_quality": "fair"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6030776500701904,
+    "frustration_score": 0.6,
+    "stress_level": 0.5800000011920929
+  },
+  "intent": {
+    "primary_intent": "clarification_needed",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "general",
+    "service_name": "Government Helpdesk",
+    "contact_info": "181 (State Helpline) or 1800-111-555",
+    "phone": "181 (State Helpline) or 1800-111-555",
+    "confidence": 0.8,
+    "reasoning": "Route: GENERAL | Intent: clarification_needed | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "A user is expressing frustration, as indicated by repetition of \"प्रश्न प्रश्न प्रश्न\", suggesting they are encountering problems or difficulties, but the urgency level is relatively low.",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": null,
+    "state_service": "Delhi Government Helpline - 1031",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 1,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "मैं आपकी सहायता करूंगी, लेकिन आपके संदेश में कोई स्पष्ट समस्या नहीं है। कृपया अपनी विशिष्ट समस्या स्पष्ट रूप से बताएं ताकि हम आपकी मदद कर सकें। यदि आपको किसी योजना के बारे में जानकारी चाहिए, तो कृपया बताएं और मैं आपको संबंधित योजनाओं के बारे में बता सकती हूं। आपातकालीन सहायता के लिए, कृपया 1100 या 181 पर कॉल करें।"
+}

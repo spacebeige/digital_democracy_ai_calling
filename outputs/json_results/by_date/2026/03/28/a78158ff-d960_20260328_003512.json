@@ -1,0 +1,57 @@
+{
+  "session_id": "a78158ff-d960",
+  "timestamp": "2026-03-28T00:35:12.045526",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "gu",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "ANGRY",
+    "anger_score": 0.820000022649765,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "general_complaint",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "general",
+    "service_name": "Government Helpdesk",
+    "contact_info": "181 (State Helpline) or 1800-111-555",
+    "phone": "181 (State Helpline) or 1800-111-555",
+    "confidence": 0.8,
+    "reasoning": "Route: GENERAL | Intent: general_complaint | Urgency: LOW | Priority: P4 | Emotion: ANGRY | Confidence: 7.2/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "General inquiry or non-urgent complaint. User submitted a complaint. Summary: આને વર્થગનગર એર્યાય માંદે આગ લાગલી આયે લાઇક તી આગ ખુપણ જાસ્ત પસરત આયે અને તેથા જોઈરાંત",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "ANGRY_CUSTOMER",
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": null,
+    "state_service": "Delhi Government Helpline - 1031",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 5,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "Complaint received: આને વર્થગનગર એર્યાય માંદે આગ લાગલી આયે લાઇક તી આગ ..."
+}

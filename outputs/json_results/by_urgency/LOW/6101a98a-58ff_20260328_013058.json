@@ -1,0 +1,57 @@
+{
+  "session_id": "6101a98a-58ff",
+  "timestamp": "2026-03-28T01:30:58.962302",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "en",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "ANGRY",
+    "anger_score": 0.785649299621582,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: ANGRY | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "The farmer is seeking general information about government schemes available to them in Maharashtra, indicating a low level of urgency and a request for educational guidance.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "ANGRY_CUSTOMER",
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "MH",
+    "state_service": "Maharashtra Social Welfare - Jan Seva Kendra",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 1,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "I understand that you're a farmer from Maharashtra and you're looking for information on government schemes. Since you're from Maharashtra, I'd like to inform you that the Maharashtra Social Welfare - Jan Seva Kendra department is assigned to help you. You can call the assigned helpline number, 1800 120 8040, for more information on the available schemes. Please feel free to ask about any specific scheme you're interested in, and I'll do my best to assist you."
+}

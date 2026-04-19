@@ -1,0 +1,56 @@
+{
+  "session_id": "5a49f7a3-6f3a",
+  "timestamp": "2026-03-28T04:07:22.171873",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.5842525959014893,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "report_water_issue",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "water",
+    "service_name": "Jal Sansthan (Water Supply Board)",
+    "contact_info": "1800-233-1331 (Maharashtra Water Supply)",
+    "phone": "1800-233-1331 (Maharashtra Water Supply)",
+    "confidence": 0.8,
+    "reasoning": "Route: WATER | Intent: report_water_issue | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 6.6/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "Summary: The customer is unhappy with the corporation's response to a problem with a water pipeline leakage and rupture in their Latur area of Maharashtra, demanding a resolution.",
+  "issue_category": "General Complaint",
+  "severity_flags": [
+    "LOW_CONFIDENCE_CLASSIFICATION"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": "WAT-MH-20260328-35352",
+    "state_code": "MH",
+    "state_service": "Maharashtra Jal Sansthan",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 6,
+    "aggressiveness_score": 20
+  },
+  "ai_response": "मी तुमच्या पाण्याच्या पाइपलाइनच्या समस्येची दखल घेते आणि तुमच्या परिस्थितीशी सहानुभूती व्यक्त करते. तुमच्या तक्रारीचा टिकट नंबर WAT-MH-20260328-35352 आहे. तुम्ही तुमच्या पाण्याच्या समस्येसाठी 1916 या हेल्पलाइन नंबरवर संपर्क साधावा आणि तुम्हाला मदत मिळेल."
+}

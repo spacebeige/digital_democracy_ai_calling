@@ -1,0 +1,54 @@
+{
+  "session_id": "899f204f-b410",
+  "timestamp": "2026-03-28T01:42:52.278030",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "FRUSTRATED",
+    "anger_score": 0.6383301019668579,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "scheme_enquiry",
+    "secondary_intents": [],
+    "urgency": "LOW"
+  },
+  "urgency_level": {
+    "level": "LOW",
+    "priority": 4
+  },
+  "routing": {
+    "department": "scheme",
+    "service_name": "Social Welfare & Schemes Department",
+    "contact_info": "1800-180-1111 (Govt Helpline)",
+    "phone": "1800-180-1111 (Govt Helpline)",
+    "confidence": 0.8,
+    "reasoning": "Route: SCHEME | Intent: scheme_enquiry | Urgency: LOW | Priority: P4 | Emotion: FRUSTRATED | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "One-sentence summary: A farmer from Maharashtra wants to know and understand all available schemes in Maharashtra that can be applied to their farming-related needs.\n\n(Note: The original text is in the Marathi language, and the translation provided is for reference purposes only.)",
+  "issue_category": "General Complaint",
+  "severity_flags": [],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": "MH",
+    "state_service": "Maharashtra Social Welfare - Jan Seva Kendra",
+    "is_scheme_enquiry": true
+  },
+  "sentiment": {
+    "frustration_level": 1,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "मी तुमच्या शेतीसाठी उपलब्ध असलेल्या योजनांबद्दल माहिती देण्यासाठी इथे आहे. तुम्ही महाराष्ट्र मध्ये असल्याने तुम्ही महाराष्ट्र शासनाच्या विविध योजनांचा लाभ घेऊ शकता. तुम्ही महाराष्ट्र सामाजिक कल्याण विभाग - जन सेवा केंद्राशी संपर्क साधू शकता आणि त्यांच्या हेल्पलाइन नंबर 180۰233४४४४ वर संपर्क करू शकता."
+}

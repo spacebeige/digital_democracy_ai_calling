@@ -591,7 +591,7 @@ IMPORTANT INSTRUCTIONS:
 2. Ignore any filler words, frustration expressions, or mild expletives - focus on the CORE issue
 3. If no clear grievance is found (just abuse/nonsense), politely ask them to explain their actual problem
 4. If a ticket number is provided, ALWAYS mention it in your response
-5. For scheme enquiries, inform them about actual relevant schemes found in the Database Context (if any are listed).
+5. For scheme enquiries, you MUST explicitly name the actual "Relevant Schemes Found in Database" that are provided in the context below.
 6. ALWAYS state the specific Assigned Helpline number aloud clearly so they know exactly who to call.
 
 User's message: "{transcript}"
@@ -603,7 +603,7 @@ Language: {lang_name}
 Provide a SHORT response (3-4 sentences MAX) in pure {lang_name} that:
 1. Acknowledges their SPECIFIC issue with empathy (if a real issue exists)
 2. MENTIONS THE TICKET NUMBER clearly if a ticket number is provided, AND state the specific Assigned Helpline number aloud clearly so they know exactly who to call. If the situation is an emergency (fire, medical/ambulance, police), strongly emphasize calling the emergency helpline number immediately as well as keeping the ticket number for reference.
-3. Mentions which department/scheme is assigned to help them
+3. If this is a scheme enquiry, you MUST explicitly name the actual schemes found in the database (from the context above) and explain them briefly.
 4. If the location is required but not provided by the user, explicitly ask them to provide their location using the exact same language.
 5. If the user mentions a natural disaster (flood, earthquake, etc.), respond EXACTLY with "we will connect you to a human operator" translated into their native language.
 
@@ -712,7 +712,7 @@ def record_live_audio(duration_s: int = 15):
     
     print(f"\n{Colors.GREEN}🔴 RECORDING IN PROGRESS...{Colors.END}")
     print(f"{Colors.YELLOW}📣 Please speak your complaint clearly.{Colors.END}")
-    print(f"{Colors.CYAN}Ready — speak now (max {duration_s}s, silence cutoff 800ms){Colors.END}")
+    print(f"{Colors.CYAN}Ready — speak now (max {duration_s}s, silence cutoff 2000ms){Colors.END}")
     
     try:
         vad = VADEngine(aggressiveness=2)
@@ -720,7 +720,7 @@ def record_live_audio(duration_s: int = 15):
         
         audio = recorder.record(
             max_duration_s=duration_s,
-            silence_ms=800,
+            silence_ms=2000,
             calibration=calibration
         )
         
@@ -742,6 +742,36 @@ def record_live_audio(duration_s: int = 15):
     except Exception as e:
         print(f"{Colors.RED}❌ Error: {e}{Colors.END}")
         return None
+
+
+def play_audio_file(audio_path: str):
+    """Play audio in a robust cross-platform way."""
+    # ALways try sounddevice first because it handles 32-bit floats and native sample rates properly
+    try:
+        import soundfile as sf
+        import sounddevice as sd
+
+        data, sr = sf.read(audio_path, dtype="float32")
+        sd.play(data, sr)
+        sd.wait()
+        return True
+    except Exception as e:
+        print(f"  ⚠️  Built-in playback (sounddevice) failed: {e}")
+
+    # Fallback to OS commands if sounddevice doesn't work
+    if os.name == "nt":
+        try:
+            import winsound
+            winsound.PlaySound(audio_path, winsound.SND_FILENAME)
+            return True
+        except Exception:
+            return os.system(f"start /wait \"{audio_path}\"") == 0
+    else:
+        import platform
+        if platform.system() == "Darwin":
+            return os.system(f"afplay \"{audio_path}\"") == 0
+        return os.system(f"paplay \"{audio_path}\" 2>/dev/null || aplay \"{audio_path}\"") == 0
+
 
 async def main():
     print_header("🎤 MULTILINGUAL INTEGRATED VOICE GRIEVANCE PROCESSING 🎤")
@@ -1076,7 +1106,9 @@ async def main():
     session.emotion_name = analytical_model.emotion.detected_emotion.name
     session.is_emergency = (urgency_level == "CRITICAL")
     
-    temp_wav = f"/tmp/{session_id}_reply.wav"
+    # Use OS temp directory for cross-platform support (Windows does not have /tmp)
+    os.makedirs(tempfile.gettempdir(), exist_ok=True)
+    temp_wav = os.path.join(tempfile.gettempdir(), f"{session_id}_reply.wav")
     
     print(f"  [TTS] Synthesizing human-like voice (Ritu) for {lang_name} using Sarvam AI...")
     
@@ -1093,7 +1125,9 @@ async def main():
     if success:
         print(f"  ✓ TTS Generated successfully: {temp_wav}")
         print("  🔊 Playing audio response...")
-        os.system(f"afplay {temp_wav} 2>/dev/null")
+        played = play_audio_file(temp_wav)
+        if not played:
+            print("  ⚠️  Could not play audio automatically; please open the file manually.")
     else:
         print(f"  ❌ [ERROR] TTS synthesis failed")
     

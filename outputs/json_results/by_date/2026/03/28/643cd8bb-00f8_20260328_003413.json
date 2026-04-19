@@ -1,0 +1,59 @@
+{
+  "session_id": "643cd8bb-00f8",
+  "timestamp": "2026-03-28T00:34:13.978878",
+  "type": "grievance_analysis",
+  "transcription": {
+    "engine_used": "groq_whisper",
+    "language_detected": "mr",
+    "language_confidence": 0.95,
+    "transcript_quality": "good"
+  },
+  "emotion": {
+    "state": "ANGRY",
+    "anger_score": 0.7970747351646423,
+    "frustration_score": 0.55,
+    "stress_level": 0.6200000007947285
+  },
+  "intent": {
+    "primary_intent": "water_issue",
+    "secondary_intents": [
+      "water_issue"
+    ],
+    "urgency": "CRITICAL"
+  },
+  "urgency_level": {
+    "level": "CRITICAL",
+    "priority": 1
+  },
+  "routing": {
+    "department": "water",
+    "service_name": "Jal Sansthan (Water Supply Board)",
+    "contact_info": "1800-233-1331 (Maharashtra Water Supply)",
+    "phone": "1800-233-1331 (Maharashtra Water Supply)",
+    "confidence": 0.8,
+    "reasoning": "Route: WATER | Intent: water_issue | Urgency: CRITICAL | Priority: P1 | Emotion: ANGRY | Confidence: 10.0/10"
+  },
+  "escalation": {
+    "should_escalate": false,
+    "triggered_rules": [],
+    "escalation_details": []
+  },
+  "ai_summary": "URGENT: Critical emergency requiring immediate response. User reported issue. Summary: अम्चे इत्या पाइपलाइन डामेज जाली है, सो पानी भारता है, लाइक रोड बर पुर्णा पानी भरला है, सो मला मदद भू...",
+  "issue_category": "Water Supply",
+  "severity_flags": [
+    "EMERGENCY_ESCALATE",
+    "ANGRY_CUSTOMER"
+  ],
+  "follow_up_needed": true,
+  "ticket": {
+    "number": null,
+    "state_code": null,
+    "state_service": "Delhi Jal Board (DJB)",
+    "is_scheme_enquiry": false
+  },
+  "sentiment": {
+    "frustration_level": 5,
+    "aggressiveness_score": 0
+  },
+  "ai_response": "Complaint received: अम्चे इत्या पाइपलाइन डामेज जाली है, सो पानी भारता ..."
+}

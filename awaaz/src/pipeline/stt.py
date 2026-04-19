@@ -268,8 +268,8 @@ class GroqWhisperSTT(BaseSTTProvider):
             "tcy": "Tulu"  # Added Tulu support
         }
 
-        # Optional: Add indian languages focus via prompt
-        base_prompt = 'Indian languages: Hindi, Marathi, Gujarati, Kannada, Konkani, Telugu, Tamil, Odia, Punjabi, Marwadi, Haryanvi, Assamese, Dogri, Pahadi, Bengali, Malayalam, Bhojpuri, Tulu, Urdu'
+        # Optional: Add indian languages focus via prompt using native script
+        base_prompt = 'नमस्ते, नमस्कार, વણક્કમ, ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ, வணக்கம், ನಮಸ್ಕಾರ, నమస్కారం, നമസ്കാരം, নমস্কার, ମୁଁ, କିପରି'
         if language and language not in ['auto', '']:
             target_lang_name = whisper_lang_map_reverse.get(language, language.title())
             if target_lang_name not in base_prompt:
@@ -497,31 +497,35 @@ class LocalWhisperSTT(BaseSTTProvider):
 class STTProcessor:
     """
     Robust Multilingual STT Pipeline.
-    Orchestrates Bhashini, HF API, and local Whisper falling back dynamically.
+    Orchestrates Sarvam, ElevenLabs, Groq, and local Whisper falling back dynamically.
     """
 
     def __init__(self, model_size: str = "small", device: str = "auto", preferred_provider: Optional[str] = None):
         self.providers: List[BaseSTTProvider] = []
         self.sarvam = SarvamLanguageTools()
 
-        # Just load Groq to ensure absolute minimum latency (if available)
-        if os.getenv("GROQ_API_KEY"):
-            self.providers.append(GroqWhisperSTT())
-        else:
-            if os.getenv("ELEVENLABS_API_KEY"):
-                self.providers.append(ElevenLabsSTT())
-            if os.getenv("BHASHINI_API_KEY"):
-                self.providers.append(BhashiniSTT())
-            if os.getenv("HF_API_KEY"):
-                self.providers.append(HuggingFaceSTT())
-
-        # Removed local_whisper to drastically reduce latency
-        # self.local_whisper = LocalWhisperSTT(model_size, device)
-        # self.providers.append(self.local_whisper)
-        self.local_whisper = None
-
+        # Build provider list based on requested fallback chain (Sarvam -> ElevenLabs -> Groq)
+        # We always initialize them so they are available for fallback detection routines
+        self.elevenlabs = ElevenLabsSTT() if os.getenv("ELEVENLABS_API_KEY") else None
+        self.groq = GroqWhisperSTT() if os.getenv("GROQ_API_KEY") else None
+        
+        # Determine priority explicitly to honor user preference
         pref = (preferred_provider or os.getenv("STT_PRIMARY") or "elevenlabs").strip().lower()
-        self._prioritize_provider(pref)
+        
+        # Load providers in explicitly preferred order
+        if "sarvam" in pref or "eleven" in pref:
+            if self.elevenlabs: self.providers.append(self.elevenlabs)
+            if self.groq: self.providers.append(self.groq)
+        else:
+            if self.groq: self.providers.append(self.groq)
+            if self.elevenlabs: self.providers.append(self.elevenlabs)
+
+        if os.getenv("BHASHINI_API_KEY"):
+            self.providers.append(BhashiniSTT())
+        if os.getenv("HF_API_KEY"):
+            self.providers.append(HuggingFaceSTT())
+
+        self.local_whisper = None
 
         self.confidence_threshold = float(os.getenv("STT_CONFIDENCE_THRESHOLD", "0.6"))
 
@@ -860,13 +864,24 @@ class STTProcessor:
     async def transcribe(self, audio_path: str, language: str = "hi") -> Optional[STTResult]:
         last_error = None
         
-        # Bypass time-consuming ensemble for latency optimization
+        # User requested efficient language detection: Sarvam -> ElevenLabs -> Groq
+        # We MUST evaluate the language explicitly before sending to Groq so it doesn't default to English!
+        detected_audio_lang = language
+        if language in ['auto', None, '']:
+            logger.debug("[STT] Auto-detecting language before transcription to prevent English fallback...")
+            det_lang, det_conf = await self.detect_language(audio_path)
+            if det_lang:
+                detected_audio_lang = det_lang
+                logger.info(f"[LANG-DETECT] Pre-detected language: {detected_audio_lang} (conf {det_conf:.2f})")
+            else:
+                detected_audio_lang = "hi"  # Failsafe fallback
+
         ensemble_lang, ensemble_scores = None, {}
         
         for provider in self.providers:
             try:
-                # auto/unspecified is better for code-mixed speech models
-                transcribe_lang = None if language in ['hi', 'auto'] else language
+                # Force the provider to use the detected native language. Let's not pass 'auto' to Groq!
+                transcribe_lang = detected_audio_lang
                 
                 # FAST PATH: Just transcribe directly!
                 result = await provider.transcribe(audio_path, language=transcribe_lang)
